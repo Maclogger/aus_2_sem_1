@@ -1,0 +1,14 @@
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/bin/Debug/net8.0/My
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/bin/Debug/net8.0/My.deps.json
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/bin/Debug/net8.0/My.runtimeconfig.json
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/bin/Debug/net8.0/My.dll
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/bin/Debug/net8.0/My.pdb
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/obj/Debug/net8.0/My.GeneratedMSBuildEditorConfig.editorconfig
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/obj/Debug/net8.0/My.AssemblyInfoInputs.cache
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/obj/Debug/net8.0/My.AssemblyInfo.cs
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/obj/Debug/net8.0/My.csproj.CoreCompileInputs.cache
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/obj/Debug/net8.0/My.dll
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/obj/Debug/net8.0/refint/My.dll
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/obj/Debug/net8.0/My.pdb
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/obj/Debug/net8.0/My.genruntimeconfig.cache
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/obj/Debug/net8.0/ref/My.dll
