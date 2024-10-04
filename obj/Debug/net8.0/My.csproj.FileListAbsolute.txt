@@ -12,3 +12,4 @@
 /home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/obj/Debug/net8.0/My.pdb
 /home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/obj/Debug/net8.0/My.genruntimeconfig.cache
 /home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/obj/Debug/net8.0/ref/My.dll
+/home/mclogger/Desktop/FRI/1. semester/AUS2/Semka/My/obj/Debug/net8.0/My.sourcelink.json

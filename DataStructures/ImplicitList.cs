@@ -1,4 +1,3 @@
-
 namespace Lists
 {
     class ImplicitList<T> : List<T> where T : IEquatable<T>
@@ -127,7 +126,7 @@ namespace Lists
                 output += this.array[i];
                 if (i != this.size - 1)
                 {
-                    output += ", ";
+                    output += ", \n";
                 }
             }
             output += "]";
