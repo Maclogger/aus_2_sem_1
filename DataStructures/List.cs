@@ -38,5 +38,9 @@ namespace Lists
         public abstract int? Find(T pItem);
         public abstract void Clear();
         public abstract void Set(int pIndex, T pValue);
+        public bool IsEmpty()
+        {
+            return this.size <= 0;
+        }
     }
 }
