@@ -31,6 +31,7 @@ namespace Lists
     abstract class List<T>
     {
         protected int size { get; set; } = 0;
+        public int Size => this.size;
         public abstract void Add(T pItem);
         public abstract void Remove(T pItem);
         public abstract T? Remove(int pIndex);

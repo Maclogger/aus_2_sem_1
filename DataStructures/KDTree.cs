@@ -1,19 +1,30 @@
+using Entities;
+
 namespace Trees
 {
 
     class Node
     {
-        private Entities.GpsPosition gpsPosition;
+        private GpsPosition gpsPosition;
 
-        public Node(Entities.GpsPosition pGpsPosition)
+        public Node(GpsPosition pGpsPosition)
         {
-            this.gpsPosition = pGpsPosition;
+            gpsPosition = pGpsPosition;
         }
     }
 
     class KDTree
     {
-        public KDTree() { }
+        Node? root;
+        public KDTree()
+        {
+
+        }
+
+        public void randomFillUp(int pCountOfNodes)
+        {
+
+        }
     }
 
 }

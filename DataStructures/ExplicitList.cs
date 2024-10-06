@@ -12,14 +12,14 @@ namespace Lists
 
         public T DataPart
         {
-            get { return this.dataPart; }
-            set { this.dataPart = value; }
+            get => this.dataPart;
+            set => this.dataPart = value;
         }
 
         public Node<T>? Next
         {
-            get { return this.next; }
-            set { this.next = value; }
+            get => this.next;
+            set => this.next = value;
         }
     }
 
@@ -54,9 +54,12 @@ namespace Lists
             {
                 this.firstNode = new Node<T>(pItem);
                 this.lastNode = this.firstNode;
+                this.size++;
                 return;
             }
             this.lastNode!.Next = new Node<T>(pItem);
+            this.lastNode = this.lastNode!.Next;
+            this.size++;
         }
 
         public override void Remove(T pItem)
@@ -119,8 +122,10 @@ namespace Lists
                 previousNode = currentNode;
                 currentNode = currentNode!.Next;
             }
+            T? temp = currentNode!.DataPart;
             previousNode!.Next = currentNode!.Next;
             this.size--;
+            return temp;
         }
 
         public override T? Get(int pIndex)
@@ -158,14 +163,18 @@ namespace Lists
                 Console.WriteLine("The explicit list is empty.");
                 return;
             }
+
             string output = "ExplicitList = [";
-            for (int i = 0; i < this.size; i++)
+
+            Node<T>? currentNode = this.firstNode;
+            while (currentNode != null)
             {
-                output += this.array[i];
-                if (i != this.size - 1)
+                output += currentNode!.DataPart;
+                if (currentNode.Next != null)
                 {
-                    output += ", \n";
+                    output += "\n";
                 }
+                currentNode = currentNode.Next;
             }
             output += "]";
             Console.WriteLine(output);

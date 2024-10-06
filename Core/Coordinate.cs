@@ -53,7 +53,6 @@ namespace Entities
             return this.latitude;
         }
 
-        // Override object.Equals
         public override bool Equals(object? obj)
         {
             if (obj is GpsPosition other)
