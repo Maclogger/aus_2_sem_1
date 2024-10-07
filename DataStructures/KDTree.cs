@@ -46,7 +46,7 @@ namespace My.DataStructures
         }
     }
 
-    class KdTree<T> where T : IKey
+    class KdTree<T> : IEnumerable where T : IKey
     {
         private Node<T>? _root;
         private int _k;
@@ -100,6 +100,30 @@ namespace My.DataStructures
             }
 
             _size++;
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            Node<T>? currentNode = _root;
+            Stack<Node<T>> stack = new();
+
+            while (currentNode != null || stack.Count > 0)
+            {
+
+                // we go all a way to bottom left node
+                while (currentNode != null)
+                {
+                    stack.Push(currentNode);
+                    currentNode = currentNode.LeftChild;
+                }
+
+                // we are at the most bottom left node => currentNode = null
+
+                currentNode = stack.Pop(); // we go up one level to father
+                yield return currentNode.Item; // we return the value to iterator
+
+                currentNode = currentNode.RightChild; // we go to right node
+            }
         }
     }
 }

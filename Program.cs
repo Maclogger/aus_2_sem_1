@@ -3,14 +3,53 @@ using My.DataStructures;
 
 namespace My
 {
+    class IntItem : IKey
+    {
+        public int value;
+
+        public IntItem(int value)
+        {
+            this.value = value;
+        }
+        
+        public int CompareTo(IKey other, int dimension)
+        {
+            if (other is not IntItem otherIntItem)
+            {
+                throw new ArgumentException("Object is not an IntItem");
+            }
+
+            if (value == otherIntItem.value)
+            {
+                return 0;
+            }
+
+            return value < otherIntItem.value ? -1 : 1;
+        }
+    }
+    
     class Program
     {
         public static void Main(string[] args)
         {
+            /*
             setUpRandom2DTree();
             setUpiPadTestCase();
+            */
+            KdTree<IntItem> tree = new(1);
+
+            for (int i = 0; i < 1000; i++)
+            {
+                tree.Add(new IntItem(i));
+            }
+
+            foreach (IntItem item in tree)
+            {
+                Console.WriteLine(item.value);
+            }
         }
 
+        /*
         private static void setUpiPadTestCase()
         {
             List<Position> positions = new List<Position>();
@@ -30,7 +69,6 @@ namespace My
             parcelas.Add(new Parcela(2, "Parcela 2", positions[4], positions[5]));
             parcelas.Add(new Parcela(3, "Parcela 3", positions[6], positions[8]));
             parcelas.Add(new Parcela(4, "Parcela 4", positions[7], positions[9]));
-            List<Node> kdNodes = new List<Node>();
         }
 
         private static void setUpRandom2DTree()
@@ -45,6 +83,7 @@ namespace My
                 nodes.Add(temp);
             }
         }
+        */
 
     }
 }
