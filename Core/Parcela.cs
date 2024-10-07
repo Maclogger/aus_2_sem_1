@@ -2,19 +2,32 @@ using Lists;
 
 namespace Entities
 {
-    class Parcela : IEquatable<Parcela>
+    public class Parcela : IEquatable<Parcela>
     {
         private int parcelNum;
         private string description;
         private ExplicitList<Nehnutelnost> nehnutelnosti;
-        private GpsPosition topLeft;
-        private GpsPosition bottomRigth;
-        public Parcela(int parcelNum, string description, GpsPosition topLeft, GpsPosition bottomRigth)
+        private Position pos1;
+        private Position pos2;
+
+        public Position Pos1
+        {
+            get => pos1;
+            set => pos1 = value ?? throw new ArgumentNullException(nameof(value));
+        }
+
+        public Position Pos2
+        {
+            get => pos2;
+            set => pos2 = value ?? throw new ArgumentNullException(nameof(value));
+        }
+
+        public Parcela(int parcelNum, string description, Position pos1, Position pos2)
         {
             this.parcelNum = parcelNum;
             this.description = description;
-            this.topLeft = topLeft;
-            this.bottomRigth = bottomRigth;
+            this.pos1 = pos1;
+            this.pos2 = pos2;
             this.nehnutelnosti = new ExplicitList<Nehnutelnost>();
         }
 
@@ -25,8 +38,8 @@ namespace Entities
                 return false;
             }
 
-            return (this.parcelNum == other.parcelNum && this.bottomRigth == other.bottomRigth &&
-                this.description == other.description && this.topLeft == other.topLeft) ;
+            return (this.parcelNum == other.parcelNum && this.pos2 == other.pos2 &&
+                this.description == other.description && this.pos1 == other.pos1) ;
         }
     }
 }

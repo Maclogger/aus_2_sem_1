@@ -1,26 +1,49 @@
+using My.DataStructures;
+
 namespace Entities
 {
-    public class GpsPosition : IEquatable<GpsPosition>
+    public class Position : IEquatable<Position>
     {
         private char latitudeSign { get; set; } // N or S
         private double latitude { get; set; }
         private char longitudeSign { get; set; } // W or E
         private double longitude { get; set; }
 
-        public GpsPosition(double pLatitude, double pLongitude)
+        public Position(double pLatitude, double pLongitude)
         {
             ValidateCoordinates(pLatitude, pLongitude);
             CreateInstance(pLatitude, pLongitude);
         }
 
-        public GpsPosition(Random rnd)
+        public Position()
         {
             // Generate random coordinates within valid range
-            double pLongitude = (rnd.NextDouble() - 0.5) * 360;
-            double pLatitude = (rnd.NextDouble() - 0.5) * 180;
+            double pLatitude = Utils.GetRandomDoubleInRange(-90.0, 90.0);
+            double pLongitude = Utils.GetRandomDoubleInRange(-180.0, 180.0);
             ValidateCoordinates(pLatitude, pLongitude);
             CreateInstance(pLatitude, pLongitude);
         }
+
+        public Position(double pMinLatitude, double pMaxLatitude, double pMinLongitude, double pMaxLongitude, bool pOnlyIntegers = false)
+        {
+            // Generate random coordinates within a given range
+            double pLatitude;
+            double pLongitude;
+
+            if (pOnlyIntegers)
+            {
+                pLatitude = Utils.GetRandomIntInRange((int)pMinLatitude, (int)pMaxLatitude);
+                pLongitude = Utils.GetRandomIntInRange((int)pMinLongitude, (int)pMaxLongitude);
+            }
+            else
+            {
+                pLatitude = Utils.GetRandomDoubleInRange((int)pMinLatitude, (int)pMaxLatitude);
+                pLongitude = Utils.GetRandomDoubleInRange((int)pMinLongitude, (int)pMaxLongitude);
+            }
+
+            CreateInstance(pLatitude, pLongitude);
+        }
+
 
         private void CreateInstance(double pLatitude, double pLongitude)
         {
@@ -53,17 +76,7 @@ namespace Entities
             return this.latitude;
         }
 
-        public override bool Equals(object? obj)
-        {
-            if (obj is GpsPosition other)
-            {
-                return Equals(other);
-            }
-
-            return false;
-        }
-
-        public bool Equals(GpsPosition? other)
+        public bool Equals(Position? other)
         {
             if (other == null)
             {
@@ -71,12 +84,6 @@ namespace Entities
             }
 
             return this.latitude == other.latitude && this.longitude == other.longitude && this.latitudeSign == other.latitudeSign && this.longitudeSign == other.longitudeSign;
-        }
-
-        // Override object.GetHashCode
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(latitude, longitude, latitudeSign, longitudeSign);
         }
 
         public override string ToString()

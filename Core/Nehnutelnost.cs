@@ -7,9 +7,8 @@ namespace Entities
         private int parcelNum;
         private string description;
         private ExplicitList<Parcela> parcely;
-        private GpsPosition topLeft;
-        private GpsPosition bottomRigth;
-        public Nehnutelnost(int pParcelNum, string pDescription, GpsPosition pTopLeft, GpsPosition pBottomRight)
+        private Position topLeft, bottomRigth;
+        public Nehnutelnost(int pParcelNum, string pDescription, Position pTopLeft, Position pBottomRight)
         {
             this.parcelNum = parcelNum;
             this.description = pDescription;

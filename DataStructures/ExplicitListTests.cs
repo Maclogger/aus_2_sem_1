@@ -1,8 +1,10 @@
 using Lists;
 
+namespace My.DataStructures;
+
 public class ExplicitListTests
 {
-    public static void Main(string[] args)
+    public static void TestAll(string[] args)
     {
         TestAdd();
         TestRemoveByValue();
