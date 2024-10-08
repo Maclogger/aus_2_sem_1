@@ -9,46 +9,47 @@ namespace My.DataStructures
     }
 
 
-    class Node<T> where T : IKey
+    class Node<K, T> where K : IKey
     {
-        private Node<T>? _leftChild = null, _rightChild = null;
-        private T _item;
+        private Node<K, T>? _leftChild = null, _rightChild = null;
+        private K _key;
+        private T? _data;
 
-        public Node(T pItem)
+
+        public Node(K pKey, T? pData)
         {
-            Item = pItem;
+            _key = pKey;
+            _data = pData;
         }
 
-        public Node<T>? LeftChild
+        public Node<K, T>? LeftChild
         {
             get => _leftChild;
             set => _leftChild = value;
         }
 
-        public Node<T>? RightChild
+        public Node<K, T>? RightChild
         {
             get => _rightChild;
             set => _rightChild = value;
         }
 
-        public T Item
+        public K Key
         {
-            get => _item;
-            set => _item = value;
+            get => _key;
+            set => _key = value;
         }
 
-        public int CompareTo(Node<T>? pOtherNode, int dimension)
+        public T? Data
         {
-            if (pOtherNode == null)
-                throw new ArgumentNullException(nameof(pOtherNode));
-
-            return Item.CompareTo(pOtherNode.Item, dimension);
+            get => _data;
+            set => _data = value;
         }
     }
 
-    class KdTree<T> : IEnumerable where T : IKey
+    class KdTree<K, T> : IEnumerable where K : IKey
     {
-        private Node<T>? _root;
+        private Node<K, T?>? _root;
         private int _k;
         private int _size = 0;
         public KdTree(int pK)
@@ -56,9 +57,9 @@ namespace My.DataStructures
             _k = pK;
         }
 
-        public void Add(T pItem)
+        public void Add(K pKey, T? pItem)
         {
-            Node<T> newNode = new Node<T>(pItem);
+            Node<K, T?> newNode = new(pKey, pItem);
 
             if (_size <= 0 || _root == null)
             {
@@ -68,16 +69,17 @@ namespace My.DataStructures
                 return;
             }
 
-            Node<T>? currentNode = _root;
+            Node<K, T?> currentNode = _root;
 
-            // at the left side of the tree, there are items less or equal to
+            // on the left side of the tree, there are items less or equal to
             int currentDimension = 0;
             while (true)
             {
-                int comp = currentNode.CompareTo(newNode, currentDimension);
-                if (comp > 0)
+                int comp = newNode.Key.CompareTo(currentNode.Key, currentDimension);
+
+                if (comp <= 0)
                 {
-                    // the place for new item is at the left side
+                    // the place for new item is on the left side
                     if (currentNode.LeftChild == null)
                     {
                         currentNode.LeftChild = newNode;
@@ -87,7 +89,7 @@ namespace My.DataStructures
                 }
                 else
                 {
-                    // the place for new item is at the right side
+                    // the place for new item is on the right side
                     if (currentNode.RightChild == null)
                     {
                         currentNode.RightChild = newNode;
@@ -104,8 +106,8 @@ namespace My.DataStructures
 
         public IEnumerator GetEnumerator()
         {
-            Node<T>? currentNode = _root;
-            Stack<Node<T>> stack = new();
+            Node<K, T?>? currentNode = _root;
+            Stack<Node<K, T?>> stack = new();
 
             while (currentNode != null || stack.Count > 0)
             {
@@ -120,7 +122,7 @@ namespace My.DataStructures
                 // we are at the most bottom left node => currentNode = null
 
                 currentNode = stack.Pop(); // we go up one level to father
-                yield return currentNode.Item; // we return the value to iterator
+                yield return currentNode.Data; // we return the value to iterator
 
                 currentNode = currentNode.RightChild; // we go to right node
             }

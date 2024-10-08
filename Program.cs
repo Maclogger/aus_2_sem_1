@@ -3,28 +3,28 @@ using My.DataStructures;
 
 namespace My
 {
-    class IntItem : IKey
+    class MyIntKey : IKey
     {
-        public int value;
+        private int _value;
 
-        public IntItem(int value)
+        public MyIntKey(int value)
         {
-            this.value = value;
+            _value = value;
         }
         
         public int CompareTo(IKey other, int dimension)
         {
-            if (other is not IntItem otherIntItem)
+            if (other is not MyIntKey myIntKey)
             {
                 throw new ArgumentException("Object is not an IntItem");
             }
 
-            if (value == otherIntItem.value)
+            if (_value == myIntKey._value)
             {
                 return 0;
             }
 
-            return value < otherIntItem.value ? -1 : 1;
+            return _value < myIntKey._value ? -1 : 1;
         }
     }
     
@@ -36,16 +36,16 @@ namespace My
             setUpRandom2DTree();
             setUpiPadTestCase();
             */
-            KdTree<IntItem> tree = new(1);
+            KdTree<MyIntKey, int> tree = new(1);
 
             for (int i = 0; i < 1000; i++)
             {
-                tree.Add(new IntItem(i));
+                tree.Add(new MyIntKey(i), i);
             }
 
-            foreach (IntItem item in tree)
+            foreach (int item in tree)
             {
-                Console.WriteLine(item.value);
+                Console.WriteLine(item);
             }
         }
 
