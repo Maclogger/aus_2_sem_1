@@ -5,7 +5,8 @@ namespace My.DataStructures
 {
     public interface IKey
     {
-        int CompareTo(IKey other, int dimension);
+        int CompareTo(IKey pOther, int pDimension);
+        bool Equals(IKey pOther);
     }
 
 
@@ -102,6 +103,39 @@ namespace My.DataStructures
             }
 
             _size++;
+        }
+
+        public List<T?> Find(K pKey)
+        {
+            List<T?> sol = new();
+
+            Node<K, T?>? currentNode = _root;
+
+            int currentDimension = 0;
+            while (currentNode != null)
+            {
+                if (pKey.Equals(currentNode.Key))
+                {
+                    sol.Add(currentNode.Data);
+                }
+
+                int comp = pKey.CompareTo(currentNode.Key, currentDimension);
+
+                if (comp <= 0)
+                {
+                    // item is on the left side
+                    currentNode = currentNode.LeftChild;
+                }
+                else
+                {
+                    // item is on the right side
+                    currentNode = currentNode.RightChild;
+                }
+
+                currentDimension = (currentDimension + 1) % _k;
+            }
+
+            return sol;
         }
 
         public IEnumerator GetEnumerator()
