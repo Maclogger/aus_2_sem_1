@@ -1,7 +1,7 @@
 using System.Collections;
-using Entities;
+using My.DataStructures.Stack;
 
-namespace My.DataStructures
+namespace My.DataStructures.KdTree
 {
     public interface IKey
     {
@@ -138,12 +138,17 @@ namespace My.DataStructures
             return sol;
         }
 
+        public void Remove(K pKey)
+        {
+
+        }
+
         public IEnumerator GetEnumerator()
         {
             Node<K, T?>? currentNode = _root;
-            Stack<Node<K, T?>> stack = new();
+            Stack.Stack<Node<K, T?>> stack = new();
 
-            while (currentNode != null || stack.Count > 0)
+            while (currentNode != null || stack.Size > 0)
             {
 
                 // we go all a way to bottom left node

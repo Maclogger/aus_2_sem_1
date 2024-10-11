@@ -1,5 +1,4 @@
-﻿using Entities;
-using My.DataStructures;
+﻿using My.DataStructures.KdTree;
 
 namespace My
 {

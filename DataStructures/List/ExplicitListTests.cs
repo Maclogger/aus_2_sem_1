@@ -1,6 +1,4 @@
-using Lists;
-
-namespace My.DataStructures;
+namespace My.DataStructures.List;
 
 public class ExplicitListTests
 {

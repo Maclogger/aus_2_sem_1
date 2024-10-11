@@ -1,4 +1,4 @@
-namespace Lists
+namespace My.DataStructures.List
 {
     class Node<T> where T : IEquatable<T>
     {
@@ -23,7 +23,7 @@ namespace Lists
         }
     }
 
-    class ExplicitList<T> : List<T> where T : IEquatable<T>
+    class ExplicitList<T> : My.DataStructures.List.List<T> where T : IEquatable<T>
     {
         Node<T>? firstNode;
         Node<T>? lastNode;

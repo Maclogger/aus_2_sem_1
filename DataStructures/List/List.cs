@@ -1,4 +1,4 @@
-namespace Lists
+namespace My.DataStructures.List
 {
     abstract class List<T>
     {

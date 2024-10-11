@@ -1,5 +1,3 @@
-using Lists;
-
 namespace My.DataStructures;
 
 public class Utils
