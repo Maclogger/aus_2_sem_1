@@ -1,5 +1,4 @@
 using System.Collections;
-using My.DataStructures.Stack;
 
 namespace My.DataStructures.KdTree
 {
@@ -10,17 +9,18 @@ namespace My.DataStructures.KdTree
     }
 
 
-    class Node<K, T> where K : IKey
+    public class Node<K, T> where K : IKey
     {
         private Node<K, T>? _leftChild = null, _rightChild = null;
         private K _key;
-        private T? _data;
+        private List<T> _data;
 
 
-        public Node(K pKey, T? pData)
+        public Node(K pKey, T pData)
         {
             _key = pKey;
-            _data = pData;
+            _data = new List<T>();
+            _data.Add(pData);
         }
 
         public Node<K, T>? LeftChild
@@ -41,42 +41,59 @@ namespace My.DataStructures.KdTree
             set => _key = value;
         }
 
-        public T? Data
+        public List<T> Data
         {
             get => _data;
             set => _data = value;
         }
+
+        public void AddData(T pItem)
+        {
+            _data.Add(pItem);
+        }
     }
 
-    class KdTree<K, T> : IEnumerable where K : IKey
+    public class KdTree<K, T> : IEnumerable where K : IKey
     {
-        private Node<K, T?>? _root;
+        private Node<K, T>? _root;
         private int _k;
         private int _size = 0;
         public KdTree(int pK)
         {
+            if (pK < 1)
+            {
+                throw new ArgumentException("K must be greater than zero");
+            }
             _k = pK;
         }
 
-        public void Add(K pKey, T? pItem)
-        {
-            Node<K, T?> newNode = new(pKey, pItem);
+        public int Size => _size;
 
-            if (_size <= 0 || _root == null)
+        public void Add(K pKey, T pItem)
+        {
+            Node<K, T> newNode = new(pKey, pItem);
+
+            if (Size <= 0 || _root == null)
             {
                 // if the tree is empty
                 _root = newNode;
                 _size = 1;
                 return;
             }
-
-            Node<K, T?> currentNode = _root;
+            Node<K, T> currentNode = _root;
 
             // on the left side of the tree, there are items less or equal to
             int currentDimension = 0;
             while (true)
             {
-                int comp = newNode.Key.CompareTo(currentNode.Key, currentDimension);
+                // if there is already a node with the exact same Key, then we store the data part in List in Node
+                if (pKey.Equals(currentNode.Key))
+                {
+                    currentNode.AddData(pItem);
+                    break;
+                }
+
+                int comp = newNode.Key.CompareTo(currentNode!.Key, currentDimension);
 
                 if (comp <= 0)
                 {
@@ -102,21 +119,19 @@ namespace My.DataStructures.KdTree
                 currentDimension = (currentDimension + 1) % _k;
             }
 
-            _size++;
+            _size = Size + 1;
         }
 
-        public List<T?> Find(K pKey)
+        public List<T>? Find(K pKey)
         {
-            List<T?> sol = new();
-
-            Node<K, T?>? currentNode = _root;
+            Node<K, T>? currentNode = _root;
 
             int currentDimension = 0;
-            while (currentNode != null)
+            while (currentNode != null || Size > 0)
             {
-                if (pKey.Equals(currentNode.Key))
+                if (pKey.Equals(currentNode!.Key))
                 {
-                    sol.Add(currentNode.Data);
+                    return currentNode.Data;
                 }
 
                 int comp = pKey.CompareTo(currentNode.Key, currentDimension);
@@ -135,18 +150,31 @@ namespace My.DataStructures.KdTree
                 currentDimension = (currentDimension + 1) % _k;
             }
 
-            return sol;
+            return null;
         }
 
-        public void Remove(K pKey)
+        public void Remove()
         {
+            /*
+            Node<K, T> currentNode = _root!;
+            foreach (Node<K, T> node in InOrderIteratorImpl(currentNode))
+            {
+                foreach (T item in node.Data)
+                {
+                    Console.WriteLine(item);
+                }
+            }
+            */
 
+            throw new NotImplementedException();
         }
 
-        public IEnumerator GetEnumerator()
+        // public iterator method for a user => it returns the !!! DATA of type T !!!
+        public IEnumerator InOrderIterator()
         {
-            Node<K, T?>? currentNode = _root;
-            Stack.Stack<Node<K, T?>> stack = new();
+            Node<K, T>? currentNode = _root;
+
+            Stack.Stack<Node<K, T>> stack = new();
 
             while (currentNode != null || stack.Size > 0)
             {
@@ -161,9 +189,76 @@ namespace My.DataStructures.KdTree
                 // we are at the most bottom left node => currentNode = null
 
                 currentNode = stack.Pop(); // we go up one level to father
-                yield return currentNode.Data; // we return the value to iterator
+
+                // since there could be more values we return all consequently 1 by 1
+                foreach (T data in currentNode.Data)
+                {
+                    yield return data; // we return the value to iterator
+                }
 
                 currentNode = currentNode.RightChild; // we go to right node
+            }
+
+        }
+
+        // this is implementation iterator -> only used in this class => it returns the !!! NODE !!!
+        private IEnumerable<Node<K, T>> InOrderIteratorImpl(Node<K, T>? pStartNode = null)
+        {
+            Node<K, T>? currentNode = pStartNode ?? _root;
+
+            Stack.Stack<Node<K, T>> stack = new();
+
+            while (currentNode != null || stack.Size > 0)
+            {
+
+                // we go all a way to bottom left node
+                while (currentNode != null)
+                {
+                    stack.Push(currentNode);
+                    currentNode = currentNode.LeftChild;
+                }
+
+                // we are at the most bottom left node => currentNode = null
+
+                currentNode = stack.Pop(); // we go up one level to father
+
+                yield return currentNode;
+
+                currentNode = currentNode.RightChild; // we go to right node
+            }
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return InOrderIterator();
+        }
+
+        public IEnumerable<T> LevelOrder()
+        {
+            Queue.Queue<Node<K, T>> queue = new();
+
+            if (_root != null)
+            {
+                queue.Add(_root);
+            }
+
+            while (queue.IsNotEmpty())
+            {
+                Node<K, T> currentNode = queue.Pop()!;
+
+                if (currentNode.LeftChild != null)
+                {
+                    queue.Add(currentNode.LeftChild);
+                }
+                if (currentNode.RightChild != null)
+                {
+                    queue.Add(currentNode.RightChild);
+                }
+
+                foreach (T data in currentNode.Data)
+                {
+                    yield return data;
+                }
             }
         }
     }

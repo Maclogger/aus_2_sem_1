@@ -4,18 +4,24 @@ public class Utils
 {
     private static readonly Random RandomInstance = new Random();
 
-    public static double GetRandomDoubleInRange(double pMin, double pMax)
+    // Inclusive min, exclusive max
+    public static double GetRandomDoubleInRange(double pMin, double pMax, Random? pRand = null)
     {
-        return pMin + (pMax - pMin) * (RandomInstance.NextDouble());
+        Random random = pRand ?? RandomInstance;
+        return pMin + (pMax - pMin) * random.NextDouble();
     }
 
-    public static int GetRandomIntInRange(int pMin, int pMax)
+    // Inclusive min, exclusive max
+    public static int GetRandomIntInRange(int pMin, int pMax, Random? pRand = null)
     {
-        return pMin + (pMax - pMin) * (RandomInstance.Next());
+        Random random = pRand ?? RandomInstance;
+        return random.Next(pMin, pMax);
     }
 
-    public static long GetRandomLongInRange(long pMin, long pMax)
+    // Inclusive min, exclusive max
+    public static long GetRandomLongInRange(long pMin, long pMax, Random? pRand = null)
     {
-        return pMin + (pMax - pMin) * (RandomInstance.NextInt64());
+        Random random = pRand ?? RandomInstance;
+        return random.NextInt64(pMin, pMax);
     }
 }
