@@ -93,7 +93,7 @@ namespace My.DataStructures.KdTree
                     break;
                 }
 
-                int comp = newNode.Key.CompareTo(currentNode!.Key, currentDimension);
+                int comp = newNode.Key.CompareTo(currentNode.Key, currentDimension);
 
                 if (comp <= 0)
                 {
@@ -119,7 +119,7 @@ namespace My.DataStructures.KdTree
                 currentDimension = (currentDimension + 1) % _k;
             }
 
-            _size = Size + 1;
+            _size++;
         }
 
         public List<T>? Find(K pKey)
@@ -155,53 +155,44 @@ namespace My.DataStructures.KdTree
 
         public void Remove()
         {
-            /*
-            Node<K, T> currentNode = _root!;
-            foreach (Node<K, T> node in InOrderIteratorImpl(currentNode))
-            {
-                foreach (T item in node.Data)
-                {
-                    Console.WriteLine(item);
-                }
-            }
-            */
-
             throw new NotImplementedException();
         }
 
-        // public iterator method for a user => it returns the !!! DATA of type T !!!
-        public IEnumerator InOrderIterator()
+        // ---------------------------------------------------
+        // -------------------- ITERATORS --------------------
+        // ---------------------------------------------------
+
+        // public default iterator
+        public IEnumerator GetEnumerator()
         {
-            Node<K, T>? currentNode = _root;
-
-            Stack.Stack<Node<K, T>> stack = new();
-
-            while (currentNode != null || stack.Size > 0)
-            {
-
-                // we go all a way to bottom left node
-                while (currentNode != null)
-                {
-                    stack.Push(currentNode);
-                    currentNode = currentNode.LeftChild;
-                }
-
-                // we are at the most bottom left node => currentNode = null
-
-                currentNode = stack.Pop(); // we go up one level to father
-
-                // since there could be more values we return all consequently 1 by 1
-                foreach (T data in currentNode.Data)
-                {
-                    yield return data; // we return the value to iterator
-                }
-
-                currentNode = currentNode.RightChild; // we go to right node
-            }
-
+            return InOrderIterator();
         }
 
-        // this is implementation iterator -> only used in this class => it returns the !!! NODE !!!
+        // public in order iterator method for a user => it returns the !!! DATA of type T !!!
+        public IEnumerator InOrderIterator()
+        {
+            foreach (Node<K,T> node in InOrderIteratorImpl())
+            {
+                foreach (T data in node.Data)
+                {
+                    yield return data;
+                }
+            }
+        }
+
+        // public level order iterator method for a user => it returns the !!! DATA of type T !!!
+        public IEnumerable<T> LevelOrder()
+        {
+            foreach (Node<K, T> node in LevelOrderImpl())
+            {
+                foreach (T data in node.Data)
+                {
+                    yield return data;
+                }
+            }
+        }
+
+        // this is implementation of InOrderIterator -> only used in this class => it returns the !!! NODE !!!
         private IEnumerable<Node<K, T>> InOrderIteratorImpl(Node<K, T>? pStartNode = null)
         {
             Node<K, T>? currentNode = pStartNode ?? _root;
@@ -228,12 +219,8 @@ namespace My.DataStructures.KdTree
             }
         }
 
-        public IEnumerator GetEnumerator()
-        {
-            return InOrderIterator();
-        }
-
-        public IEnumerable<T> LevelOrder()
+        // this is implementation of LevelOrderIterator -> only used in this class => it returns the !!! NODE !!!
+        private IEnumerable<Node<K, T>> LevelOrderImpl()
         {
             Queue.Queue<Node<K, T>> queue = new();
 
@@ -255,11 +242,9 @@ namespace My.DataStructures.KdTree
                     queue.Add(currentNode.RightChild);
                 }
 
-                foreach (T data in currentNode.Data)
-                {
-                    yield return data;
-                }
+                yield return currentNode;
             }
         }
+
     }
 }

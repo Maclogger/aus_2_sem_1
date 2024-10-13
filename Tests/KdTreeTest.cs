@@ -226,4 +226,57 @@ public class KdTreeTest
 
         CollectionAssert.AreEqual(expected, actual);
     }
+
+    public static void TestDuplicates()
+    {
+        KdTree<Cord, int> tree = new(2);
+
+        tree.Add(new Cord(1, 1), 1);
+        tree.Add(new Cord(1, 1), 2);
+        tree.Add(new Cord(1, 1), 3);
+        tree.Add(new Cord(1, 1), 4);
+
+        Assert.AreEqual(tree.Size, 4);
+
+        List<int> expected = new();
+        expected.Add(1);
+        expected.Add(2);
+        expected.Add(3);
+        expected.Add(4);
+
+        List<int> actual = new();
+        foreach (int i in tree)
+        {
+            actual.Add(i);
+        }
+
+        CollectionAssert.AreEqual(expected, actual);
+    }
+
+    public static void TestFind()
+    {
+        KdTree<Cord, string> tree = Create2dTreeEx1();
+        List<string>? actual = tree.Find(new Cord(14, 39));
+
+        List<string> expected = new();
+        expected.Add("Senica");
+
+        CollectionAssert.AreEqual(expected, actual);
+    }
+
+    public static void TestFindWithDuplicates()
+    {
+        KdTree<Cord, string> tree = Create2dTreeEx1();
+        tree.Add(new Cord(14, 39), "Žilina");
+
+        List<string>? actual = tree.Find(new Cord(14, 39));
+        actual!.Sort();
+
+        List<string> expected = new();
+        expected.Add("Senica");
+        expected.Add("Žilina");
+        expected.Sort();
+
+        CollectionAssert.AreEqual(expected, actual);
+    }
 }
