@@ -8,7 +8,6 @@ namespace My.DataStructures.KdTree
         bool Equals(IKey pOther);
     }
 
-
     public class Node<K, T> where K : IKey
     {
         private Node<K, T>? _leftChild = null, _rightChild = null;
@@ -38,13 +37,11 @@ namespace My.DataStructures.KdTree
         public K Key
         {
             get => _key;
-            set => _key = value;
         }
 
         public List<T> Data
         {
             get => _data;
-            set => _data = value;
         }
 
         public void AddData(T pItem)
@@ -69,9 +66,9 @@ namespace My.DataStructures.KdTree
 
         public int Size => _size;
 
-        public void Add(K pKey, T pItem)
+        public void Add(K pKey, T pData)
         {
-            Node<K, T> newNode = new(pKey, pItem);
+            Node<K, T> newNode = new(pKey, pData);
 
             if (Size <= 0 || _root == null)
             {
@@ -89,7 +86,7 @@ namespace My.DataStructures.KdTree
                 // if there is already a node with the exact same Key, then we store the data part in List in Node
                 if (pKey.Equals(currentNode.Key))
                 {
-                    currentNode.AddData(pItem);
+                    currentNode.AddData(pData);
                     break;
                 }
 
@@ -153,7 +150,7 @@ namespace My.DataStructures.KdTree
             return null;
         }
 
-        public void Remove()
+        public void Remove(K pKey)
         {
             throw new NotImplementedException();
         }
@@ -176,6 +173,18 @@ namespace My.DataStructures.KdTree
                 foreach (T data in node.Data)
                 {
                     yield return data;
+                }
+            }
+        }
+
+        // public in order iterator method for a user => it returns tuple of <K, T>
+        public IEnumerator EntryInOrderIterator()
+        {
+            foreach (Node<K,T> node in InOrderIteratorImpl())
+            {
+                foreach (T data in node.Data)
+                {
+                    yield return new Tuple<K, T>(node.Key, data);
                 }
             }
         }

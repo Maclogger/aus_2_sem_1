@@ -8,9 +8,9 @@ public class MyIntKey : IKey
 {
     private int _value;
 
-    public MyIntKey(int value)
+    public MyIntKey(int pValue)
     {
-        _value = value;
+        _value = pValue;
     }
 
     public int CompareTo(IKey pOther, int pDimension)
@@ -50,16 +50,19 @@ public class Cord : IKey
         _y = pY;
     }
 
+    public Cord(Random random)
+    {
+        _x = random.Next(int.MinValue, int.MaxValue);
+        _y = random.Next(int.MinValue, int.MaxValue);
+    }
     public int X
     {
         get => _x;
-        set => _x = value;
     }
 
     public int Y
     {
         get => _y;
-        set => _y = value;
     }
 
     public override string ToString()
@@ -116,6 +119,13 @@ public class KdTreeTest
     {
         TestAdd();
         RandomAddTest();
+        RandomSizeAddTest();
+        TestInOrder();
+        TestLevelOrder();
+        TestDuplicates();
+        TestFind();
+        TestFindWithDuplicates();
+        TestWithOperationGenerator();
     }
 
     private static KdTree<MyIntKey, int> SetUpRandomIntTree(int pCount, int pMin, int pMax)
@@ -165,6 +175,15 @@ public class KdTreeTest
     public static void RandomAddTest()
     {
         int count = 10_000;
+        Random random = new();
+        KdTree<MyIntKey, int> tree = SetUpRandomIntTree(count, -10_000, 10_000);
+
+        Assert.AreEqual(tree.Size, count);
+    }
+
+    public static void RandomSizeAddTest()
+    {
+        int count = Utils.GetRandomIntInRange(1_000, 1_000_000);
         Random random = new();
         KdTree<MyIntKey, int> tree = SetUpRandomIntTree(count, -10_000, 10_000);
 
@@ -278,5 +297,57 @@ public class KdTreeTest
         expected.Sort();
 
         CollectionAssert.AreEqual(expected, actual);
+    }
+
+    public static void TestWithOperationGenerator()
+    {
+        int operationCount = 100_000;
+        OperationGenerator opGen = new(probAdd: 1.0, probFind: 0.0, probUpdate: 0.0, probRemove: 0.0);
+        Random gen = new();
+        List<Tuple<Cord, int>> inserted = new();
+        List<int> found = new();
+        double probOfFindingExistingElement = 0.9;
+
+        KdTree<Cord, int> tree = new(2);
+
+        for (int i = 0; i < operationCount; i++)
+        {
+            Operation op = opGen.GetRandomOperation();
+            if (op == Operation.Add)
+            {
+                // Add a random Cord and index to the tree and list
+                Cord randomCord = new Cord(gen);
+                tree.Add(randomCord, i);
+                inserted.Add(new Tuple<Cord, int>(randomCord, i));
+            }
+            else if (op == Operation.Find)
+            {
+                // !!!!!!! WIP - not working yet !!!!!!!
+                double randomNumber = gen.NextDouble();
+                if (inserted.Count > 0 && randomNumber < probOfFindingExistingElement)
+                {
+                    // Pick a random item from the list of inserted elements
+                    int randomIndex = gen.Next(0, inserted.Count);
+                    Tuple<Cord, int> tuple = inserted[randomIndex];
+                    List<int>? listOfResults = tree.Find(tuple.Item1);
+
+                    // Check that the found list is not null or empty and contains the expected item
+                    Assert.IsNotNull(listOfResults, "The result list should not be null.");
+                    Assert.IsTrue(listOfResults.Count > 0, "The result list should not be empty.");
+                    Assert.IsTrue(listOfResults.Contains(tuple.Item2), $"The value {tuple.Item2} should be in the result list.");
+
+                    found.Add(tuple.Item2);
+                }
+                else
+                {
+                    // Generate a random Cord that was not inserted before
+                    Cord randomCord = new Cord(gen);
+                    List<int>? listOfResults = tree.Find(randomCord);
+
+                    // Check that the list should be empty for a new item
+                    Assert.IsTrue(listOfResults == null || listOfResults.Count == 0, "A new item should not be found.");
+                }
+            }
+        }
     }
 }
