@@ -5,7 +5,6 @@ namespace My.DataStructures.KdTree
     public interface IKey
     {
         int CompareTo(IKey pOther, int pDimension);
-        bool Equals(IKey pOther);
     }
 
     public class Node<K, T> where K : IKey
@@ -64,6 +63,18 @@ namespace My.DataStructures.KdTree
             _k = pK;
         }
 
+        private bool EqualsTwoKeys(K pk1, K pk2)
+        {
+            for (int dimension = 0; dimension < _k; dimension++)
+            {
+                if (pk1.CompareTo(pk2, dimension) != 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public int Size => _size;
 
         public void Add(K pKey, T pData)
@@ -83,14 +94,15 @@ namespace My.DataStructures.KdTree
             int currentDimension = 0;
             while (true)
             {
-                // if there is already a node with the exact same Key, then we store the data part in List in Node
-                if (pKey.Equals(currentNode.Key))
+
+                int comp = newNode.Key.CompareTo(currentNode.Key, currentDimension);
+
+                if (comp == 0 && EqualsTwoKeys(currentNode.Key, pKey))
                 {
+                    // if there is already a node with the exact same Key, then we store the data part in List in Node
                     currentNode.AddData(pData);
                     break;
                 }
-
-                int comp = newNode.Key.CompareTo(currentNode.Key, currentDimension);
 
                 if (comp <= 0)
                 {
@@ -126,7 +138,7 @@ namespace My.DataStructures.KdTree
             int currentDimension = 0;
             while (currentNode != null || Size > 0)
             {
-                if (pKey.Equals(currentNode!.Key))
+                if (EqualsTwoKeys(pKey, currentNode!.Key))
                 {
                     return currentNode.Data;
                 }
@@ -152,6 +164,18 @@ namespace My.DataStructures.KdTree
 
         public void Remove(K pKey)
         {
+            if (_size <= 0 || _root == null)
+            {
+                return;
+            }
+
+            Node<K, T> nodeToRemove = _root;
+
+            while (true)
+            {
+
+            }
+
             throw new NotImplementedException();
         }
 

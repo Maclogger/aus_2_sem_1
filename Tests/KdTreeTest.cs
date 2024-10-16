@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using My.DataStructures;
 using My.DataStructures.KdTree;
@@ -28,15 +29,6 @@ public class MyIntKey : IKey
         return _value < myIntKey._value ? -1 : 1;
     }
 
-    public bool Equals(IKey pOther)
-    {
-        if (pOther is not MyIntKey myIntKey)
-        {
-            throw new ArgumentException("Object is not an IntItem");
-        }
-
-        return _value == myIntKey._value;
-    }
 }
 
 public class Cord : IKey
@@ -101,30 +93,25 @@ public class Cord : IKey
 
         return 0;
     }
-
-    public bool Equals(IKey pOther)
-    {
-        if (pOther is not Cord cord)
-        {
-            throw new ArgumentException("Object is not an IntItem");
-        }
-
-        return _x == cord.X && _y == cord.Y;
-    }
 }
 
 public class KdTreeTest
 {
     public static void RunAllTests()
     {
+        // Add
         TestAdd();
-        RandomAddTest();
-        RandomSizeAddTest();
+        TestAddRandom();
+        TestAddRandom2D();
+        TestAddRandomSize();
+        TestAddDuplicates();
+        // Iterators
         TestInOrder();
         TestLevelOrder();
-        TestDuplicates();
+        // Other
         TestFind();
         TestFindWithDuplicates();
+        // Operation Generator
         TestWithOperationGenerator();
     }
 
@@ -172,16 +159,17 @@ public class KdTreeTest
         Assert.AreEqual(size, 14);
     }
 
-    public static void RandomAddTest()
+    public static void TestAddRandom()
     {
-        int count = 10_000;
+
+        int count = 100_000;
         Random random = new();
         KdTree<MyIntKey, int> tree = SetUpRandomIntTree(count, -10_000, 10_000);
 
         Assert.AreEqual(tree.Size, count);
     }
 
-    public static void RandomSizeAddTest()
+    public static void TestAddRandomSize()
     {
         int count = Utils.GetRandomIntInRange(1_000, 1_000_000);
         Random random = new();
@@ -246,7 +234,7 @@ public class KdTreeTest
         CollectionAssert.AreEqual(expected, actual);
     }
 
-    public static void TestDuplicates()
+    public static void TestAddDuplicates()
     {
         KdTree<Cord, int> tree = new(2);
 
@@ -279,6 +267,11 @@ public class KdTreeTest
 
         List<string> expected = new();
         expected.Add("Senica");
+        expected.Add("Tlmače");
+        expected.Add("Bošany");
+
+        actual.AddRange(tree.Find(new Cord(28, 34)));
+        actual.AddRange(tree.Find(new Cord(24, 40)));
 
         CollectionAssert.AreEqual(expected, actual);
     }
@@ -349,5 +342,28 @@ public class KdTreeTest
                 }
             }
         }
+    }
+
+    public static void TestAddRandom2D()
+    {
+        Random random = new();
+        int count = 1_000_000;
+        KdTree<Cord, string> tree = new(2);
+        Stopwatch sw = Stopwatch.StartNew();
+        for (int i = 0; i < count; i++)
+        {
+            Cord cord = new Cord(random);
+            tree.Add(cord, $"Data {i}");
+        }
+
+        sw.Stop();
+        Assert.AreEqual(tree.Size, count);
+        Console.WriteLine(sw.ElapsedMilliseconds);
+        /*
+        foreach (string s in tree)
+        {
+            Console.WriteLine(s);
+        }
+    */
     }
 }
