@@ -9,7 +9,7 @@ namespace My.DataStructures.KdTree
 
     public class Node<K, T> where K : IKey
     {
-        private Node<K, T>? _leftChild = null, _rightChild = null;
+        private Node<K, T>? _leftChild = null, _rightChild = null, _father = null;
         private K _key;
         private List<T> _data;
 
@@ -41,6 +41,12 @@ namespace My.DataStructures.KdTree
         public List<T> Data
         {
             get => _data;
+        }
+
+        public Node<K, T>? Father
+        {
+            get => _father;
+            set => _father = value;
         }
 
         public void AddData(T pItem)
@@ -110,6 +116,7 @@ namespace My.DataStructures.KdTree
                     if (currentNode.LeftChild == null)
                     {
                         currentNode.LeftChild = newNode;
+                        newNode.Father = currentNode;
                         break;
                     }
                     currentNode = currentNode.LeftChild;
@@ -120,6 +127,7 @@ namespace My.DataStructures.KdTree
                     if (currentNode.RightChild == null)
                     {
                         currentNode.RightChild = newNode;
+                        newNode.Father = currentNode;
                         break;
                     }
                     currentNode = currentNode.RightChild;
@@ -133,47 +141,85 @@ namespace My.DataStructures.KdTree
 
         public List<T>? Find(K pKey)
         {
-            Node<K, T>? currentNode = _root;
+            return FindNode(pKey)?.Data;
+        }
 
-            int currentDimension = 0;
-            while (currentNode != null || Size > 0)
+
+        private Node<K, T>? FindNode(K pKey, bool returnFather = false)
+        {
+            // returns the node we want to find with the pKey and also it's parent
+            if (_size <= 0 || _root == null)
             {
-                if (EqualsTwoKeys(pKey, currentNode!.Key))
-                {
-                    return currentNode.Data;
-                }
-
-                int comp = pKey.CompareTo(currentNode.Key, currentDimension);
-
-                if (comp <= 0)
-                {
-                    // item is on the left side
-                    currentNode = currentNode.LeftChild;
-                }
-                else
-                {
-                    // item is on the right side
-                    currentNode = currentNode.RightChild;
-                }
-
-                currentDimension = (currentDimension + 1) % _k;
+                return null;
             }
 
-            return null;
+            Node<K, T>? currentNode = _root;
+            Node<K, T>? fatherNode = null;
+            int dimension = 0;
+
+            while (currentNode != null)
+            {
+                int comp = pKey.CompareTo(currentNode.Key, dimension);
+                if (comp == 0 && EqualsTwoKeys(currentNode.Key, pKey))
+                {
+                    // the wanted node was found
+                    return returnFather ? fatherNode : currentNode;
+                }
+
+                fatherNode = currentNode;
+                currentNode = comp <= 0 ? currentNode.LeftChild : currentNode.RightChild;
+                dimension++;
+            }
+
+            return null; // if the node is null, then
         }
 
         public void Remove(K pKey)
         {
-            if (_size <= 0 || _root == null)
+            if (_size <= 1 && _root != null)
             {
+                if (EqualsTwoKeys(_root.Key, pKey))
+                {
+                    // there is only 1 node in the tree (root) and it's gonna be removed
+                    _root = null;
+                    _size = 0;
+                }
                 return;
             }
 
-            Node<K, T> nodeToRemove = _root;
-
-            while (true)
+            Node<K, T>? fatherNode = FindNode(pKey, returnFather: true);
+            if (fatherNode == null)
             {
+                // wanted node is not in the tree
+                return;
+            }
 
+            Node<K, T> nodeToDelete;
+            bool isLeftSon;
+            if (fatherNode.LeftChild != null && EqualsTwoKeys(fatherNode.LeftChild.Key, pKey))
+            {
+                nodeToDelete = fatherNode.LeftChild;
+                isLeftSon = true;
+            }
+            else
+            {
+                nodeToDelete = fatherNode.RightChild!;
+                isLeftSon = false;
+            }
+
+            if (nodeToDelete.RightChild == null && nodeToDelete.LeftChild == null)
+            {
+                // base case when removing leaf
+                if (isLeftSon)
+                {
+                    fatherNode.LeftChild = null;
+                }
+                else
+                {
+                    fatherNode.RightChild = null;
+                }
+
+                return;
             }
 
             throw new NotImplementedException();
