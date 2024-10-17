@@ -6,6 +6,7 @@ class Program
 {
     public static void Main(string[] args)
     {
+        Console.WriteLine(!false);
         /*
         setUpRandom2DTree();
         setUpiPadTestCase();
