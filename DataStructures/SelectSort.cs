@@ -108,8 +108,7 @@ public class SelectSortTest
             Test9, Test10, Test11, Test12, Test13, Test14, Test15, Test16, Test17, Test18
         ];
 
-
-        int seedCount = 100;
+        int seedCount = 10_000;
         for (int seed = 1; seed < seedCount; seed++)
         {
             int oktests = 0;
@@ -129,35 +128,45 @@ public class SelectSortTest
                 testNumber++;
             }
 
-            if (oktests == tests.Count)
+            if (oktests == tests.Count && seed % 10 == 0)
             {
                 Console.WriteLine($"Seed {seed} / {seedCount} -> OK");
             }
         }
+
+        long sum = 0;
+        foreach (long ellapedTime in _ellapsedTimes)
+        {
+            sum += ellapedTime;
+        }
+        long averageTime = sum / _ellapsedTimes.Count;
+
+        Console.WriteLine($"Average: {averageTime} milliseconds");
     }
 
 
     private static int _seed = 2;
+    private static List<long> _ellapsedTimes = new();
 
-    private static void Test0() => Assert.AreEqual(3, SelectSort<int>.FindMedian([3, 2, 7, 9, 1], _seed));
-    private static void Test1() => Assert.AreEqual(5, SelectSort<int>.FindMedian([1, 2, 3, 4, 5, 6, 7, 8, 9], _seed));
-    private static void Test2() => Assert.AreEqual(2, SelectSort<int>.FindMedian([1, 2, 3], _seed));
-    private static void Test3() => Assert.AreEqual(8, SelectSort<int>.FindMedian([4, 8, 22], _seed));
-    private static void Test4() => Assert.AreEqual(8, SelectSort<int>.FindMedian([22, 8, 4], _seed));
-    private static void Test5() => Assert.AreEqual(8, SelectSort<int>.FindMedian([22, 4, 8], _seed));
-    private static void Test6() => Assert.AreEqual(1, SelectSort<int>.FindMedian([1, 1, 1], _seed));
-    private static void Test7() => Assert.AreEqual(1, SelectSort<int>.FindMedian([1], _seed));
-    private static void Test8() => Assert.AreEqual(5, SelectSort<int>.FindMedian([9, 8, 7, 6, 5, 4, 3, 2, 1], _seed));
-    private static void Test9() => Assert.AreEqual(1, SelectSort<int>.FindMedian([1, 1, 2, 2, 1, 2], _seed));
-    private static void Test10() => Assert.AreEqual(1, SelectSort<int>.FindMedian([1, 2], _seed));
-    private static void Test11() => Assert.AreEqual(2, SelectSort<int>.FindMedian([4, 2, 1, 4], _seed));
-    private static void Test12() => Assert.AreEqual(0, SelectSort<int>.FindMedian([0, 0, 0, 0, 0, 0, 0, 0], _seed));
-    private static void Test13() => Assert.AreEqual(7, SelectSort<int>.FindMedian([9, 8, 7, 6], _seed));
-    private static void Test14() => Assert.AreEqual(10, SelectSort<int>.FindMedian([10, 5, 20, 15], _seed));
-    private static void Test15() => RunLargeTest(150, 10_000, 0, 100, 200, 300, true, _seed);
-    private static void Test16() => RunLargeTest(500_000, 5, -1_000_000, 300_000, 700_000, 1_000_000, false, _seed);
-    private static void Test17() => RunLargeTest(150, 10_000, 0, 100, 200, 300, false, _seed);
-    private static void Test18() => RunLargeTest(1, 10_000, 0, 0, 1, 1, false, _seed);
+    public static void Test0() => Assert.AreEqual(3, SelectSort<int>.FindMedian([3, 2, 7, 9, 1], _seed));
+    public static void Test1() => Assert.AreEqual(5, SelectSort<int>.FindMedian([1, 2, 3, 4, 5, 6, 7, 8, 9], _seed));
+    public static void Test2() => Assert.AreEqual(2, SelectSort<int>.FindMedian([1, 2, 3], _seed));
+    public static void Test3() => Assert.AreEqual(8, SelectSort<int>.FindMedian([4, 8, 22], _seed));
+    public static void Test4() => Assert.AreEqual(8, SelectSort<int>.FindMedian([22, 8, 4], _seed));
+    public static void Test5() => Assert.AreEqual(8, SelectSort<int>.FindMedian([22, 4, 8], _seed));
+    public static void Test6() => Assert.AreEqual(1, SelectSort<int>.FindMedian([1, 1, 1], _seed));
+    public static void Test7() => Assert.AreEqual(1, SelectSort<int>.FindMedian([1], _seed));
+    public static void Test8() => Assert.AreEqual(5, SelectSort<int>.FindMedian([9, 8, 7, 6, 5, 4, 3, 2, 1], _seed));
+    public static void Test9() => Assert.AreEqual(1, SelectSort<int>.FindMedian([1, 1, 2, 2, 1, 2], _seed));
+    public static void Test10() => Assert.AreEqual(1, SelectSort<int>.FindMedian([1, 2], _seed));
+    public static void Test11() => Assert.AreEqual(2, SelectSort<int>.FindMedian([4, 2, 1, 4], _seed));
+    public static void Test12() => Assert.AreEqual(0, SelectSort<int>.FindMedian([0, 0, 0, 0, 0, 0, 0, 0], _seed));
+    public static void Test13() => Assert.AreEqual(7, SelectSort<int>.FindMedian([9, 8, 7, 6], _seed));
+    public static void Test14() => Assert.AreEqual(10, SelectSort<int>.FindMedian([10, 5, 20, 15], _seed));
+    public static void Test15() => RunLargeTest(500_000, 1_000, -1_000_000, 0, 1_000_000, 2_000_000, true, _seed);
+    public static void Test16() => RunLargeTest(500_000, 1_000, -1_000_000, 300_000, 700_000, 1_000_000, false, _seed);
+    public static void Test17() => RunLargeTest(150, 1_000, 0, 100, 200, 300, false, _seed);
+    public static void Test18() => RunLargeTest(1, 1_000, 0, 0, 1, 1, false, _seed);
 
     private static void RunLargeTest(int pMedianExpected, int pCount, int pMin1, int pMax1, int pMin2, int pMax2, bool pEven, int pSeed)
     {
@@ -176,7 +185,13 @@ public class SelectSortTest
         }
 
         int[] ints = Shuffle(list, random);
+
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
         int median = SelectSort<int>.FindMedian(ints);
+        sw.Stop();
+
+        _ellapsedTimes.Add(sw.ElapsedMilliseconds);
 
         Assert.AreEqual(pMedianExpected, median);
     }
