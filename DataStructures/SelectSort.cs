@@ -38,6 +38,7 @@ public class SelectSort<T> where T : IComparable
         {
             if (endIndex - startIndex == 1)
             {
+                // comparing last 2 items
                 int comp = array[startIndex].CompareTo(array[endIndex]);
                 if (comp > 0)
                 {
@@ -48,51 +49,47 @@ public class SelectSort<T> where T : IComparable
                 return array[medianIndex];
             }
 
-            T pivot = array[random.Next(startIndex, endIndex + 1)];
+            int pivotIndex = random.Next(startIndex, endIndex + 1);
+            T pivot = array[pivotIndex];
             int left = startIndex;
             int right = endIndex;
 
-            // resetting array (in case of multiple pivots being present)
-            for (int i = startIndex; i < endIndex; i++)
-            {
-                newArray[i] = pivot;
-            }
-
-            int countOfPivots = 0;
-
             for (int i = startIndex; i <= endIndex; i++)
             {
+                if (i == pivotIndex) {continue;}
+
                 int comp = array[i].CompareTo(pivot);
-                if (comp < 0) // if array[i] < pivot
+                if (comp <= 0) // if array[i] <= pivot
                 {
                     newArray[left] = array[i];
                     left++;
                 }
-                else if (comp > 0)
+                else
                 {
                     newArray[right] = array[i];
                     right--;
                 }
-                else
-                {
-                    countOfPivots++;
-                }
             }
 
-            if (medianIndex >= left && medianIndex <= left + countOfPivots - 1)
+            newArray[left] = array[pivotIndex];
+
+            if (left == medianIndex)
             {
                 return newArray[medianIndex];
             }
 
             if (medianIndex < left)
             {
-                endIndex = left - 1; // going left
+                // going left from pivot
+                endIndex = left - 1;
             }
             else
             {
-                startIndex = left + countOfPivots - 1 + 1; // going right
+                // going right from pivot
+                startIndex = left + 1;
             }
 
+            // copying all relevant items from newArray to array
             for (int i = startIndex; i <= endIndex; i++)
             {
                 array[i] = newArray[i];
@@ -105,18 +102,12 @@ public class SelectSortTest
 {
     public static void RunAllTests()
     {
-        /*
         List<Action> tests =
         [
-            Test1, Test2, Test3, Test4, Test5, Test6, Test7, Test8,
+            Test0, Test1, Test2, Test3, Test4, Test5, Test6, Test7, Test8,
             Test9, Test10, Test11, Test12, Test13, Test14, Test15, Test16, Test17, Test18
         ];
-        */
 
-        List<Action> tests =
-        [
-            Test16
-        ];
 
         int seedCount = 100;
         for (int seed = 1; seed < seedCount; seed++)
@@ -145,8 +136,10 @@ public class SelectSortTest
         }
     }
 
+
     private static int _seed = 2;
 
+    private static void Test0() => Assert.AreEqual(3, SelectSort<int>.FindMedian([3, 2, 7, 9, 1], _seed));
     private static void Test1() => Assert.AreEqual(5, SelectSort<int>.FindMedian([1, 2, 3, 4, 5, 6, 7, 8, 9], _seed));
     private static void Test2() => Assert.AreEqual(2, SelectSort<int>.FindMedian([1, 2, 3], _seed));
     private static void Test3() => Assert.AreEqual(8, SelectSort<int>.FindMedian([4, 8, 22], _seed));
