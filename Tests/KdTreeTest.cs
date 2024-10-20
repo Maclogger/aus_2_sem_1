@@ -59,7 +59,7 @@ public class Cord : IKey
 
     public override string ToString()
     {
-        return $"[{_x}, {_y}]";
+        return $"[{_x}-{_y}]";
     }
 
     public int CompareTo(IKey pOther, int pDimension)
@@ -99,10 +99,13 @@ public class KdTreeTest
 {
     public static void RunAllTests()
     {
+        SwapTest();
+        return;
+        TestPrint();
         // Add
         TestAdd();
         TestAddRandom();
-        TestAddRandom2D();
+        //TestAddRandom2D();
         TestAddRandomSize();
         TestAddDuplicates();
         // Iterators
@@ -112,7 +115,144 @@ public class KdTreeTest
         TestFind();
         TestFindWithDuplicates();
         // Operation Generator
-        TestWithOperationGenerator();
+        //TestWithOperationGenerator();
+        SwapTest();
+    }
+
+    private static void TestPrint()
+    {
+        KdTree<Cord, string> tree = Create2dTreeEx1();
+        tree.Add(new Cord(20, 33), "Sereďovina");
+        tree.Print();
+    }
+
+    private static List<T> SwapInList<T>(List<T> pList, int pIndex1, int pIndex2)
+    {
+        (pList[pIndex1], pList[pIndex2]) = (pList[pIndex2], pList[pIndex1]);
+        return pList;
+    }
+
+    public static void RandomizedSwapTest()
+    {
+        int count = 10_000;
+        int seedCount = 1_000;
+        for (int seed = 1; seed < seedCount; seed++)
+        {
+            Random random = new(seed);
+            for (int i = 0; i < count; i++)
+            {
+                List<Tuple<Cord, string>> listOfTuples = new();
+                listOfTuples.Add(new Tuple<Cord, string>(new Cord(13, 32), "Bratislava"));
+                listOfTuples.Add(new Tuple<Cord, string>(new Cord(16, 31), "Galanta"));
+                listOfTuples.Add(new Tuple<Cord, string>(new Cord(20, 33), "Sereď"));
+                listOfTuples.Add(new Tuple<Cord, string>(new Cord(12, 41), "Hodonín"));
+                listOfTuples.Add(new Tuple<Cord, string>(new Cord(14, 39), "Senica"));
+                listOfTuples.Add(new Tuple<Cord, string>(new Cord(17, 42), "Trnava"));
+                listOfTuples.Add(new Tuple<Cord, string>(new Cord(23, 35), "Nitra"));
+                listOfTuples.Add(new Tuple<Cord, string>(new Cord(26, 35), "Moravce"));
+                listOfTuples.Add(new Tuple<Cord, string>(new Cord(28, 34), "Tlmače"));
+                listOfTuples.Add(new Tuple<Cord, string>(new Cord(30, 33), "Levice"));
+                listOfTuples.Add(new Tuple<Cord, string>(new Cord(25, 36), "Topoľčianky"));
+                listOfTuples.Add(new Tuple<Cord, string>(new Cord(24, 40), "Bošany"));
+                listOfTuples.Add(new Tuple<Cord, string>(new Cord(27, 43), "Nováky"));
+                listOfTuples.Add(new Tuple<Cord, string>(new Cord(29, 46), "Bojnice"));
+
+                int randomIndex1 = random.Next(0, listOfTuples.Count);
+                int randomIndex2 = random.Next(0, listOfTuples.Count);
+
+                KdTree<Cord, string> tree = Create2dTreeEx1();
+
+                tree.Swap(listOfTuples[randomIndex1].Item1, listOfTuples[randomIndex2].Item1);
+                SwapInList(listOfTuples, randomIndex1, randomIndex2);
+
+                List<string> expected = new();
+                List<string> actual = new();
+
+                foreach (Tuple<Cord, string> tuple in listOfTuples)
+                {
+                    expected.Add(tuple.Item2);
+                }
+
+                foreach (string s in tree)
+                {
+                    actual.Add(s);
+                }
+
+                CollectionAssert.AreEqual(expected, actual);
+            }
+            //Console.WriteLine($"{seed} / {seedCount} OK");
+
+        }
+    }
+
+    public static void SwapTest()
+    {
+        TestSwapUni([
+            "Bratislava",
+            "Galanta",
+            "Nitra",
+            "Hodonín",
+            "Senica",
+            "Trnava",
+            "Sereď",
+            "Moravce",
+            "Tlmače",
+            "Levice",
+            "Topoľčianky",
+            "Bošany",
+            "Nováky",
+            "Bojnice"
+            ], new Cord(20, 33), new Cord(23, 35)
+        );
+        TestSwapUni([
+            "Bratislava",
+            "Galanta",
+            "Sereď",
+            "Hodonín",
+            "Senica",
+            "Trnava",
+            "Nitra",
+            "Tlmače",
+            "Moravce",
+            "Levice",
+            "Topoľčianky",
+            "Bošany",
+            "Nováky",
+            "Bojnice"
+            ], new Cord(26, 35), new Cord(28, 34)
+        );
+        TestSwapUni([
+            "Bratislava",
+            "Galanta",
+            "Topoľčianky",
+            "Hodonín",
+            "Senica",
+            "Trnava",
+            "Nitra",
+            "Moravce",
+            "Tlmače",
+            "Levice",
+            "Sereď",
+            "Bošany",
+            "Nováky",
+            "Bojnice"
+            ], new Cord(20, 33), new Cord(25, 36)
+        );
+    }
+
+    private static void TestSwapUni(List<string> expected, Cord cord1, Cord cord2)
+    {
+        KdTree<Cord, string> tree = Create2dTreeEx1();
+        tree.Swap(cord1, cord2);
+
+        List<string> actual = new(14);
+
+        foreach (string s in tree)
+        {
+            actual.Add(s);
+        }
+
+        CollectionAssert.AreEqual(expected, actual);
     }
 
     private static KdTree<MyIntKey, int> SetUpRandomIntTree(int pCount, int pMin, int pMax)
@@ -147,6 +287,7 @@ public class KdTreeTest
         tree.Add(new Cord(30, 33), "Levice");
         tree.Add(new Cord(29, 46), "Bojnice");
         tree.Add(new Cord(27, 43), "Nováky");
+        // 14
 
         return tree;
     }

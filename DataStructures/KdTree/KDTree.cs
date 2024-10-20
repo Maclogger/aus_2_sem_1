@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Diagnostics;
+using My.Tests;
 
 namespace My.DataStructures.KdTree
 {
@@ -11,15 +13,29 @@ namespace My.DataStructures.KdTree
     {
         private Node<K, T>? _leftChild = null, _rightChild = null, _father = null;
         private K _key;
+        private int _dimension;
         private List<T> _data;
 
 
-        public Node(K pKey, T pData)
+        public Node(K pKey, T pData, int dimension)
         {
             _key = pKey;
+            _dimension = dimension;
             _data = new List<T>();
             _data.Add(pData);
         }
+
+        public Node(Node<K, T> pOtherNode)
+        {
+            _key = pOtherNode.Key;
+            // _data = new List<T>(other.Data); --> TODO test if it should be new List or just a pointer copy
+            _data = pOtherNode.Data;
+            _father = pOtherNode.Father;
+            _leftChild = pOtherNode.LeftChild;
+            _rightChild = pOtherNode.RightChild;
+            _dimension = pOtherNode.Dimension;
+        }
+
 
         public Node<K, T>? LeftChild
         {
@@ -36,11 +52,13 @@ namespace My.DataStructures.KdTree
         public K Key
         {
             get => _key;
+            set => _key = value;
         }
 
         public List<T> Data
         {
             get => _data;
+            set => _data = value;
         }
 
         public Node<K, T>? Father
@@ -49,9 +67,75 @@ namespace My.DataStructures.KdTree
             set => _father = value;
         }
 
+        public int Dimension
+        {
+            get => _dimension;
+            set => _dimension = value;
+        }
+
         public void AddData(T pItem)
         {
             _data.Add(pItem);
+        }
+
+        public void ReplaceChild(Node<K, T> pChild, Node<K, T>? pChildReplacement, int pK)
+        {
+            if (_leftChild != null && KdTreeUtils<K>.EqualsTwoKeys(_leftChild.Key, pChild.Key, pK))
+            {
+                _leftChild = pChildReplacement;
+            }
+            else if (_rightChild != null && KdTreeUtils<K>.EqualsTwoKeys(_rightChild.Key, pChild.Key, pK))
+            {
+                _rightChild = pChildReplacement;
+            }
+            else
+            {
+                throw new UnauthorizedAccessException("You are trying to remove a node from a wrong parent!");
+            }
+        }
+
+        public bool IsLeaf()
+        {
+            return _leftChild == null && _rightChild == null;
+        }
+
+        public override string ToString()
+        {
+            string sol = _key.ToString() ?? "";
+            sol += $"({_dimension}):";
+            T last = _data[^1];
+            foreach (T item in _data)
+            {
+                if (item == null) continue;
+                sol += item.ToString();
+                if (!item.Equals(last))
+                {
+                    sol += "->";
+                }
+            }
+
+            return sol;
+        }
+
+        public void SwapChilds()
+        {
+            (_leftChild, _rightChild) = (_rightChild, _leftChild);
+        }
+    }
+
+    public class KdTreeUtils<K> where K : IKey
+    {
+        public static bool EqualsTwoKeys(K pk1, K pk2, int pK)
+        {
+            for (int dimension = 0; dimension < pK; dimension++)
+            {
+                if (pk1.CompareTo(pk2, dimension) != 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 
@@ -60,50 +144,39 @@ namespace My.DataStructures.KdTree
         private Node<K, T>? _root;
         private int _k;
         private int _size = 0;
+
         public KdTree(int pK)
         {
             if (pK < 1)
             {
                 throw new ArgumentException("K must be greater than zero");
             }
+
             _k = pK;
         }
 
-        private bool EqualsTwoKeys(K pk1, K pk2)
-        {
-            for (int dimension = 0; dimension < _k; dimension++)
-            {
-                if (pk1.CompareTo(pk2, dimension) != 0)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
 
         public int Size => _size;
 
         public void Add(K pKey, T pData)
         {
-            Node<K, T> newNode = new(pKey, pData);
-
             if (Size <= 0 || _root == null)
             {
                 // if the tree is empty
-                _root = newNode;
+                _root = new Node<K, T>(pKey, pData, 0);
                 _size = 1;
                 return;
             }
+
             Node<K, T> currentNode = _root;
 
             // on the left side of the tree, there are items less or equal to
             int currentDimension = 0;
             while (true)
             {
+                int comp = pKey.CompareTo(currentNode.Key, currentDimension);
 
-                int comp = newNode.Key.CompareTo(currentNode.Key, currentDimension);
-
-                if (comp == 0 && EqualsTwoKeys(currentNode.Key, pKey))
+                if (comp == 0 && KdTreeUtils<K>.EqualsTwoKeys(currentNode.Key, pKey, _k))
                 {
                     // if there is already a node with the exact same Key, then we store the data part in List in Node
                     currentNode.AddData(pData);
@@ -115,10 +188,11 @@ namespace My.DataStructures.KdTree
                     // the place for new item is on the left side
                     if (currentNode.LeftChild == null)
                     {
-                        currentNode.LeftChild = newNode;
-                        newNode.Father = currentNode;
+                        currentNode.LeftChild = new Node<K, T>(pKey, pData, (currentDimension + 1) % 2);
+                        currentNode.LeftChild.Father = currentNode;
                         break;
                     }
+
                     currentNode = currentNode.LeftChild;
                 }
                 else
@@ -126,10 +200,11 @@ namespace My.DataStructures.KdTree
                     // the place for new item is on the right side
                     if (currentNode.RightChild == null)
                     {
-                        currentNode.RightChild = newNode;
-                        newNode.Father = currentNode;
+                        currentNode.RightChild = new Node<K, T>(pKey, pData, (currentDimension + 1) % 2);
+                        currentNode.RightChild.Father = currentNode;
                         break;
                     }
+
                     currentNode = currentNode.RightChild;
                 }
 
@@ -145,7 +220,7 @@ namespace My.DataStructures.KdTree
         }
 
 
-        private Node<K, T>? FindNode(K pKey, bool returnFather = false)
+        private Node<K, T>? FindNode(K pKey)
         {
             // returns the node we want to find with the pKey and also it's parent
             if (_size <= 0 || _root == null)
@@ -154,75 +229,170 @@ namespace My.DataStructures.KdTree
             }
 
             Node<K, T>? currentNode = _root;
-            Node<K, T>? fatherNode = null;
             int dimension = 0;
 
             while (currentNode != null)
             {
                 int comp = pKey.CompareTo(currentNode.Key, dimension);
-                if (comp == 0 && EqualsTwoKeys(currentNode.Key, pKey))
+                if (comp == 0 && KdTreeUtils<K>.EqualsTwoKeys(currentNode.Key, pKey, _k))
                 {
                     // the wanted node was found
-                    return returnFather ? fatherNode : currentNode;
+                    return currentNode;
                 }
 
-                fatherNode = currentNode;
                 currentNode = comp <= 0 ? currentNode.LeftChild : currentNode.RightChild;
-                dimension++;
+                dimension = (dimension + 1) % 2;
             }
 
             return null; // if the node is null, then
         }
 
-        public void Remove(K pKey)
+        public void Remove(K pKey, K pKey2)
         {
+            Node<K, T> node1 = FindNode(pKey)!;
+            Node<K, T> node2 = FindNode(pKey2)!;
+
+            if (node1 == null)
+            {
+                Console.WriteLine($"{pKey} is null");
+            }
+
+            if (node2 == null)
+            {
+                Console.WriteLine($"{pKey2} is null");
+            }
+
+            Swap(node1, node2);
+
+            return;
+
             if (_size <= 1 && _root != null)
             {
-                if (EqualsTwoKeys(_root.Key, pKey))
+                if (KdTreeUtils<K>.EqualsTwoKeys(_root.Key, pKey, _k))
                 {
-                    // there is only 1 node in the tree (root) and it's gonna be removed
+                    // there is only 1 node in the tree (root) and it's going to be removed
                     _root = null;
                     _size = 0;
                 }
+
                 return;
             }
 
-            Node<K, T>? fatherNode = FindNode(pKey, returnFather: true);
-            if (fatherNode == null)
+            Node<K, T>? nodeToDelete = FindNode(pKey);
+
+            if (nodeToDelete == null)
             {
-                // wanted node is not in the tree
                 return;
             }
 
-            Node<K, T> nodeToDelete;
-            bool isLeftSon;
-            if (fatherNode.LeftChild != null && EqualsTwoKeys(fatherNode.LeftChild.Key, pKey))
+            while (!nodeToDelete.IsLeaf())
             {
-                nodeToDelete = fatherNode.LeftChild;
-                isLeftSon = true;
-            }
-            else
-            {
-                nodeToDelete = fatherNode.RightChild!;
-                isLeftSon = false;
-            }
-
-            if (nodeToDelete.RightChild == null && nodeToDelete.LeftChild == null)
-            {
-                // base case when removing leaf
-                if (isLeftSon)
+                if (nodeToDelete.LeftChild != null)
                 {
-                    fatherNode.LeftChild = null;
+                    // finding a node with the biggest part of the key at current dimension
+                    Node<K, T> nodeForSwap = FindBiggestNodeByDimensionDown(nodeToDelete.LeftChild);
+                    Swap(nodeToDelete, nodeForSwap);
+                    Console.WriteLine("\n");
+                    Print();
                 }
                 else
                 {
-                    fatherNode.RightChild = null;
+                    throw new UnreachableException("Okej toto sa nemalo stať.");
                 }
+            }
 
+            if (nodeToDelete.Father == null)
+            {
+                throw new UnreachableException(
+                    "The size of the tree >= 2 and the nodeToDelete is a leaf. There has to be a father. This should never happen.");
+            }
+
+
+            nodeToDelete.Father.ReplaceChild(nodeToDelete, null, _k); // this will remove the node from the tree
+            _size--;
+
+            //throw new NotImplementedException();
+        }
+
+        private void Swap(Node<K, T> node1, Node<K, T> node2)
+        {
+            if (node1 == node2 || KdTreeUtils<K>.EqualsTwoKeys(node1.Key, node2.Key, _k))
+            {
+                // when swapping the same nodes
                 return;
             }
 
-            throw new NotImplementedException();
+            if (node1.Father != null && node1.Father == node2.Father)
+            {
+                node1.Father.SwapChilds();
+            }
+            else
+            {
+                if (node1.Father != null)
+                {
+                    node1.Father.ReplaceChild(node1, node2, _k);
+                }
+
+                if (node2.Father != null)
+                {
+                    node2.Father.ReplaceChild(node2, node1, _k);
+                }
+            }
+
+            (node1.LeftChild, node2.LeftChild) = (node2.LeftChild, node1.LeftChild);
+            (node1.RightChild, node2.RightChild) = (node2.RightChild, node1.RightChild);
+            (node1.Father, node2.Father) = (node2.Father, node1.Father);
+            (node1.Dimension, node2.Dimension) = (node2.Dimension, node1.Dimension);
+
+            if (node1.LeftChild != null)
+            {
+                node1.LeftChild.Father = node1;
+            }
+
+            if (node1.RightChild != null)
+            {
+                node1.RightChild.Father = node1;
+            }
+
+            if (node2.LeftChild != null)
+            {
+                node2.LeftChild.Father = node2;
+            }
+
+            if (node2.RightChild != null)
+            {
+                node2.RightChild.Father = node2;
+            }
+
+            // Update root reference if necessary
+            if (_root != null)
+            {
+                if (KdTreeUtils<K>.EqualsTwoKeys(node1.Key, _root.Key, _k))
+                {
+                    _root = node2;
+                }
+                else if (KdTreeUtils<K>.EqualsTwoKeys(node2.Key, _root.Key, _k))
+                {
+                    _root = node1;
+                }
+            }
+        }
+
+
+        private Node<K, T> FindBiggestNodeByDimensionDown(Node<K, T> pStartNode)
+        {
+            Node<K, T> nodeWithBiggestKeyInThatDim = pStartNode;
+
+
+            foreach (Node<K, T> node in InOrderIteratorImpl(pStartNode))
+            {
+                if (node.Key.CompareTo(nodeWithBiggestKeyInThatDim.Key, (pStartNode.Dimension + 1) % 2) > 0)
+                {
+                    nodeWithBiggestKeyInThatDim = node;
+                }
+            }
+
+            return nodeWithBiggestKeyInThatDim;
         }
 
         // ---------------------------------------------------
@@ -238,7 +408,7 @@ namespace My.DataStructures.KdTree
         // public in order iterator method for a user => it returns the !!! DATA of type T !!!
         public IEnumerator InOrderIterator()
         {
-            foreach (Node<K,T> node in InOrderIteratorImpl())
+            foreach (Node<K, T> node in InOrderIteratorImpl())
             {
                 foreach (T data in node.Data)
                 {
@@ -250,7 +420,7 @@ namespace My.DataStructures.KdTree
         // public in order iterator method for a user => it returns tuple of <K, T>
         public IEnumerator EntryInOrderIterator()
         {
-            foreach (Node<K,T> node in InOrderIteratorImpl())
+            foreach (Node<K, T> node in InOrderIteratorImpl())
             {
                 foreach (T data in node.Data)
                 {
@@ -280,7 +450,6 @@ namespace My.DataStructures.KdTree
 
             while (currentNode != null || stack.Size > 0)
             {
-
                 // we go all a way to bottom left node
                 while (currentNode != null)
                 {
@@ -316,6 +485,7 @@ namespace My.DataStructures.KdTree
                 {
                     queue.Add(currentNode.LeftChild);
                 }
+
                 if (currentNode.RightChild != null)
                 {
                     queue.Add(currentNode.RightChild);
@@ -325,5 +495,49 @@ namespace My.DataStructures.KdTree
             }
         }
 
+        // ---------------------------------------------------
+        // ------------------ VISUALISATION ------------------
+        // ---------------------------------------------------
+
+        public void Print()
+        {
+            string sol = "\n";
+
+            Queue.Queue<Node<K, T>?> queue = new();
+
+            if (_root != null)
+            {
+                queue.Add(_root);
+            }
+
+            int count = 0;
+            while (count < _size)
+            {
+                if (count != 0)
+                {
+                    sol += ",";
+                }
+
+                Node<K, T>? currentNode = queue.Pop()!;
+                if (currentNode != null)
+                {
+                    count += currentNode.Data.Count;
+                    sol += currentNode.ToString();
+                    queue.Add(currentNode?.LeftChild);
+                    queue.Add(currentNode?.RightChild);
+                }
+                else
+                {
+                    sol += "null";
+                }
+            }
+
+            Console.WriteLine(sol);
+        }
+
+        public void Swap(K pKey1, K pKey2)
+        {
+            Swap(FindNode(pKey1)!, FindNode(pKey2)!);
+        }
     }
 }
