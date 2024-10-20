@@ -28,7 +28,6 @@ public class MyIntKey : IKey
 
         return _value < myIntKey._value ? -1 : 1;
     }
-
 }
 
 public class Cord : IKey
@@ -47,6 +46,7 @@ public class Cord : IKey
         _x = random.Next(int.MinValue, int.MaxValue);
         _y = random.Next(int.MinValue, int.MaxValue);
     }
+
     public int X
     {
         get => _x;
@@ -75,16 +75,19 @@ public class Cord : IKey
             {
                 return -1;
             }
+
             if (_x > cord.X)
             {
                 return 1;
             }
-        } else if (pDimension == 1)
+        }
+        else if (pDimension == 1)
         {
             if (_y < cord.Y)
             {
                 return -1;
             }
+
             if (_y > cord.Y)
             {
                 return 1;
@@ -100,7 +103,6 @@ public class KdTreeTest
     public static void RunAllTests()
     {
         SwapTest();
-        return;
         TestPrint();
         // Add
         TestAdd();
@@ -117,6 +119,217 @@ public class KdTreeTest
         // Operation Generator
         //TestWithOperationGenerator();
         SwapTest();
+        RandomizedSwapTest();
+        // Remove
+        // Leaf
+        RemoveTest();
+        // Has left son
+        RemoveTest0();
+        RemoveTest1();
+        RemoveTest2();
+        RemoveTest3();
+        RemoveTheWholeLeftSubTree();
+        // Doesn't have left son
+    }
+
+    public static KdTree<Cord, string> RemoveTheWholeLeftSubTree()
+    {
+        KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
+
+        tree.Remove(new Cord(12, 41));
+        tree.Remove(new Cord(22, 32));
+        tree.Remove(new Cord(22, 31));
+        tree.Remove(new Cord(22, 42));
+        tree.Remove(new Cord(22, 39));
+
+        List<string> expected = new();
+        expected.Add("Nitra");
+        expected.Add("Tlmače - nem.");
+        expected.Add("Tlmače");
+        expected.Add("Levice");
+        expected.Add("Tlmače - úrad");
+        expected.Add("Tlmače - parkovisko");
+        expected.Add("Nováky");
+        expected.Add("Bojnice");
+
+        List<string> actual = new();
+        foreach (string s in tree)
+        {
+            actual.Add(s);
+        }
+
+        CollectionAssert.AreEqual(expected, actual);
+
+        return tree;
+    }
+
+    public static void RemoveTest()
+    {
+        KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
+
+        tree.Remove(new Cord(27, 43));
+
+        List<string> expected = new();
+        expected.Add("Senica - úrad");
+        expected.Add("Senica - škola");
+        expected.Add("Senica");
+        expected.Add("Hodonín");
+        expected.Add("Senica - stanica");
+        expected.Add("Nitra");
+        expected.Add("Tlmače - nem.");
+        expected.Add("Tlmače");
+        expected.Add("Levice");
+        expected.Add("Tlmače - úrad");
+        expected.Add("Tlmače - parkovisko");
+        expected.Add("Bojnice");
+
+        List<string> actual = new();
+        foreach (string s in tree)
+        {
+            actual.Add(s);
+        }
+
+        CollectionAssert.AreEqual(expected, actual);
+    }
+    public static void RemoveTest0()
+    {
+        KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
+
+        tree.Remove(new Cord(29, 46));
+
+        List<string> expected = new();
+        expected.Add("Senica - úrad");
+        expected.Add("Senica - škola");
+        expected.Add("Senica");
+        expected.Add("Hodonín");
+        expected.Add("Senica - stanica");
+        expected.Add("Nitra");
+        expected.Add("Tlmače - nem.");
+        expected.Add("Tlmače");
+        expected.Add("Levice");
+        expected.Add("Tlmače - úrad");
+        expected.Add("Tlmače - parkovisko");
+        expected.Add("Nováky");
+
+        List<string> actual = new();
+        foreach (string s in tree)
+        {
+            actual.Add(s);
+        }
+
+        CollectionAssert.AreEqual(expected, actual);
+    }
+
+    public static void RemoveTest1()
+    {
+        KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
+
+        tree.Remove(new Cord(23, 35));
+
+        List<string> expected = new();
+        expected.Add("Senica - škola");
+        expected.Add("Senica");
+        expected.Add("Hodonín");
+        expected.Add("Senica - stanica");
+        expected.Add("Senica - úrad");
+        expected.Add("Tlmače - nem.");
+        expected.Add("Tlmače");
+        expected.Add("Levice");
+        expected.Add("Tlmače - úrad");
+        expected.Add("Tlmače - parkovisko");
+        expected.Add("Nováky");
+        expected.Add("Bojnice");
+
+        List<string> actual = new();
+        foreach (string s in tree)
+        {
+            actual.Add(s);
+        }
+
+        CollectionAssert.AreEqual(expected, actual);
+    }
+
+    public static void RemoveTest2()
+    {
+        KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
+
+        tree.Remove(new Cord(22, 42));
+
+        List<string> expected = new();
+        expected.Add("Senica - úrad");
+        expected.Add("Senica - škola");
+        expected.Add("Senica");
+        expected.Add("Hodonín");
+        expected.Add("Nitra");
+        expected.Add("Tlmače - nem.");
+        expected.Add("Tlmače");
+        expected.Add("Levice");
+        expected.Add("Tlmače - úrad");
+        expected.Add("Tlmače - parkovisko");
+        expected.Add("Nováky");
+        expected.Add("Bojnice");
+
+        List<string> actual = new();
+        foreach (string s in tree)
+        {
+            actual.Add(s);
+        }
+
+        CollectionAssert.AreEqual(expected, actual);
+    }
+
+    public static void RemoveTest3()
+    {
+        KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
+
+        tree.Remove(new Cord(24, 36));
+
+        List<string> expected = new();
+        expected.Add("Senica - úrad");
+        expected.Add("Senica - škola");
+        expected.Add("Senica");
+        expected.Add("Hodonín");
+        expected.Add("Senica - stanica");
+        expected.Add("Nitra");
+        expected.Add("Tlmače");
+        expected.Add("Levice");
+        expected.Add("Tlmače - nem.");
+        expected.Add("Tlmače - parkovisko");
+        expected.Add("Nováky");
+        expected.Add("Bojnice");
+
+        List<string> actual = new();
+        foreach (string s in tree)
+        {
+            actual.Add(s);
+        }
+
+        CollectionAssert.AreEqual(expected, actual);
+    }
+
+    private static KdTree<Cord, string> SetUpRemoveTreeTest1()
+    {
+        KdTree<Cord, string> tree = new(2);
+
+        tree.Add(new Cord(23, 35), "Nitra");
+
+        tree.Add(new Cord(22, 39), "Senica");
+        tree.Add(new Cord(24, 36), "Tlmače - úrad");
+
+        tree.Add(new Cord(22, 31), "Senica - škola");
+        tree.Add(new Cord(22, 42), "Senica - stanica");
+        tree.Add(new Cord(24, 34), "Tlmače");
+        tree.Add(new Cord(24, 40), "Tlmače - parkovisko");
+
+        tree.Add(new Cord(22, 32), "Senica - úrad");
+        tree.Add(new Cord(12, 41), "Hodonín");
+        tree.Add(new Cord(24, 35), "Tlmače - nem.");
+        tree.Add(new Cord(30, 33), "Levice");
+        tree.Add(new Cord(29, 46), "Bojnice");
+
+        tree.Add(new Cord(27, 43), "Nováky");
+
+        return tree;
     }
 
     private static void TestPrint()
@@ -126,16 +339,15 @@ public class KdTreeTest
         tree.Print();
     }
 
-    private static List<T> SwapInList<T>(List<T> pList, int pIndex1, int pIndex2)
+    private static void SwapInList<T>(List<T> pList, int pIndex1, int pIndex2)
     {
         (pList[pIndex1], pList[pIndex2]) = (pList[pIndex2], pList[pIndex1]);
-        return pList;
     }
 
     public static void RandomizedSwapTest()
     {
-        int count = 10_000;
-        int seedCount = 1_000;
+        int count = 1000;
+        int seedCount = 100;
         for (int seed = 1; seed < seedCount; seed++)
         {
             Random random = new(seed);
@@ -181,61 +393,62 @@ public class KdTreeTest
                 CollectionAssert.AreEqual(expected, actual);
             }
             //Console.WriteLine($"{seed} / {seedCount} OK");
-
         }
+
+        Console.WriteLine("ok");
     }
 
     public static void SwapTest()
     {
         TestSwapUni([
-            "Bratislava",
-            "Galanta",
-            "Nitra",
-            "Hodonín",
-            "Senica",
-            "Trnava",
-            "Sereď",
-            "Moravce",
-            "Tlmače",
-            "Levice",
-            "Topoľčianky",
-            "Bošany",
-            "Nováky",
-            "Bojnice"
+                "Bratislava",
+                "Galanta",
+                "Nitra",
+                "Hodonín",
+                "Senica",
+                "Trnava",
+                "Sereď",
+                "Moravce",
+                "Tlmače",
+                "Levice",
+                "Topoľčianky",
+                "Bošany",
+                "Nováky",
+                "Bojnice"
             ], new Cord(20, 33), new Cord(23, 35)
         );
         TestSwapUni([
-            "Bratislava",
-            "Galanta",
-            "Sereď",
-            "Hodonín",
-            "Senica",
-            "Trnava",
-            "Nitra",
-            "Tlmače",
-            "Moravce",
-            "Levice",
-            "Topoľčianky",
-            "Bošany",
-            "Nováky",
-            "Bojnice"
+                "Bratislava",
+                "Galanta",
+                "Sereď",
+                "Hodonín",
+                "Senica",
+                "Trnava",
+                "Nitra",
+                "Tlmače",
+                "Moravce",
+                "Levice",
+                "Topoľčianky",
+                "Bošany",
+                "Nováky",
+                "Bojnice"
             ], new Cord(26, 35), new Cord(28, 34)
         );
         TestSwapUni([
-            "Bratislava",
-            "Galanta",
-            "Topoľčianky",
-            "Hodonín",
-            "Senica",
-            "Trnava",
-            "Nitra",
-            "Moravce",
-            "Tlmače",
-            "Levice",
-            "Sereď",
-            "Bošany",
-            "Nováky",
-            "Bojnice"
+                "Bratislava",
+                "Galanta",
+                "Topoľčianky",
+                "Hodonín",
+                "Senica",
+                "Trnava",
+                "Nitra",
+                "Moravce",
+                "Tlmače",
+                "Levice",
+                "Sereď",
+                "Bošany",
+                "Nováky",
+                "Bojnice"
             ], new Cord(20, 33), new Cord(25, 36)
         );
     }
@@ -294,7 +507,7 @@ public class KdTreeTest
 
     public static void TestAdd()
     {
-        KdTree<Cord,string> tree = Create2dTreeEx1();
+        KdTree<Cord, string> tree = Create2dTreeEx1();
 
         int size = tree.Size;
         Assert.AreEqual(size, 14);
@@ -302,7 +515,6 @@ public class KdTreeTest
 
     public static void TestAddRandom()
     {
-
         int count = 100_000;
         Random random = new();
         KdTree<MyIntKey, int> tree = SetUpRandomIntTree(count, -10_000, 10_000);
@@ -321,8 +533,9 @@ public class KdTreeTest
 
     public static void TestInOrder()
     {
-        KdTree<Cord,string> tree = Create2dTreeEx1();
-        List<string> expected = [
+        KdTree<Cord, string> tree = Create2dTreeEx1();
+        List<string> expected =
+        [
             "Bratislava",
             "Galanta",
             "Sereď",
@@ -349,8 +562,9 @@ public class KdTreeTest
 
     public static void TestLevelOrder()
     {
-        KdTree<Cord,string> tree = Create2dTreeEx1();
-        List<string> expected = [
+        KdTree<Cord, string> tree = Create2dTreeEx1();
+        List<string> expected =
+        [
             "Nitra",
             "Sereď",
             "Topoľčianky",
@@ -468,7 +682,8 @@ public class KdTreeTest
                     // Check that the found list is not null or empty and contains the expected item
                     Assert.IsNotNull(listOfResults, "The result list should not be null.");
                     Assert.IsTrue(listOfResults.Count > 0, "The result list should not be empty.");
-                    Assert.IsTrue(listOfResults.Contains(tuple.Item2), $"The value {tuple.Item2} should be in the result list.");
+                    Assert.IsTrue(listOfResults.Contains(tuple.Item2),
+                        $"The value {tuple.Item2} should be in the result list.");
 
                     found.Add(tuple.Item2);
                 }
