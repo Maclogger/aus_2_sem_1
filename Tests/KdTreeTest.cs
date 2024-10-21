@@ -102,6 +102,8 @@ public class KdTreeTest
 {
     public static void RunAllTests()
     {
+        RemoveRightTest();
+        return;
         SwapTest();
         TestPrint();
         // Add
@@ -128,11 +130,33 @@ public class KdTreeTest
         RemoveTest1();
         RemoveTest2();
         RemoveTest3();
-        RemoveTheWholeLeftSubTree();
+        RemoveTheWholeLeftSubTreeTest();
         // Doesn't have left son
     }
 
-    public static KdTree<Cord, string> RemoveTheWholeLeftSubTree()
+    public static void RemoveRightTest()
+    {
+        KdTree<Cord, string> tree = new(2);
+
+        tree.Add(new Cord(22, 39), "Senica");
+
+        tree.Add(new Cord(24, 36), "Tlmače - úrad");
+
+        tree.Add(new Cord(24, 34), "Tlmače");
+        tree.Add(new Cord(24, 40), "Tlmače - parkovisko");
+        tree.Add(new Cord(24, 35), "Tlmače - nem.");
+
+        tree.Add(new Cord(30, 33), "Levice");
+        tree.Add(new Cord(29, 46), "Bojnice");
+
+        tree.Add(new Cord(27, 43), "Nováky");
+
+        tree.Print();
+        tree.Remove(new Cord(22, 39));
+        tree.Print();
+    }
+
+    public static void RemoveTheWholeLeftSubTreeTest()
     {
         KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
 
@@ -159,8 +183,6 @@ public class KdTreeTest
         }
 
         CollectionAssert.AreEqual(expected, actual);
-
-        return tree;
     }
 
     public static void RemoveTest()

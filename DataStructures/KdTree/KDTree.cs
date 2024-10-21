@@ -16,6 +16,7 @@ namespace My.DataStructures.KdTree
         private K _key;
         private int _dimension;
         private List<T> _data;
+        private bool _isInStack = false; // present, removed, inStackWillBeRemovedAndInserted, willBeInsertedBack
 
 
         public Node(K pKey, T pData, int dimension)
@@ -35,6 +36,7 @@ namespace My.DataStructures.KdTree
             _leftChild = pOtherNode.LeftChild;
             _rightChild = pOtherNode.RightChild;
             _dimension = pOtherNode.Dimension;
+            _isInStack = pOtherNode.IsInStack;
         }
 
 
@@ -72,6 +74,12 @@ namespace My.DataStructures.KdTree
         {
             get => _dimension;
             set => _dimension = value;
+        }
+
+        public bool IsInStack
+        {
+            get => _isInStack;
+            set => _isInStack = value;
         }
 
         public void AddData(T pItem)
@@ -158,6 +166,55 @@ namespace My.DataStructures.KdTree
 
 
         public int Size => _size;
+
+
+        private void AddNodeBack(Node<K, T> pNode) // implementation method => only used in Remove() when inserting nodes back
+        {
+            if (Size <= 0 || _root == null)
+            {
+                // if the tree is empty
+                _root = pNode;
+                return;
+            }
+
+            Node<K, T> currentNode = _root;
+
+            // on the left side of the tree, there are items less or equal to
+            int currentDimension = 0;
+            while (true)
+            {
+                int comp = pNode.Key.CompareTo(currentNode.Key, currentDimension);
+
+                if (comp <= 0)
+                {
+                    // the place for new item is on the left side
+                    if (currentNode.LeftChild == null)
+                    {
+                        pNode.Dimension = (currentDimension + 1) % 2;
+                        currentNode.LeftChild = pNode;
+                        pNode.Father = currentNode;
+                        break;
+                    }
+
+                    currentNode = currentNode.LeftChild;
+                }
+                else
+                {
+                    // the place for new item is on the right side
+                    if (currentNode.RightChild == null)
+                    {
+                        pNode.Dimension = (currentDimension + 1) % 2;
+                        currentNode.RightChild = pNode;
+                        pNode.Father = currentNode;
+                        break;
+                    }
+
+                    currentNode = currentNode.RightChild;
+                }
+
+                currentDimension = (currentDimension + 1) % _k;
+            }
+        }
 
         public void Add(K pKey, T pData)
         {
@@ -270,40 +327,110 @@ namespace My.DataStructures.KdTree
             }
 
 
-            Stack.Stack<Node<K, T>> stackNodesToDelete = new();
-            stackNodesToDelete.Push(nodeToDelete);
+            Stack.Stack<Node<K, T>> nodesToRemove = new();
+            List<Node<K, T>> nodesToAddBack = new();
 
-            while (stackNodesToDelete.Size > 0)
+            nodesToRemove.Push(nodeToDelete);
+
+            do
             {
-                nodeToDelete = stackNodesToDelete.Pop();
-
-                while (!nodeToDelete.IsLeaf())
+                Node<K, T> node = nodesToRemove.Pop();
+                if (node != nodeToDelete)
                 {
-                    if (nodeToDelete.LeftChild != null)
+                    nodesToAddBack.Add(node);
+                }
+
+                while (!node.IsLeaf())
+                {
+                    if (node.LeftChild != null)
                     {
                         // finding a node with the biggest part of the key at current dimension
-                        Node<K, T> nodeForSwap = FindNodeWithHighestKeyInDim(nodeToDelete.LeftChild, nodeToDelete.Dimension);
-                        Swap(nodeToDelete, nodeForSwap);
+                        Node<K, T> nodeForSwap = FindNodeWithHighestKeyInDim(node.LeftChild, node.Dimension);
+                        Swap(node, nodeForSwap);
                     }
                     else
                     {
                         // Case when nodeToDelete is not a leaf, and it doesn't have a LEFT child =>
                         // => have to remove some from the right side
-                        // TODO List<Node<K, T>> nodesToSwap
+                        List<Node<K, T>> nodes = FindNodesWithLowestKeyInDim(node.RightChild!, node.Dimension);
 
-                        throw new UnreachableException("Okej toto sa nemalo stať.");
+                        if (nodes.Count <= 0)
+                        {
+                            throw new UnreachableException(
+                                "The list of nodes with lowest key was empty => this cannot happen since node is not a leaf and LeftChild is null");
+                        }
+
+                        Swap(nodes[0], node);
+
+                        for (int i = 1; i < nodes.Count; i++)
+                        {
+                            if (!nodes[i].IsInStack)
+                            {
+                                nodesToRemove.Push(nodes[i]);
+                                nodes[i].IsInStack = true;
+                            }
+                        }
                     }
                 }
-                if (nodeToDelete.Father == null)
+
+                if (node.Father == null)
                 {
                     throw new UnreachableException(
                         "The size of the tree >= 2 and the nodeToDelete is a leaf. There has to be a father. This should never happen.");
                 }
 
-                nodeToDelete.Father.ReplaceChild(nodeToDelete, null, _k); // this will remove the node from the tree
+                node.Father.ReplaceChild(node, null, _k); // this will remove the node from the tree
+            } while (nodesToRemove.Size > 0);
+
+            foreach (Node<K, T> node in nodesToAddBack)
+            {
+                node.IsInStack = false;
+                AddNodeBack(node);
             }
 
             _size--;
+        }
+
+        private Node<K, T> FindNodeWithHighestKeyInDim(Node<K, T> pStartNode, int pDimension)
+        {
+            Node<K, T> nodeWithHighestKeyInDim = pStartNode;
+
+            foreach (Node<K, T> node in InOrderIteratorImpl(pStartNode))
+            {
+                int comp = node.Key.CompareTo(nodeWithHighestKeyInDim.Key, pDimension);
+                if (comp > 0 || (comp == 0 && node.IsLeaf()))
+                {
+                    // if node has higher key in that dimension, or it is the same, but is also a leaf (leaf is better)
+                    nodeWithHighestKeyInDim = node;
+                }
+            }
+
+            return nodeWithHighestKeyInDim;
+        }
+
+
+        private List<Node<K, T>> FindNodesWithLowestKeyInDim(Node<K,T> pStartNode, int pDimension)
+        {
+            List<Node<K, T>> nodesWithLowestKeyInDim = new();
+            K lowestKey = pStartNode.Key;
+
+            foreach (Node<K, T> node in InOrderIteratorImpl(pStartNode))
+            {
+                int comp = node.Key.CompareTo(lowestKey, pDimension);
+                if (comp < 0)
+                {
+                    // if node is lower than the current minimum
+                    lowestKey = node.Key;
+                    nodesWithLowestKeyInDim.Clear();
+                    nodesWithLowestKeyInDim.Add(node);
+                }
+                else if (comp == 0)
+                {
+                    nodesWithLowestKeyInDim.Add(node);
+                }
+            }
+
+            return nodesWithLowestKeyInDim;
         }
 
         private void Swap(Node<K, T> node1, Node<K, T> node2)
@@ -368,24 +495,6 @@ namespace My.DataStructures.KdTree
                     _root = node1;
                 }
             }
-        }
-
-
-        private Node<K, T> FindNodeWithHighestKeyInDim(Node<K, T> pStartNode, int dimension)
-        {
-            Node<K, T> nodeWithHighestKeyInDim = pStartNode;
-
-            foreach (Node<K, T> node in InOrderIteratorImpl(pStartNode))
-            {
-                int comp = node.Key.CompareTo(nodeWithHighestKeyInDim.Key, dimension);
-                if (comp > 0 || (comp == 0 && node.IsLeaf()))
-                {
-                    // if node has higher key in that dimension, or it is the same, but is also a leaf (leaf is better)
-                    nodeWithHighestKeyInDim = node;
-                }
-            }
-
-            return nodeWithHighestKeyInDim;
         }
 
         // ---------------------------------------------------
