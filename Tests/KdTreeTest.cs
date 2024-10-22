@@ -98,8 +98,130 @@ public class Cord : IKey
     }
 }
 
+
+public class CordInt
+{
+    private Cord _cord;
+    private int _data;
+
+    public CordInt(Cord pCord, int pData)
+    {
+        Cord = pCord;
+        Data = pData;
+    }
+
+    public Cord Cord
+    {
+        get => _cord;
+        set => _cord = value;
+    }
+
+    public int Data
+    {
+        get => _data;
+        set => _data = value;
+    }
+}
+
+public class SimulationTester
+{
+    private double _probAdd;
+    private double _probFind;
+    private double _probUpdate;
+    private double _probRemove;
+    private double _probOfRemovingExistingElement;
+    private int _checkAfterOperationCount;
+
+    public SimulationTester(double pProbAdd = 0.25, double pProbFind = 0.25,
+        double pProbUpdate = 0.25, double pProbRemove = 0.25, double pProbOfRemovingExistingElement=0.7)
+    {
+        _probAdd = pProbAdd;
+        _probFind = pProbFind;
+        _probUpdate = pProbUpdate;
+        _probRemove = pProbRemove;
+        _probOfRemovingExistingElement = pProbOfRemovingExistingElement;
+    }
+
+    public void RunCordInt()
+    {
+        int seed = 1;
+        int count = 100;
+
+        OperationGenerator opGen = new(probAdd: _probAdd, probFind: _probFind, probUpdate: _probUpdate, probRemove: _probRemove);
+        Random gen = new(seed); // for generating random numbers
+        Random genForRemovingExistingElement = new(); // for generating random numbers
+
+        List<CordInt> expectedInTree = new();
+
+        KdTree<Cord, int> tree = new(2);
+
+        Cord notExisting = new Cord(gen); // randomly generated 1 node which will never exist in tree
+
+        for (int i = 0; i < count; i++)
+        {
+            Operation op = opGen.GetRandomOperation();
+            if (op == Operation.Add)
+            {
+                Cord randomCord;
+                while (true)
+                {
+                    randomCord = new Cord(gen); // random generated new Cord (could be existing although the probability is low)
+                    if (randomCord.X != notExisting.X || randomCord.Y != notExisting.Y)
+                    {
+                        break; // the probability is low but not zero => now is zero (ignoring
+                    }
+                }
+
+                tree.Add(randomCord, i); // adding randomly generated Cord into tree, data is just an i
+
+                expectedInTree.Add(new CordInt(randomCord, i));
+            }
+            else if (op == Operation.Remove)
+            {
+                if (expectedInTree.Count > 0 && genForRemovingExistingElement.NextDouble() < _probOfRemovingExistingElement)
+                {
+                    int indexOfElementToRemove = gen.Next(0, expectedInTree.Count);
+                    CordInt randomExistingElement = expectedInTree[indexOfElementToRemove];
+
+                    List<int>? itemsWithMatchingKey = tree.Find(randomExistingElement.Cord);
+
+                    if (itemsWithMatchingKey == null)
+                    {
+                        throw new KeyNotFoundException("The node was in expected list, but was not found by the KdTree. :(");
+                    }
+
+                    int j = 0;
+                    for (; j < itemsWithMatchingKey.Count; j++)
+                    {
+                        if (itemsWithMatchingKey[j] == randomExistingElement.Data)
+                        {
+                            break;
+                        }
+                    }
+
+                    tree.Remove(randomExistingElement.Cord, j);
+                    expectedInTree.RemoveAt(indexOfElementToRemove);
+                }
+                else
+                {
+                    // removing not existing element
+                    Cord randomCord = new Cord(gen); // random generated new Cord (could be existing but the probability is low)
+
+                    tree.Remove(randomCord, 0); // removing node which doesn't exist
+                }
+            }
+        }
+
+
+    }
+
+
+
+}
+
 public class KdTreeTest
 {
+
     public static void RunAllTests()
     {
         RemoveRightTest();
@@ -151,20 +273,27 @@ public class KdTreeTest
 
         tree.Add(new Cord(27, 43), "Nováky");
 
-        tree.Print();
-        tree.Remove(new Cord(22, 39));
-        tree.Print();
+        tree.Remove(new Cord(24, 40), 0);
+        tree.Remove(new Cord(27, 43), 0);
+        tree.Remove(new Cord(22, 39), 0);
+        tree.Remove(new Cord(30, 33), 0);
+        tree.Remove(new Cord(24, 36), 0);
+        tree.Remove(new Cord(24, 34), 0);
+        tree.Remove(new Cord(24, 35), 0);
+        tree.Remove(new Cord(29, 46), 0);
+
+        Assert.AreEqual(0, tree.Size);
     }
 
     public static void RemoveTheWholeLeftSubTreeTest()
     {
         KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
 
-        tree.Remove(new Cord(12, 41));
-        tree.Remove(new Cord(22, 32));
-        tree.Remove(new Cord(22, 31));
-        tree.Remove(new Cord(22, 42));
-        tree.Remove(new Cord(22, 39));
+        tree.Remove(new Cord(12, 41), 0);
+        tree.Remove(new Cord(22, 32), 0);
+        tree.Remove(new Cord(22, 31), 0);
+        tree.Remove(new Cord(22, 42), 0);
+        tree.Remove(new Cord(22, 39), 0);
 
         List<string> expected = new();
         expected.Add("Nitra");
@@ -189,7 +318,7 @@ public class KdTreeTest
     {
         KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
 
-        tree.Remove(new Cord(27, 43));
+        tree.Remove(new Cord(27, 43), 0);
 
         List<string> expected = new();
         expected.Add("Senica - úrad");
@@ -217,7 +346,7 @@ public class KdTreeTest
     {
         KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
 
-        tree.Remove(new Cord(29, 46));
+        tree.Remove(new Cord(29, 46), 0);
 
         List<string> expected = new();
         expected.Add("Senica - úrad");
@@ -246,7 +375,7 @@ public class KdTreeTest
     {
         KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
 
-        tree.Remove(new Cord(23, 35));
+        tree.Remove(new Cord(23, 35), 0);
 
         List<string> expected = new();
         expected.Add("Senica - škola");
@@ -275,7 +404,7 @@ public class KdTreeTest
     {
         KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
 
-        tree.Remove(new Cord(22, 42));
+        tree.Remove(new Cord(22, 42), 0);
 
         List<string> expected = new();
         expected.Add("Senica - úrad");
@@ -304,7 +433,7 @@ public class KdTreeTest
     {
         KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
 
-        tree.Remove(new Cord(24, 36));
+        tree.Remove(new Cord(24, 36), 0);
 
         List<string> expected = new();
         expected.Add("Senica - úrad");

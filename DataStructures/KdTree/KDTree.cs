@@ -305,7 +305,7 @@ namespace My.DataStructures.KdTree
             return null; // if the node is null, then
         }
 
-        public void Remove(K pKey)
+        public void Remove(K pKey, int pIndex)
         {
             if (_size <= 1 && _root != null)
             {
@@ -323,6 +323,13 @@ namespace My.DataStructures.KdTree
 
             if (nodeToDelete == null)
             {
+                return;
+            }
+
+            if (pIndex >= 0 && pIndex < nodeToDelete.Data.Count) // <0; count)
+            {
+                nodeToDelete.Data.RemoveAt(pIndex);
+                _size--;
                 return;
             }
 
