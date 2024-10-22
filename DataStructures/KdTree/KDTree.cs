@@ -326,7 +326,7 @@ namespace My.DataStructures.KdTree
                 return;
             }
 
-            if (pIndex >= 0 && pIndex < nodeToDelete.Data.Count) // <0; count)
+            if (pIndex > 0 && pIndex < nodeToDelete.Data.Count) // (0; count) -> removing only when there is at least one left
             {
                 nodeToDelete.Data.RemoveAt(pIndex);
                 _size--;

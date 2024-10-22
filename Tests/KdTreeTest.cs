@@ -59,7 +59,7 @@ public class Cord : IKey
 
     public override string ToString()
     {
-        return $"[{_x}-{_y}]";
+        return $"[{_x};{_y}]";
     }
 
     public int CompareTo(IKey pOther, int pDimension)
@@ -98,7 +98,6 @@ public class Cord : IKey
     }
 }
 
-
 public class CordInt
 {
     private Cord _cord;
@@ -131,25 +130,31 @@ public class SimulationTester
     private double _probRemove;
     private double _probOfRemovingExistingElement;
     private int _checkAfterOperationCount;
+    private readonly bool _shouldPrint;
 
     public SimulationTester(double pProbAdd = 0.25, double pProbFind = 0.25,
-        double pProbUpdate = 0.25, double pProbRemove = 0.25, double pProbOfRemovingExistingElement=0.7)
+        double pProbUpdate = 0.25, double pProbRemove = 0.25, double pProbOfRemovingExistingElement = 0.7,
+        int pCheckAfterOperationCount = 100, bool pShouldPrint = true)
     {
         _probAdd = pProbAdd;
         _probFind = pProbFind;
         _probUpdate = pProbUpdate;
         _probRemove = pProbRemove;
         _probOfRemovingExistingElement = pProbOfRemovingExistingElement;
+        _checkAfterOperationCount = pCheckAfterOperationCount;
+        _shouldPrint = pShouldPrint;
     }
 
-    public void RunCordInt()
+    public void RunCordInt(int pSeed = 1, int pCount = 100)
     {
-        int seed = 1;
-        int count = 100;
+        int seed = pSeed;
+        int count = pCount;
 
-        OperationGenerator opGen = new(probAdd: _probAdd, probFind: _probFind, probUpdate: _probUpdate, probRemove: _probRemove);
+        OperationGenerator opGen = new(probAdd: _probAdd, probFind: _probFind, probUpdate: _probUpdate,
+            probRemove: _probRemove);
         Random gen = new(seed); // for generating random numbers
-        Random genForRemovingExistingElement = new(); // for generating random numbers
+        Random genForRemovingExistingElement = new(seed * 2); // for generating random numbers
+        Random genForRandomOperation = new(seed * 2); // for generating random numbers
 
         List<CordInt> expectedInTree = new();
 
@@ -159,13 +164,14 @@ public class SimulationTester
 
         for (int i = 0; i < count; i++)
         {
-            Operation op = opGen.GetRandomOperation();
+            Operation op = opGen.GetRandomOperation(genForRandomOperation);
             if (op == Operation.Add)
             {
                 Cord randomCord;
                 while (true)
                 {
-                    randomCord = new Cord(gen); // random generated new Cord (could be existing although the probability is low)
+                    randomCord =
+                        new Cord(gen); // random generated new Cord (could be existing although the probability is low)
                     if (randomCord.X != notExisting.X || randomCord.Y != notExisting.Y)
                     {
                         break; // the probability is low but not zero => now is zero (ignoring
@@ -175,10 +181,12 @@ public class SimulationTester
                 tree.Add(randomCord, i); // adding randomly generated Cord into tree, data is just an i
 
                 expectedInTree.Add(new CordInt(randomCord, i));
+                if (_shouldPrint) Console.WriteLine($"Adding element {randomCord} {i}");
             }
             else if (op == Operation.Remove)
             {
-                if (expectedInTree.Count > 0 && genForRemovingExistingElement.NextDouble() < _probOfRemovingExistingElement)
+                if (expectedInTree.Count > 0 &&
+                    genForRemovingExistingElement.NextDouble() < _probOfRemovingExistingElement)
                 {
                     int indexOfElementToRemove = gen.Next(0, expectedInTree.Count);
                     CordInt randomExistingElement = expectedInTree[indexOfElementToRemove];
@@ -187,7 +195,8 @@ public class SimulationTester
 
                     if (itemsWithMatchingKey == null)
                     {
-                        throw new KeyNotFoundException("The node was in expected list, but was not found by the KdTree. :(");
+                        throw new KeyNotFoundException(
+                            "The node was in expected list, but was not found by the KdTree. :(");
                     }
 
                     int j = 0;
@@ -199,29 +208,60 @@ public class SimulationTester
                         }
                     }
 
-                    tree.Remove(randomExistingElement.Cord, j);
+                    tree.Remove(randomExistingElement.Cord, j); // removing item from the tree
                     expectedInTree.RemoveAt(indexOfElementToRemove);
+                    if (_shouldPrint)
+                        Console.WriteLine(
+                            $"Removing element {randomExistingElement.Cord} {randomExistingElement.Data} at index {indexOfElementToRemove}");
                 }
                 else
                 {
                     // removing not existing element
-                    Cord randomCord = new Cord(gen); // random generated new Cord (could be existing but the probability is low)
-
-                    tree.Remove(randomCord, 0); // removing node which doesn't exist
+                    tree.Remove(notExisting, 0); // removing node which doesn't exist (shouldn't change anything)
+                    if (_shouldPrint) Console.WriteLine("Removing not existing element");
                 }
             }
+
+            if (i % _checkAfterOperationCount == 0)
+            {
+                CheckCorrectness(expectedInTree, tree);
+                if (_shouldPrint) Console.WriteLine($"{pSeed}: {i + _checkAfterOperationCount} / {count}");
+            }
+
+            if (_shouldPrint) tree.Print();
         }
 
-
+        CheckCorrectness(expectedInTree, tree);
+        if (_shouldPrint) Console.WriteLine(tree.Size);
     }
 
 
+    public void CheckCorrectness(List<CordInt> pExpectedInTree, KdTree<Cord, int> pTree)
+    {
+        Assert.AreEqual(pExpectedInTree.Count, pTree.Size);
 
+        List<int> actual = new();
+        List<int> expected = new();
+
+        foreach (int data in pTree)
+        {
+            actual.Add(data);
+        }
+
+        foreach (CordInt c in pExpectedInTree)
+        {
+            expected.Add(c.Data);
+        }
+
+        actual.Sort();
+        expected.Sort();
+
+        CollectionAssert.AreEqual(actual, expected);
+    }
 }
 
 public class KdTreeTest
 {
-
     public static void RunAllTests()
     {
         RemoveRightTest();
@@ -342,6 +382,7 @@ public class KdTreeTest
 
         CollectionAssert.AreEqual(expected, actual);
     }
+
     public static void RemoveTest0()
     {
         KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
