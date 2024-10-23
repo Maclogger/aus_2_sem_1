@@ -1,94 +1,88 @@
+using Entities;
 using My.DataStructures;
+using My.DataStructures.KdTree;
 
-namespace Entities
+namespace My.Core
 {
-    public class Position : IEquatable<Position>
+    public class Position : IKey
     {
-        private char latitudeSign { get; set; } // N or S
-        private double latitude { get; set; }
-        private char longitudeSign { get; set; } // W or E
-        private double longitude { get; set; }
+        private char _latitudeSign; // N or S
+        private double _latitude;
+        private char _longitudeSign; // W or E
+        private double _longitude;
+        private double _x;
+        private double _y;
 
-        public Position(double pLatitude, double pLongitude)
+        public Position(double pLatitude, char pLatitudeSign, double pLongitude, char pLongitudeSign)
         {
-            ValidateCoordinates(pLatitude, pLongitude);
-            CreateInstance(pLatitude, pLongitude);
+            if (pLatitudeSign == 'S')
+            {
+                X = -pLatitude;
+            }
+
+            if (pLongitudeSign == 'E')
+            {
+                Y = -pLongitude;
+            }
+
+            _latitude = pLatitude;
+            _latitudeSign = pLatitudeSign;
+            _longitude = pLongitude;
+            _longitudeSign = pLongitudeSign;
         }
 
-        public Position()
+        public Position(Random? pRandom = null)
         {
+            Random random = pRandom ?? new Random();
+
             // Generate random coordinates within valid range
-            double pLatitude = Utils.GetRandomDoubleInRange(-90.0, 90.0);
-            double pLongitude = Utils.GetRandomDoubleInRange(-180.0, 180.0);
-            ValidateCoordinates(pLatitude, pLongitude);
-            CreateInstance(pLatitude, pLongitude);
+            double pLatitude = Utils.GetRandomDoubleInRange(Config.Instance.MinLatitude, Config.Instance.MaxLatitude);
+            double pLongitude = Utils.GetRandomDoubleInRange(Config.Instance.MinLongitude, Config.Instance.MaxLongitude);
         }
 
-        public Position(double pMinLatitude, double pMaxLatitude, double pMinLongitude, double pMaxLongitude, bool pOnlyIntegers = false)
+        public double X
         {
-            // Generate random coordinates within a given range
-            double pLatitude;
-            double pLongitude;
-
-            if (pOnlyIntegers)
-            {
-                pLatitude = Utils.GetRandomIntInRange((int)pMinLatitude, (int)pMaxLatitude);
-                pLongitude = Utils.GetRandomIntInRange((int)pMinLongitude, (int)pMaxLongitude);
-            }
-            else
-            {
-                pLatitude = Utils.GetRandomDoubleInRange((int)pMinLatitude, (int)pMaxLatitude);
-                pLongitude = Utils.GetRandomDoubleInRange((int)pMinLongitude, (int)pMaxLongitude);
-            }
-
-            CreateInstance(pLatitude, pLongitude);
+            get => _x;
+            set => _x = value;
         }
 
-
-        private void CreateInstance(double pLatitude, double pLongitude)
+        public double Y
         {
-            this.latitude = pLatitude;
-            this.longitude = pLongitude;
-            this.latitudeSign = this.latitude >= 0 ? 'N' : 'S';
-            this.longitudeSign = this.longitude >= 0 ? 'E' : 'W';
-        }
-
-        private void ValidateCoordinates(double pLatitude, double pLongitude)
-        {
-            if (pLatitude < -90 || pLatitude > 90)
-            {
-                throw new ArgumentOutOfRangeException(nameof(pLatitude), "Latitude must be between -90 and 90.");
-            }
-
-            if (pLongitude < -180 || pLongitude > 180)
-            {
-                throw new ArgumentOutOfRangeException(nameof(pLongitude), "Longitude must be between -180 and 180.");
-            }
-        }
-
-        public double GetX()
-        {
-            return this.longitude;
-        }
-
-        public double GetY()
-        {
-            return this.latitude;
-        }
-
-        public bool Equals(Position? other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
-
-            return this.latitude == other.latitude && this.longitude == other.longitude && this.latitudeSign == other.latitudeSign && this.longitudeSign == other.longitudeSign;
+            get => _y;
+            set => _y = value;
         }
 
         public override string ToString()
         {
-            return $"{this.longitudeSign} {Math.Abs(this.longitude)} and {this.latitudeSign} {Math.Abs(this.latitude)}]";
+            if (Config.Instance.FormattedOutput)
+            {
+                return $"( {_latitudeSign}{_latitude} ; {_longitudeSign}{_longitude} )";
+            }
+            return $"( {X} ; {Y} )";
+        }
+
+        public int CompareTo(IKey pOther, int pDimension)
+        {
+            if (pOther is not Position pOtherPos)
+            {
+                throw new ArgumentException($"IKey in comparator was not an instance of Position: {nameof(pOther)}");
+            }
+
+            double[] cords = { X, Y };
+            double[] cordsOther = { pOtherPos.X, pOtherPos.Y };
+
+
+            if (Math.Abs(cords[pDimension] - cordsOther[pDimension]) < Config.Instance.DoubleTolerance)
+            {
+                return 0;
+            }
+            
+            if (cords[pDimension] < cordsOther[pDimension])
+            {
+                return -1;
+            }
+
+            return 1;
         }
     }
 }

@@ -170,8 +170,7 @@ public class SimulationTester
                 Cord randomCord;
                 while (true)
                 {
-                    randomCord =
-                        new Cord(gen); // random generated new Cord (could be existing although the probability is low)
+                    randomCord = new Cord(gen); // random generated new Cord (could be existing although the probability is low)
                     if (randomCord.X != notExisting.X || randomCord.Y != notExisting.Y)
                     {
                         break; // the probability is low but not zero => now is zero (ignoring
@@ -271,7 +270,7 @@ public class KdTreeTest
         // Add
         TestAdd();
         TestAddRandom();
-        //TestAddRandom2D();
+        TestAddRandom2D();
         TestAddRandomSize();
         TestAddDuplicates();
         // Iterators
