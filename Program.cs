@@ -1,4 +1,6 @@
-﻿using My.DataStructures.KdTree;
+﻿using My.Core;
+using My.CoreGui;
+using My.DataStructures.KdTree;
 using My.Tests;
 
 namespace My;
@@ -6,6 +8,13 @@ namespace My;
 class Program
 {
     public static void Main(string[] args)
+    {
+        Application application = new Application();
+
+        application.Run();
+    }
+
+    private static void Test()
     {
         SimulationTester simulationTester = new SimulationTester(
             pProbAdd: 0.2, pProbFind: 0, pProbRemove: 0.8, pProbUpdate: 0, pProbOfRemovingExistingElement: 1,
@@ -41,6 +50,4 @@ class Program
             }
         }
     }
-
-
 }
