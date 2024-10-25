@@ -55,6 +55,11 @@ namespace My.Core
             double pLongitude = Utils.GetRandomDoubleInRange(Config.Instance.MinLongitude, Config.Instance.MaxLongitude);
         }
 
+        public bool Equals(Position other)
+        {
+            return Math.Abs(X - other.X) < Config.Instance.DoubleTolerance && Math.Abs(Y - other.Y) < Config.Instance.DoubleTolerance;
+        }
+
         public double X
         {
             get => _x;

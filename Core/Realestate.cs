@@ -24,6 +24,11 @@ namespace My.Core
                 _parcelas.Add(parcel);
             }
         }
+
+        public void RemoveParcel(Parcel parcelToDelete)
+        {
+            _parcelas.Remove(parcelToDelete);
+        }
     }
 }
 

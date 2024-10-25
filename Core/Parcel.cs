@@ -44,6 +44,14 @@ namespace My.Core
             get => _bottomRight;
             set => _bottomRight = value;
         }
+
+        public void AddRealestate(Realestate realestate)
+        {
+            if (!Realestates.Contains(realestate))
+            {
+                _realestates.Add(realestate);
+            }
+        }
     }
 }
 
