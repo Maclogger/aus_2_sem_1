@@ -1,4 +1,5 @@
 using My.Core;
+using My.DataStructures;
 
 namespace My.CoreGui;
 
@@ -19,13 +20,35 @@ public class Application
         set => _core = value;
     }
 
-
     // GUI => Core
-    public void AddParcel(string[] data)
+    public Answer AddParcel(string pos1Attr, string pos2Attr, string parcelAttr)
     {
-        
+        int? parcelNum = ClientSys.GetIntFromAttr(parcelAttr, "PARCEL_NUM");
+        string description = ClientSys.GetStringFromAttr(parcelAttr, "DESCRIPTION")!;
+
+        Position? pos1;
+        Position? pos2;
+        try
+        {
+            pos1 = new(pos1Attr); // it can throw inside
+            pos2 = new(pos2Attr); // it can throw inside
+            int dummy = (int)parcelNum!; // if parcelNum is not a number => crash
+        }
+        catch
+        {
+            return new Answer("Some of the attributes are missing or invalid.", AnswerState.Error);
+        }
+
+        Parcel parcel = new((int)parcelNum, description, pos1, pos2);
+
+        return _core.AddParcel(pos1, pos2, parcel);
+    }
+
+    public Answer RemoveParcel(string attr)
+    {
 
     }
+
 
 
     public void Run()

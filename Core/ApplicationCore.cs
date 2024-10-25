@@ -14,17 +14,30 @@ public class ApplicationCore
         _application = pApplication;
     }
 
-    public Answer AddParcel(Position position, Parcel parcel)
+    public Answer AddParcel(Position pos1, Position pos2,  Parcel parcel)
     {
         try
         {
-            _parcelasTree.Add(position, parcel);
+            // adding new parcel to all realestates at pos1 and pos2
+            foreach (Realestate realestate in _realestatesTree.Find(pos1) ?? new List<Realestate>())
+            {
+                realestate.AddParcel(parcel);
+            }
+
+            foreach (Realestate realestate in _realestatesTree.Find(pos2) ?? new List<Realestate>())
+            {
+                realestate.AddParcel(parcel);
+            }
+
+            _parcelasTree.Add(pos1, parcel);
+            _parcelasTree.Add(pos2, parcel);
         }
         catch (Exception e)
         {
-            return new Answer($"Pridanie prvku {position}-{parcel} sa nepodarilo. {e.Message}", AnswerState.Error);
+            return new Answer($"Pridanie prvku ({pos1}-{pos2})-{parcel} sa nepodarilo. {e.Message}", AnswerState.Error);
         }
-        return new Answer($"Pridanie prvku {position}-{parcel} bolo úspešné.", AnswerState.Ok);
+
+        return new Answer($"Pridanie parcely ({pos1}-{pos2})-{parcel} bolo úspešné.", AnswerState.Ok);
     }
 
     public Answer RemoveParcel(Position position)

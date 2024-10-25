@@ -16,6 +16,14 @@ namespace My.Core
             _topLeft = pTopLeft;
             _bottomRight = pBottomRight;
         }
+
+        public void AddParcel(Parcel parcel)
+        {
+            if (!_parcelas.Contains(parcel))
+            {
+                _parcelas.Add(parcel);
+            }
+        }
     }
 }
 

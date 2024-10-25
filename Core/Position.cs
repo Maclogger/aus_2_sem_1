@@ -15,6 +15,21 @@ namespace My.Core
 
         public Position(double pLatitude, char pLatitudeSign, double pLongitude, char pLongitudeSign)
         {
+            Initialize(pLatitude, pLatitudeSign, pLongitude, pLongitudeSign);
+        }
+
+        public Position(string attr)
+        {
+            char latitude = (char)ClientSys.GetStringFromAttr(attr, "LAT")?[0]!;
+            char latitudeSign = (char)ClientSys.GetStringFromAttr(attr, "LAT_SIGN")?[0]!;
+            double longitude = (double)ClientSys.GetDoubleFromAttr(attr, "LON")!;
+            char longitudeSign = (char)ClientSys.GetStringFromAttr(attr, "LON_SIGN")?[0]!;
+
+            Initialize(latitude, latitudeSign, longitude, longitudeSign);
+        }
+
+        private void Initialize(double pLatitude, char pLatitudeSign, double pLongitude, char pLongitudeSign)
+        {
             if (pLatitudeSign == 'S')
             {
                 X = -pLatitude;
@@ -25,10 +40,10 @@ namespace My.Core
                 Y = -pLongitude;
             }
 
-            _latitude = pLatitude;
-            _latitudeSign = pLatitudeSign;
-            _longitude = pLongitude;
-            _longitudeSign = pLongitudeSign;
+            Latitude = pLatitude;
+            LatitudeSign = pLatitudeSign;
+            Longitude = pLongitude;
+            LongitudeSign = pLongitudeSign;
         }
 
         public Position(Random? pRandom = null)
@@ -52,11 +67,35 @@ namespace My.Core
             set => _y = value;
         }
 
+        public char LatitudeSign
+        {
+            get => _latitudeSign;
+            set => _latitudeSign = value;
+        }
+
+        public double Latitude
+        {
+            get => _latitude;
+            set => _latitude = value;
+        }
+
+        public char LongitudeSign
+        {
+            get => _longitudeSign;
+            set => _longitudeSign = value;
+        }
+
+        public double Longitude
+        {
+            get => _longitude;
+            set => _longitude = value;
+        }
+
         public override string ToString()
         {
             if (Config.Instance.FormattedOutput)
             {
-                return $"( {_latitudeSign}{_latitude} ; {_longitudeSign}{_longitude} )";
+                return $"( {LatitudeSign}{Latitude} ; {LongitudeSign}{Longitude} )";
             }
             return $"( {X} ; {Y} )";
         }

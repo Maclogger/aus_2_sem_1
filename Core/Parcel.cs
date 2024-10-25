@@ -9,10 +9,40 @@ namespace My.Core
 
         public Parcel(int pParcelNum, string pDescription, Position pTopLeft, Position pBottomRight)
         {
-            _parcelNum = pParcelNum;
-            _description = pDescription;
-            _topLeft = pTopLeft;
-            _bottomRight = pBottomRight;
+            ParcelNum = pParcelNum;
+            Description = pDescription;
+            TopLeft = pTopLeft;
+            BottomRight = pBottomRight;
+        }
+
+        public int ParcelNum
+        {
+            get => _parcelNum;
+            set => _parcelNum = value;
+        }
+
+        public string Description
+        {
+            get => _description;
+            set => _description = value;
+        }
+
+        public List<Realestate> Realestates
+        {
+            get => _realestates;
+            set => _realestates = value;
+        }
+
+        public Position TopLeft
+        {
+            get => _topLeft;
+            set => _topLeft = value;
+        }
+
+        public Position BottomRight
+        {
+            get => _bottomRight;
+            set => _bottomRight = value;
         }
     }
 }
