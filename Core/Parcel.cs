@@ -6,6 +6,7 @@ namespace My.Core
         private string _description; // popis
         private List<Realestate> _realestates = new(); // nehnuteľnosti
         private Position _topLeft, _bottomRight;
+        private int? _uid1, _uid2;
 
         public Parcel(int pParcelNum, string pDescription, Position pTopLeft, Position pBottomRight)
         {
@@ -14,6 +15,7 @@ namespace My.Core
             TopLeft = pTopLeft;
             BottomRight = pBottomRight;
         }
+        
 
         public int ParcelNum
         {
@@ -43,6 +45,18 @@ namespace My.Core
         {
             get => _bottomRight;
             set => _bottomRight = value;
+        }
+
+        public int? Uid1
+        {
+            get => _uid1;
+            set => _uid1 = value;
+        }
+
+        public int? Uid2
+        {
+            get => _uid2;
+            set => _uid2 = value;
         }
 
         public void AddRealestate(Realestate realestate)

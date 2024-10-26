@@ -16,9 +16,11 @@ public class Node<K, T> where K : IKey
         _data.Add(new DataPart<T>(pData));
     }
 
-    public void AddData(T pData)
+    public int AddData(T pData)
     {
-        _data.Add(new DataPart<T>(pData));
+        DataPart<T> dataPart = new DataPart<T>(pData);
+        _data.Add(dataPart);
+        return dataPart.Uid;
     }
 
     public void ReplaceChild(Node<K, T> pChild, Node<K, T>? pChildReplacement, int pK)

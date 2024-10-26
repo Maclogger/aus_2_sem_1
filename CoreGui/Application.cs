@@ -12,7 +12,7 @@ public class Application
     public Application()
     {
         _core = new ApplicationCore(this);
-        _gui = new GUI(this); // TODO add GUI
+        _gui = new GUI(this);
     }
 
     public ApplicationCore? Core
@@ -47,7 +47,7 @@ public class Application
 
     public Answer RemoveParcel(string attr)
     {
-
+        throw new NotImplementedException();
     }
 
 
@@ -71,17 +71,5 @@ public class Application
         int index = _gui.ChooseFromList(optionsForUser); // TODO implement GUI
 
         return list[index].Uid;
-    }
-
-    public int AskUserToChooseFromList(List<object> list)
-    {
-        string?[] options = new string?[list.Count];
-
-        for (var i = 0; i < list.Count; i++)
-        {
-            options[i] = list[i].ToString();
-        }
-
-        return _gui.ChooseFromList(list); // TODO implement GUI
     }
 }

@@ -19,20 +19,23 @@ public class ApplicationCore
         try
         {
             // adding new parcel to all realestates at pos1 and pos2
-            foreach (Realestate realestate in _realestatesTree.Find(pos1) ?? new List<Realestate>())
+            foreach (Realestate realestate in _realestatesTree.Find(pos1))
             {
                 realestate.AddParcel(parcel);
                 parcel.AddRealestate(realestate);
             }
 
-            foreach (Realestate realestate in _realestatesTree.Find(pos2) ?? new List<Realestate>())
+            foreach (Realestate realestate in _realestatesTree.Find(pos2))
             {
                 realestate.AddParcel(parcel);
                 parcel.AddRealestate(realestate);
             }
 
-            _parcelasTree.Add(pos1, parcel);
-            _parcelasTree.Add(pos2, parcel);
+            int uid1 = _parcelasTree.Add(pos1, parcel);
+            int uid2 = _parcelasTree.Add(pos2, parcel);
+
+            parcel.Uid1 = uid1;
+            parcel.Uid2 = uid2;
         }
         catch (Exception e)
         {
@@ -42,64 +45,73 @@ public class ApplicationCore
         return new Answer($"Pridanie parcely ({pos1}-{pos2})-{parcel} bolo úspešné.", AnswerState.Ok);
     }
 
-    public Answer RemoveParcel(Position position, int? pUid = null)
+    public Answer RemoveParcel(Position pos1, int pUid1, Position pos2)
     {
-        try
+        /*try
         {
-            List<DataPart<Parcel>> dupDataPartsParcels = _parcelasTree.FindDataParts(position);
+            List<DataPart<Parcel>> dupParcelas1 = _parcelasTree.FindDataParts(pos1);
+            List<DataPart<Parcel>> dupParcelas2 = _parcelasTree.FindDataParts(pos2);
 
-            if (dupDataPartsParcels.Count == 0)
+            if (dupParcelas1.Count == 0 || dupParcelas2.Count == 0)
             {
-                return new Answer($"Nenašla sa žiadna parcela na súradnici {position}", AnswerState.Info);
+                return new Answer($"!!! ERROR: Parcela na súradniciach ({pos1}-{pos2}) sa už nenachádzala v systéme!!! ERROR", AnswerState.Error);
             }
 
-            int uid = pUid ?? _application.GetUidFromUserByChoosingFromList(dupDataPartsParcels);
+            Parcel parcelToDelete = DataPart<Parcel>.GetValue(dupParcelas1, pUid1)!;
 
-
-
-            Parcel? parcelToDelete = DataPart<Parcel>.GetValue(dupDataPartsParcels, uid);
-
-            if (parcelToDelete == null)
+            List<Realestate> realestatesAtPos1 = _realestatesTree.Find(pos1);
+            List<Realestate> realestatesAtPos2 = _realestatesTree.Find(pos2);
+            foreach (Realestate realestate in realestatesAtPos1)
             {
-                return new Answer($"ERROR: Parcela na súradnici {position} s UID: {uid} sa nenašla!!!", AnswerState.Error);
+                realestate.RemoveParcel(parcelToDelete);
             }
-
-            List<Realestate> realestatesAtThatPosition = _realestatesTree.Find(position);
-            foreach (Realestate realestate in realestatesAtThatPosition)
+            foreach (Realestate realestate in realestatesAtPos2)
             {
                 realestate.RemoveParcel(parcelToDelete);
             }
 
-            _parcelasTree.Remove(position, uid);
+            int uid2 = (int)DataPart<Parcel>.GetUid(dupParcelas2, parcelToDelete)!;
+            _parcelasTree.Remove(pos1, pUid1);
+            _parcelasTree.Remove(pos1, uid2);
 
-            return new Answer($"Parcela na súradnici {position} bola úspešne odstránená.", AnswerState.Ok);
+            return new Answer($"Parcela na súradniciach ({pos1}-{pos2}) bola úspešne odstránená.", AnswerState.Ok);
         }
         catch (Exception e)
         {
-            return new Answer($"Odstránenie parcely na súradnici {position} sa nepodarilo. {e.Message}", AnswerState.Error);
-        }
+            return new Answer($"Odstránenie parcely na súradniciach ({pos1}-{pos2}) sa nepodarilo. {e.Message}", AnswerState.Error);
+        }*/
+        throw new NotImplementedException();
     }
 
-    public Answer UpdateParcel(Position oldPos1, Position oldPos2, Position newPos1, Position newPos2, Parcel newparcel, int index)
+    public Answer UpdateParcel(Position oldPos1, Position oldPos2, Position newPos1, Position newPos2, Parcel newParcel, int pUid)
     {
-        try
+        /*try
         {
-            Parcel parcel = _parcelasTree.Find(oldPos1)![index];
-            if (oldPosition.Equals(newPosition))
-            {
+            List<DataPart<Parcel>> foundDataParts = _parcelasTree.FindDataParts(oldPos1);
+            Parcel? parcel = DataPart<Parcel>.GetValue(foundDataParts, pUid);
 
-                parcel.Description = newparcel.Description;
-                parcel.ParcelNum = newparcel.ParcelNum;
-                return new Answer($"Parcela na súradnici {oldPosition} bola úspešne aktualizovaná.", AnswerState.Ok);
+            if (parcel == null)
+            {
+                return new Answer($"Parcela na súradniciach {oldPos1}-{oldPos2} sa nenašla aj keď sa mala. CHYBA", AnswerState.Error);
             }
+
+            if ((oldPos1.Equals(newPos1) && oldPos2.Equals(newPos2)) || (oldPos1.Equals(newPos2) && oldPos2.Equals(newPos1)))
+            {
+                // if only data is changed
+                parcel.Description = newParcel.Description;
+                parcel.ParcelNum = newParcel.ParcelNum;
+                return new Answer($"Parcela na súradniciach {oldPos1}-{oldPos2} bola úspešne aktualizovaná.", AnswerState.Ok);
+            }
+
+
+            RemoveParcel();
+
+
 
             RemoveParcel(oldPosition, index);
 
 
-            AddParcel()
-
-
-
+            AddParcel();
         }
         catch (Exception e)
         {
@@ -112,6 +124,7 @@ public class ApplicationCore
         {
             return new Answer($"Neexistuje žiadna parcela na súradnici {oldPosition}", AnswerState.Info);
         }
+        */
 
 
 
@@ -119,27 +132,22 @@ public class ApplicationCore
         throw new NotImplementedException();
     }
 
-    public Tuple<Answer, List<Parcel>> FindParcel(Position position)
+    public Tuple<Answer, List<DataPart<Parcel>>> FindParcelas(Position position)
     {
         try
         {
-            List<Parcel> parcels = _parcelasTree.Find(position) ?? new List<Parcel>();
+            List<DataPart<Parcel>> dpParcelas = _parcelasTree.FindDataParts(position);
 
-            if (parcels.Count <= 0)
+            if (dpParcelas.Count <= 0)
             {
-                return new Tuple<Answer, List<Parcel>>(new Answer($"Neexistuje žiadna parcela na súradnici {position}", AnswerState.Info), parcels);
+                return new Tuple<Answer, List<DataPart<Parcel>>>(new Answer($"Neexistuje žiadna parcela na súradnici {position}", AnswerState.Info), dpParcelas);
             }
 
-            return new Tuple<Answer, List<Parcel>>(new Answer($"Našlo sa {parcels.Count} parciel.", AnswerState.Ok), parcels);
+            return new Tuple<Answer, List<DataPart<Parcel>>>(new Answer($"Našlo sa {dpParcelas.Count} parciel.", AnswerState.Ok), dpParcelas);
         }
         catch (Exception e)
         {
-            return new Tuple<Answer, List<Parcel>>(new Answer($"Odstránenie parcely na súradnici {position} sa nepodarilo. {e.Message}", AnswerState.Error), new List<Parcel>());
+            return new Tuple<Answer, List<DataPart<Parcel>>>(new Answer($"Vyhľadanie parcely na súradnici {position} sa nepodarilo. {e.Message}", AnswerState.Error), new  List<DataPart<Parcel>>());
         }
     }
-
-
-
-
-
 }

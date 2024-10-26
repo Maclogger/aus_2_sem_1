@@ -5,7 +5,7 @@ namespace Entities
         private static readonly Config _instance = new Config();
 
         // double TOLERANCE
-        private double _doubleTolerance = 0.00001;
+        private double _tolerance = 0.00001;
         // random generated coordination:
         private double _minLatitude = Double.MinValue;
         private double _maxLatitude = Double.MaxValue;
@@ -27,7 +27,7 @@ namespace Entities
 
         public bool ProbabilityCheck()
         {
-            return Math.Abs(_probOfAdd + _probOfFind + _probOfRemove + _probOfUpdate - 1) < DoubleTolerance;
+            return Math.Abs(_probOfAdd + _probOfFind + _probOfRemove + _probOfUpdate - 1) < Tolerance;
         }
 
         public double MinLatitude
@@ -84,10 +84,10 @@ namespace Entities
             set => _formattedOutput = value;
         }
 
-        public double DoubleTolerance
+        public double Tolerance
         {
-            get => _doubleTolerance;
-            set => _doubleTolerance = value;
+            get => _tolerance;
+            set => _tolerance = value;
         }
     }
 }

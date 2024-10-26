@@ -1,3 +1,5 @@
+using My.Core;
+
 namespace My.DataStructures.KdTree;
 
 public class DataPart<T>
@@ -19,6 +21,7 @@ public class DataPart<T>
         set => _value = value;
     }
 
+
     public static T? GetValue<T>(List<DataPart<T>> list, int pUid)
     {
         foreach (DataPart<T> dataPart in list)
@@ -26,6 +29,19 @@ public class DataPart<T>
             if (dataPart.Uid == pUid)
             {
                 return dataPart.Value;
+            }
+        }
+
+        return default;
+    }
+
+    public static int? GetUid<T>(List<DataPart<T>> list, T t)
+    {
+        foreach (DataPart<T> dataPart in list)
+        {
+            if (dataPart.Value?.Equals(t) ?? false)
+            {
+                return dataPart.Uid;
             }
         }
 

@@ -74,18 +74,19 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         }
     }
 
-    public void Add(K pKey, T pData)
+    public int Add(K pKey, T pData)
     {
         if (Size <= 0 || _root == null)
         {
             // if the tree is empty
             _root = new Node<K, T>(pKey, pData, 0);
             _size = 1;
-            return;
+            return -1;
         }
 
         Node<K, T> currentNode = _root;
 
+        int? uid = null;
         // on the left side of the tree, there are items less or equal to
         int currentDimension = 0;
         while (true)
@@ -95,7 +96,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
             if (comp == 0 && currentNode.Key.Equals(pKey))
             {
                 // if there is already a node with the exact same Key, then we store the data part in List in Node
-                currentNode.AddData(pData);
+                uid = currentNode.AddData(pData);
                 break;
             }
 
@@ -128,6 +129,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         }
 
         _size++;
+        return (int)uid!;
     }
 
     public List<DataPart<T>> FindDataParts(K pKey)

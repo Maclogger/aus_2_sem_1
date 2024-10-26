@@ -57,7 +57,7 @@ namespace My.Core
 
         public bool Equals(Position other)
         {
-            return Math.Abs(X - other.X) < Config.Instance.DoubleTolerance && Math.Abs(Y - other.Y) < Config.Instance.DoubleTolerance;
+            return Math.Abs(X - other.X) < Config.Instance.Tolerance && Math.Abs(Y - other.Y) < Config.Instance.Tolerance;
         }
 
         public double X
@@ -116,7 +116,7 @@ namespace My.Core
             double[] cordsOther = { pOtherPos.X, pOtherPos.Y };
 
 
-            if (Math.Abs(cords[pDimension] - cordsOther[pDimension]) < Config.Instance.DoubleTolerance)
+            if (Math.Abs(cords[pDimension] - cordsOther[pDimension]) < Config.Instance.Tolerance)
             {
                 return 0;
             }
@@ -127,6 +127,13 @@ namespace My.Core
             }
 
             return 1;
+        }
+
+        public bool Equals(IKey pOther)
+        {
+            if (pOther is not Position pOtherPos) return false;
+            return Math.Abs(_x - pOtherPos.X) < Config.Instance.Tolerance &&
+                   Math.Abs(_y - pOtherPos.Y) < Config.Instance.Tolerance;
         }
     }
 }
