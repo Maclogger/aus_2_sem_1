@@ -1,20 +1,27 @@
 using System;
 using System.Collections.Generic;
 using AUS_Semestralna_Praca_1.BackEnd.Core;
+using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 
-namespace AUS_Semestralna_Praca_1.BackEnd.CoreGui;
+namespace AUS_Semestralna_Praca_1;
 
-public class Application
+
+
+public class MainApplication
 {
-    private ApplicationCore _core;
-    private GUI _gui;
+    // SINGLETON
+    private static readonly MainApplication _instance = new();
+    public static MainApplication Instance => _instance;
 
-    public Application()
+    private ApplicationCore _core;
+    private ConsoleGui _consoleGui;
+
+    private MainApplication()
     {
         _core = new ApplicationCore(this);
-        _gui = new GUI(this);
+        _consoleGui = new ConsoleGui(this);
     }
 
     public ApplicationCore? Core
@@ -52,14 +59,10 @@ public class Application
         throw new NotImplementedException();
     }
 
-
-
     public void Run()
     {
-        _gui.Run();
+        _consoleGui.Run();
     }
-
-
 
     public int GetUidFromUserByChoosingFromList<T>(List<DataPart<T>> list)
     {
@@ -70,7 +73,7 @@ public class Application
             optionsForUser.Add(option);
         }
         
-        int index = _gui.ChooseFromList(optionsForUser); // TODO implement GUI
+        int index = _consoleGui.ChooseFromList(optionsForUser); // TODO implement GUI
 
         return list[index].Uid;
     }

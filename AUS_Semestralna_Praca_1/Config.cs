@@ -4,7 +4,7 @@ namespace AUS_Semestralna_Praca_1;
 
 public class Config
 {
-    private static readonly Config _instance = new Config();
+    private static readonly Config _instance = new();
 
     // double TOLERANCE
     private double _tolerance = 0.00001;

@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using System;
+using AUS_Semestralna_Praca_1.FrontEnd;
 
 namespace AUS_Semestralna_Praca_1;
 

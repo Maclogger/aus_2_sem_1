@@ -8,9 +8,11 @@ partial class Program
 {
     public static void MainBack(string[] args)
     {
-        Application application = new Application();
+        /*
+        MainApplication mainApplication = new MainApplication();
 
-        application.Run();
+        mainApplication.Run();
+    */
     }
 
     private static void Test()

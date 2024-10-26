@@ -7,13 +7,13 @@ namespace AUS_Semestralna_Praca_1.BackEnd.Core;
 
 public class ApplicationCore
 {
-    private readonly Application _application;
+    private readonly MainApplication _mainApplication;
     private KdTree<Position, Realestate> _realestatesTree = new(2);
     private KdTree<Position, Parcel> _parcelasTree = new(2);
 
-    public ApplicationCore(Application pApplication)
+    public ApplicationCore(MainApplication pMainApplication)
     {
-        _application = pApplication;
+        _mainApplication = pMainApplication;
     }
 
     public Answer AddParcel(Position pos1, Position pos2,  Parcel parcel)

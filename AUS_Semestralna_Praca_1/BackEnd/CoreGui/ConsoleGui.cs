@@ -4,13 +4,13 @@ using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 
-public class GUI
+public class ConsoleGui
 {
-    private Application _application;
+    private MainApplication _mainApplication;
 
-    public GUI(Application application)
+    public ConsoleGui(MainApplication mainApplication)
     {
-        _application = application;
+        _mainApplication = mainApplication;
     }
 
     public int ChooseFromList(List<string?> options)
@@ -44,7 +44,7 @@ public class GUI
         ClientSys.AddToAttr(ref parcelAttr, "DESCRIPTION", "Prva parcela");
 
 
-        Answer answer = _application.AddParcel(pos1Attr, pos2Attr, parcelAttr);
+        Answer answer = _mainApplication.AddParcel(pos1Attr, pos2Attr, parcelAttr);
         answer.PrintOut();
 
 
@@ -65,7 +65,7 @@ public class GUI
         ClientSys.AddToAttr(ref parcelAttr, "PARCEL_NUM", 11);
         ClientSys.AddToAttr(ref parcelAttr, "DESCRIPTION", "Druha parcela");
 
-        answer = _application.AddParcel(pos1Attr, pos2Attr, parcelAttr);
+        answer = _mainApplication.AddParcel(pos1Attr, pos2Attr, parcelAttr);
         answer.PrintOut();
 
 
@@ -86,10 +86,10 @@ public class GUI
         ClientSys.AddToAttr(ref parcelAttr, "PARCEL_NUM", 12);
         ClientSys.AddToAttr(ref parcelAttr, "DESCRIPTION", "Tretia parcela");
 
-        answer = _application.AddParcel(pos1Attr, pos2Attr, parcelAttr);
+        answer = _mainApplication.AddParcel(pos1Attr, pos2Attr, parcelAttr);
         answer.PrintOut();
 
         Console.WriteLine("\n\n\n");
-        _application.PrintParcelTree();
+        _mainApplication.PrintParcelTree();
     }
 }

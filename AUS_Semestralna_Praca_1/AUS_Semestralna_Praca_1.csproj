@@ -18,4 +18,15 @@
         <PackageReference Include="MSTest.TestAdapter" Version="3.6.1" />
         <PackageReference Include="MSTest.TestFramework" Version="3.6.1" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="FrontEnd\MainWindow.axaml.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="FrontEnd\App.axaml.cs">
+        <DependentUpon>App.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>
