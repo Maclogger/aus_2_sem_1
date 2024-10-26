@@ -7,7 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85b5f463-3eb4-4695-b2c1-7f78dc5b873f" name="Changes" comment="Added GUI Avalonia framework">
+    <list default="true" id="85b5f463-3eb4-4695-b2c1-7f78dc5b873f" name="Changes" comment="GUI stuff">
       <change afterPath="$PROJECT_DIR$/../SemestralnaPraca/MojaPrvaAplikacia.csproj" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../SemestralnaPraca/Program.cs" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../SemestralnaPraca/bin/Debug/net8.0/MojaPrvaAplikacia" afterDir="false" />
@@ -61,6 +61,27 @@
       <change afterPath="$PROJECT_DIR$/../Semka/MyBackup/My" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Semka/RuckiMarekSem1.zip" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Semka/sprava.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/bin/Debug/net8.0/My" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/bin/Debug/net8.0/My.deps.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/bin/Debug/net8.0/My.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/bin/Debug/net8.0/My.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/bin/Debug/net8.0/My.runtimeconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/My.AssemblyInfo.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/My.AssemblyInfoInputs.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/My.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/My.GlobalUsings.g.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/My.assets.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/My.csproj.CoreCompileInputs.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/My.csproj.FileListAbsolute.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/My.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/My.genruntimeconfig.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/My.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/My.sourcelink.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/apphost" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/ref/My.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Semka/Copy/My/obj/Debug/net8.0/refint/My.dll" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,6 +158,7 @@
       <workItem from="1729969504035" duration="204000" />
       <workItem from="1729972840117" duration="1039000" />
       <workItem from="1729973884324" duration="632000" />
+      <workItem from="1729974523833" duration="236000" />
     </task>
     <servers />
   </component>
@@ -148,7 +170,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Added GUI Avalonia framework" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added GUI Avalonia framework" />
+    <MESSAGE value="GUI stuff" />
+    <option name="LAST_COMMIT_MESSAGE" value="GUI stuff" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
