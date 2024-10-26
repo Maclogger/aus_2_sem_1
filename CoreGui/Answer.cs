@@ -22,6 +22,22 @@ public class Answer
     {
         get => _state;
     }
+
+
+    public void PrintOut()
+    {
+        Console.ForegroundColor = _state switch
+        {
+            AnswerState.Error => ConsoleColor.Red,
+            AnswerState.Info => ConsoleColor.DarkYellow,
+            AnswerState.Ok => ConsoleColor.DarkGreen,
+            _ => Console.ForegroundColor
+        };
+
+        Console.WriteLine($"[{_state}] {_message}");
+        Console.ResetColor();
+    }
+
 }
 
 

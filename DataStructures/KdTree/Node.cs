@@ -48,7 +48,7 @@ public class Node<K, T> where K : IKey
     {
         string sol = _key.ToString() ?? "";
         sol += $"({_dimension}):";
-        DataPart<T> last = _data[^0];
+        DataPart<T> last = _data[^1];
         foreach (DataPart<T> item in _data)
         {
             if (item.Value == null) continue;

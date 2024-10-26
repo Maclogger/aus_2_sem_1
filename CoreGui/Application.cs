@@ -54,7 +54,7 @@ public class Application
 
     public void Run()
     {
-        throw new NotImplementedException();
+        _gui.Run();
     }
 
 
@@ -71,5 +71,10 @@ public class Application
         int index = _gui.ChooseFromList(optionsForUser); // TODO implement GUI
 
         return list[index].Uid;
+    }
+
+    public void PrintParcelTree()
+    {
+        _core.PrintParcelTree();
     }
 }

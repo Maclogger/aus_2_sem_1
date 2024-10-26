@@ -11,24 +11,24 @@ public static class ClientSys
     /////////////////////////////////// ADD ////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    public static string AddToAttr(string attr, string key, string value)
+    public static void AddToAttr(ref string attr, string key, string value)
     {
-        return $"{attr}{key}{PairSeparator}{value}{PairSeparator}";
+        attr = $"{attr}{key}{KeyValueSeparator}{value}{PairSeparator}";
     }
 
-    public static string AddToAttr(string attr, string key, int value)
+    public static void AddToAttr(ref string attr, string key, int value)
     {
-        return $"{attr}{key}{PairSeparator}{value.ToString()}{PairSeparator}";
+        attr = $"{attr}{key}{KeyValueSeparator}{value.ToString()}{PairSeparator}";
     }
 
-    public static string AddToAttr(string attr, string key, double value)
+    public static void AddToAttr(ref string attr, string key, double value)
     {
-        return $"{attr}{key}{PairSeparator}{value.ToString(CultureInfo.InvariantCulture)}{PairSeparator}";
+        attr = $"{attr}{key}{KeyValueSeparator}{value.ToString(CultureInfo.InvariantCulture)}{PairSeparator}";
     }
 
-    public static string AddToAttr(string attr, string key, bool value)
+    public static void AddToAttr(ref string attr, string key, bool value)
     {
-        return $"{attr}{key}{PairSeparator}{value.ToString()}{PairSeparator}";
+        attr = $"{attr}{key}{KeyValueSeparator}{value.ToString()}{PairSeparator}";
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -64,6 +64,7 @@ public static class ClientSys
 
     private static List<Tuple<string, string>> Process(string attr)
     {
+        attr = attr.Substring(0, attr.Length - 1);
         List<Tuple<string, string>> sol = new();
 
         string[] pairs = attr.Split(PairSeparator);

@@ -150,4 +150,9 @@ public class ApplicationCore
             return new Tuple<Answer, List<DataPart<Parcel>>>(new Answer($"Vyhľadanie parcely na súradnici {position} sa nepodarilo. {e.Message}", AnswerState.Error), new  List<DataPart<Parcel>>());
         }
     }
+
+    public void PrintParcelTree()
+    {
+        _parcelasTree.Print();
+    }
 }

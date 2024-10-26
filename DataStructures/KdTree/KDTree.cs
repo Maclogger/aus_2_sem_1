@@ -81,7 +81,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
             // if the tree is empty
             _root = new Node<K, T>(pKey, pData, 0);
             _size = 1;
-            return -1;
+            return _root.Data[0].Uid;
         }
 
         Node<K, T> currentNode = _root;
@@ -107,6 +107,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
                 {
                     currentNode.LeftChild = new Node<K, T>(pKey, pData, (currentDimension + 1) % 2);
                     currentNode.LeftChild.Father = currentNode;
+                    uid = currentNode.LeftChild.Data[0].Uid;
                     break;
                 }
 
@@ -119,6 +120,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
                 {
                     currentNode.RightChild = new Node<K, T>(pKey, pData, (currentDimension + 1) % 2);
                     currentNode.RightChild.Father = currentNode;
+                    uid = currentNode.RightChild.Data[0].Uid;
                     break;
                 }
 

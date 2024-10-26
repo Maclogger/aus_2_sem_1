@@ -20,7 +20,7 @@ namespace My.Core
 
         public Position(string attr)
         {
-            char latitude = (char)ClientSys.GetStringFromAttr(attr, "LAT")?[0]!;
+            double latitude = (double)ClientSys.GetDoubleFromAttr(attr, "LAT")!;
             char latitudeSign = (char)ClientSys.GetStringFromAttr(attr, "LAT_SIGN")?[0]!;
             double longitude = (double)ClientSys.GetDoubleFromAttr(attr, "LON")!;
             char longitudeSign = (char)ClientSys.GetStringFromAttr(attr, "LON_SIGN")?[0]!;
@@ -30,15 +30,9 @@ namespace My.Core
 
         private void Initialize(double pLatitude, char pLatitudeSign, double pLongitude, char pLongitudeSign)
         {
-            if (pLatitudeSign == 'S')
-            {
-                X = -pLatitude;
-            }
+            X = pLatitudeSign == 'W' ? -pLatitude : pLatitude;
 
-            if (pLongitudeSign == 'E')
-            {
-                Y = -pLongitude;
-            }
+            Y = pLongitudeSign == 'S' ? -pLongitude : pLongitude;
 
             Latitude = pLatitude;
             LatitudeSign = pLatitudeSign;

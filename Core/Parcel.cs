@@ -1,3 +1,5 @@
+using Entities;
+
 namespace My.Core
 {
     public class Parcel
@@ -5,15 +7,15 @@ namespace My.Core
         private int _parcelNum; // číslo parcely
         private string _description; // popis
         private List<Realestate> _realestates = new(); // nehnuteľnosti
-        private Position _topLeft, _bottomRight;
+        private Position _pos1, _pos2;
         private int? _uid1, _uid2;
 
-        public Parcel(int pParcelNum, string pDescription, Position pTopLeft, Position pBottomRight)
+        public Parcel(int pParcelNum, string pDescription, Position pPos1, Position pPos2)
         {
-            ParcelNum = pParcelNum;
-            Description = pDescription;
-            TopLeft = pTopLeft;
-            BottomRight = pBottomRight;
+            _parcelNum = pParcelNum;
+            _description = pDescription;
+            _pos1 = pPos1;
+            _pos2 = pPos2;
         }
         
 
@@ -35,16 +37,16 @@ namespace My.Core
             set => _realestates = value;
         }
 
-        public Position TopLeft
+        public Position Pos1
         {
-            get => _topLeft;
-            set => _topLeft = value;
+            get => _pos1;
+            set => _pos1 = value;
         }
 
-        public Position BottomRight
+        public Position Pos2
         {
-            get => _bottomRight;
-            set => _bottomRight = value;
+            get => _pos2;
+            set => _pos2 = value;
         }
 
         public int? Uid1
@@ -65,6 +67,22 @@ namespace My.Core
             {
                 _realestates.Add(realestate);
             }
+        }
+
+        public override string ToString()
+        {
+            if (Config.Instance.FormattedOutput)
+            {
+                string sol = "";
+
+                sol += $"\nParcela ({_pos1}-{_pos2})\n";
+                sol += $"Číslo parcely: {_parcelNum}\n";
+                sol += $"Popis: '{_description}'\n";
+
+                return sol;
+            }
+
+            return $"{_parcelNum}: {_description}";
         }
     }
 }
