@@ -1,5 +1,6 @@
 using My.Core;
 using My.DataStructures;
+using My.DataStructures.KdTree;
 
 namespace My.CoreGui;
 
@@ -54,6 +55,22 @@ public class Application
     public void Run()
     {
         throw new NotImplementedException();
+    }
+
+
+
+    public int GetUidFromUserByChoosingFromList<T>(List<DataPart<T>> list)
+    {
+        List<string?> optionsForUser = new();
+        foreach (DataPart<T> dataPart in list)
+        {
+            string option = dataPart.Value?.ToString() ?? "NULL";
+            optionsForUser.Add(option);
+        }
+        
+        int index = _gui.ChooseFromList(optionsForUser); // TODO implement GUI
+
+        return list[index].Uid;
     }
 
     public int AskUserToChooseFromList(List<object> list)

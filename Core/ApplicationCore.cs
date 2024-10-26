@@ -42,29 +42,35 @@ public class ApplicationCore
         return new Answer($"Pridanie parcely ({pos1}-{pos2})-{parcel} bolo úspešné.", AnswerState.Ok);
     }
 
-    public Answer RemoveParcel(Position position, int? pIndex = null)
+    public Answer RemoveParcel(Position position, int? pUid = null)
     {
         try
         {
-            List<Parcel>? duplicateParcels = _parcelasTree.Find(position);
+            List<DataPart<Parcel>> dupDataPartsParcels = _parcelasTree.FindDataParts(position);
 
-            if (duplicateParcels == null || duplicateParcels.Count == 0)
+            if (dupDataPartsParcels.Count == 0)
             {
                 return new Answer($"Nenašla sa žiadna parcela na súradnici {position}", AnswerState.Info);
             }
 
-
-            int index = pIndex ?? (duplicateParcels.Count == 1 ? 0 : _application.AskUserToChooseFromList(duplicateParcels.Cast<object>().ToList()));
-            Parcel parcelToDelete = duplicateParcels[index];
+            int uid = pUid ?? _application.GetUidFromUserByChoosingFromList(dupDataPartsParcels);
 
 
-            List<Realestate>? realestatesAtThatPosition = _realestatesTree.Find(position);
-            foreach (Realestate realestate in realestatesAtThatPosition ?? new List<Realestate>())
+
+            Parcel? parcelToDelete = DataPart<Parcel>.GetValue(dupDataPartsParcels, uid);
+
+            if (parcelToDelete == null)
+            {
+                return new Answer($"ERROR: Parcela na súradnici {position} s UID: {uid} sa nenašla!!!", AnswerState.Error);
+            }
+
+            List<Realestate> realestatesAtThatPosition = _realestatesTree.Find(position);
+            foreach (Realestate realestate in realestatesAtThatPosition)
             {
                 realestate.RemoveParcel(parcelToDelete);
             }
 
-            _parcelasTree.Remove(position, index);
+            _parcelasTree.Remove(position, uid);
 
             return new Answer($"Parcela na súradnici {position} bola úspešne odstránená.", AnswerState.Ok);
         }
@@ -74,11 +80,11 @@ public class ApplicationCore
         }
     }
 
-    public Answer UpdateParcel(Position oldPosition, Position newPosition, Parcel newparcel, int index)
+    public Answer UpdateParcel(Position oldPos1, Position oldPos2, Position newPos1, Position newPos2, Parcel newparcel, int index)
     {
         try
         {
-            Parcel parcel = _parcelasTree.Find(oldPosition)![index];
+            Parcel parcel = _parcelasTree.Find(oldPos1)![index];
             if (oldPosition.Equals(newPosition))
             {
 

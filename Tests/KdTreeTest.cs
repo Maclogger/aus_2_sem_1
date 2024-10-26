@@ -11,7 +11,13 @@ public class MyIntKey : IKey
 
     public MyIntKey(int pValue)
     {
-        _value = pValue;
+        Value = pValue;
+    }
+
+    public int Value
+    {
+        get => _value;
+        set => _value = value;
     }
 
     public int CompareTo(IKey pOther, int pDimension)
@@ -21,12 +27,18 @@ public class MyIntKey : IKey
             throw new ArgumentException("Object is not an IntItem");
         }
 
-        if (_value == myIntKey._value)
+        if (Value == myIntKey.Value)
         {
             return 0;
         }
 
-        return _value < myIntKey._value ? -1 : 1;
+        return Value < myIntKey.Value ? -1 : 1;
+    }
+
+    public bool Equals(IKey pOther)
+    {
+        if (pOther is not MyIntKey myIntKey) return false;
+        return Value == myIntKey.Value;
     }
 }
 
@@ -95,6 +107,12 @@ public class Cord : IKey
         }
 
         return 0;
+    }
+
+    public bool Equals(IKey pOther)
+    {
+        if (pOther is not Cord cord) return false;
+        return _x == cord.X && _y == cord.Y;
     }
 }
 
@@ -190,7 +208,7 @@ public class SimulationTester
                     int indexOfElementToRemove = gen.Next(0, expectedInTree.Count);
                     CordInt randomExistingElement = expectedInTree[indexOfElementToRemove];
 
-                    List<int>? itemsWithMatchingKey = tree.Find(randomExistingElement.Cord);
+                    List<int> itemsWithMatchingKey = tree.Find(randomExistingElement.Cord);
 
                     if (itemsWithMatchingKey == null)
                     {
