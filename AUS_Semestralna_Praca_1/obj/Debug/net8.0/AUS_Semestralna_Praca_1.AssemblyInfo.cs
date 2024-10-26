@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AUS_Semestralna_Praca_1")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6679f4e6a51983d0051c53a18b4264cee7dd7d5e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+768fbec1132d6b0b6655fa4c8418d893319cb11f")]
 [assembly: System.Reflection.AssemblyProductAttribute("AUS_Semestralna_Praca_1")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AUS_Semestralna_Praca_1")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
