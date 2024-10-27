@@ -45,7 +45,7 @@ public class Realestate : Asset
         set => _uid2 = value;
     }
 
-    public void ToAttr(ref string attr)
+    public override void ToAttr(ref string attr)
     {
         ClientSys.AddToAttr(ref attr, "POS_1", _pos1.ToString());
         ClientSys.AddToAttr(ref attr, "POS_2", _pos2.ToString());

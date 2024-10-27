@@ -42,6 +42,9 @@ public class ApplicationCore
             int uid1 = _parcelasTree.Add(pos1, parcel);
             int uid2 = _parcelasTree.Add(pos2, parcel);
 
+            _assetsTree.Add(pos1, parcel);
+            _assetsTree.Add(pos2, parcel);
+
             parcel.Uid1 = uid1;
             parcel.Uid2 = uid2;
         }
@@ -204,6 +207,9 @@ public class ApplicationCore
             int uid1 = _realestatesTree.Add(pos1, realestate);
             int uid2 = _realestatesTree.Add(pos2, realestate);
 
+            _assetsTree.Add(pos1, realestate);
+            _assetsTree.Add(pos2, realestate);
+
             realestate.Uid1 = uid1;
             realestate.Uid2 = uid2;
         }
@@ -240,6 +246,38 @@ public class ApplicationCore
                 new Answer($"Vyhľadanie parcely na súradnici {position} sa nepodarilo. {e.Message}", AnswerState.Error),
                 new List<DataPart<Realestate>>());
         }
+    }
 
+    public Tuple<Answer, List<DataPart<Asset>>> FindAssets(Position pos1, Position pos2)
+    {
+        try
+        {
+            List<DataPart<Asset>> dpAssets = _assetsTree.FindDataParts(pos1);
+            List<DataPart<Asset>> tempDpAssets = _assetsTree.FindDataParts(pos2);
+
+            foreach (DataPart<Asset> dpAsset in tempDpAssets)
+            {
+                if (!dpAssets.Contains(dpAsset))
+                {
+                    dpAssets.Add(dpAsset);
+                }
+            }
+
+            if (dpAssets.Count <= 0)
+            {
+                return new Tuple<Answer, List<DataPart<Asset>>>(
+                    new Answer($"Neexistuje žiadna parcela/nehnuteľnosť na súradniciach {pos1},{pos2}", AnswerState.Info), dpAssets);
+            }
+
+
+            return new Tuple<Answer, List<DataPart<Asset>>>(
+                new Answer($"Našlo sa {dpAssets.Count} parciel/nehnuteľností.", AnswerState.Ok), dpAssets);
+        }
+        catch (Exception e)
+        {
+            return new Tuple<Answer, List<DataPart<Asset>>>(
+                new Answer($"Vyhľadanie parcely na súradnici {pos1},{pos2} sa nepodarilo. {e.Message}", AnswerState.Error),
+                new List<DataPart<Asset>>());
+        }
     }
 }

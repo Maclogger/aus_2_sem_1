@@ -172,4 +172,37 @@ public class MainApplication
         return new Tuple<Answer, List<string>>(tuple.Item1, solList);
     }
 
+    public Tuple<Answer,List<string>> FindAssets(string posAttr1, string posAttr2)
+    {
+        Position pos1;
+        Position pos2;
+        try
+        {
+            pos1 = new(posAttr1);
+            pos2 = new(posAttr2);
+        }
+        catch (Exception e)
+        {
+            return new Tuple<Answer, List<string>>(new Answer("Some of the attributes are missing or invalid.", AnswerState.Error), new List<string>());
+        }
+
+        Tuple<Answer, List<DataPart<Asset>>> tuple = _core.FindAssets(pos1, pos2);
+
+        if (tuple.Item1.State is AnswerState.Error or AnswerState.Info)
+        {
+            return new Tuple<Answer, List<string>>(tuple.Item1, new List<string>());
+        }
+
+        // Order has to be correct
+        List<string> solList = new(tuple.Item2.Count);
+        foreach (DataPart<Asset> realDp in tuple.Item2)
+        {
+            string sol = "";
+            realDp.Value.ToAttr(ref sol);
+            ClientSys.AddToAttr(ref sol, "TYPE", realDp.Value is Realestate ? "RS" : "PC");
+            solList.Add(sol);
+        }
+
+        return new Tuple<Answer, List<string>>(tuple.Item1, solList);
+    }
 }
