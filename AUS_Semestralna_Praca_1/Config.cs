@@ -21,7 +21,7 @@ public class Config
     private double _probOfUpdate = 0.25;
 
     // printing format
-    private bool _formattedOutput = false;
+    private bool _formattedOutput = true;
 
     private Config() { }
 

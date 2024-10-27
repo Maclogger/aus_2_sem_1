@@ -38,4 +38,9 @@ public partial class MainWindow : Window
     {
         throw new System.NotImplementedException();
     }
+
+    private void OnStatusClicked(object? sender, RoutedEventArgs e)
+    {
+        ContentArea.Content = new StatusPage(ContentArea);
+    }
 }

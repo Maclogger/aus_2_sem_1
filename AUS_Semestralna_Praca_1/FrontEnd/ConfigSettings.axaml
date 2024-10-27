@@ -5,9 +5,7 @@
              xmlns:local="clr-namespace:AUS_Semestralna_Praca_1"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AUS_Semestralna_Praca_1.FrontEnd.ConfigSettings">
-
     <ScrollViewer>
-
 
         <Border Background="#2D2D2D" Margin="100, 10, 100, 0" CornerRadius="20">
             <StackPanel Margin="100" Spacing="10">

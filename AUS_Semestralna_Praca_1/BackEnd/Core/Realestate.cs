@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.Core;
 
-public class Realestate
+public class Realestate : Asset
 {
     private int _realestateNum; // súpisné číslo
     private string _description; // popis

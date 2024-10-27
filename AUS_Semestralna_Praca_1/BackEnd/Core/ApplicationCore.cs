@@ -10,6 +10,7 @@ public class ApplicationCore
     private readonly MainApplication _mainApplication;
     private KdTree<Position, Realestate> _realestatesTree = new(2);
     private KdTree<Position, Parcel> _parcelasTree = new(2);
+    private KdTree<Position, Asset> _assetsTree = new(2);
 
     public ApplicationCore(MainApplication pMainApplication)
     {
@@ -156,5 +157,20 @@ public class ApplicationCore
     public void PrintParcelTree()
     {
         _parcelasTree.Print();
+    }
+
+    public int GetParcelCount()
+    {
+        return _parcelasTree.Size;
+    }
+
+    public int GetRealEstateCount()
+    {
+        return _realestatesTree.Size;
+    }
+
+    public int GetAssetCount()
+    {
+        return _assetsTree.Size;
     }
 }

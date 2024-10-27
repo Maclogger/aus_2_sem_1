@@ -9,20 +9,34 @@
             <TextBlock Text="Počet parciel: 34"
                        FontSize="20"
                        Foreground="white"
-                       HorizontalAlignment="Center" Padding="200, 40, 200, 0" />
-            <TextBlock Foreground="white" Text="Akú operáciu si prajete spraviť?" FontSize="24" HorizontalAlignment="Center" />
+                       HorizontalAlignment="Center"
+                       Padding="200, 40, 200, 0" />
+            <TextBlock Foreground="white"
+                       Text="Akú operáciu si prajete spraviť?"
+                       FontSize="24"
+                       HorizontalAlignment="Center" />
 
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20">
-                <Button Content="Pridať parcelu" Margin="10" Width="150" Height="50"
-                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                <Button Content="Pridať parcelu"
+                        Margin="10"
+                        Width="150"
+                        Height="50"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
                         Background="Black"
                         Foreground="white"
                         CornerRadius="10" />
-                <Button Content="Nájsť parcelu" Margin="10" Width="150" Height="50"
-                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                <Button Content="Nájsť parcelu"
+                        Margin="10"
+                        Width="150"
+                        Height="50"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
                         Background="Black"
                         Foreground="white"
                         CornerRadius="10" />

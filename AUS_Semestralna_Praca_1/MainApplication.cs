@@ -24,10 +24,19 @@ public class MainApplication
         _consoleGui = new ConsoleGui(this);
     }
 
-    public ApplicationCore? Core
+    public int ParcelCount
     {
-        get => _core;
-        set => _core = value;
+        get => _core.GetParcelCount();
+    }
+
+    public int RealEstateCount
+    {
+        get => _core.GetRealEstateCount();
+    }
+
+    public int AssetCount
+    {
+        get => _core.GetAssetCount();
     }
 
     // GUI => Core

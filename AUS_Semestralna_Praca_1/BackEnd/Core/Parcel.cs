@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.Core;
 
-public class Parcel
+public class Parcel : Asset
 {
     private int _parcelNum; // číslo parcely
     private string _description; // popis
