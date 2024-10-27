@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:AUS_Semestralna_Praca_1"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AUS_Semestralna_Praca_1.FrontEnd.ConfigSettings">
+
+    <ScrollViewer>
+
+
+        <Border Background="#2D2D2D" Margin="100, 10, 100, 0" CornerRadius="20">
+            <StackPanel Margin="100" Spacing="10">
+                <TextBlock Text="Configuration Settings" FontSize="24" HorizontalAlignment="Center" Margin="0" />
+
+                <TextBlock Text="Tolerance:" />
+                <NumericUpDown Minimum="0.00000001" Maximum="1"
+                               Increment="0.000001"
+                               Value="{Binding Tolerance, Source={x:Static local:Config.Instance}}" />
+
+                <TextBlock Text="Minimum Latitude (-90 to 90):" />
+                <NumericUpDown Minimum="-90.0"
+                               Maximum="90.0"
+                               Increment="0.01"
+                               Value="{Binding MinLatitude, Source={x:Static local:Config.Instance}}" />
+
+                <TextBlock Text="Maximum Latitude (-90 to 90):" />
+                <NumericUpDown Minimum="-90"
+                               Maximum="90"
+                               Increment="0.01"
+                               Value="{Binding MaxLatitude, Source={x:Static local:Config.Instance}}" />
+
+                <TextBlock Text="Minimum Longitude (-180 to 180):" />
+                <NumericUpDown Minimum="-180"
+                               Maximum="180"
+                               Increment="0.01"
+                               Value="{Binding MinLongitude, Source={x:Static local:Config.Instance}}" />
+
+                <TextBlock Text="Maximum Longitude (-180 to 180):" />
+                <NumericUpDown Minimum="-180"
+                               Maximum="180"
+                               Increment="0.01"
+                               Value="{Binding MaxLongitude, Source={x:Static local:Config.Instance}}" />
+
+                <TextBlock Text="Probability of Add (0 to 1):" />
+                <NumericUpDown Minimum="0"
+                               Maximum="1"
+                               Increment="0.01" Value="{Binding ProbOfAdd, Source={x:Static local:Config.Instance}}" />
+
+                <TextBlock Text="Probability of Find (0 to 1):" />
+                <NumericUpDown Minimum="0"
+                               Maximum="1"
+                               Increment="0.01" Value="{Binding ProbOfFind, Source={x:Static local:Config.Instance}}" />
+
+                <TextBlock Text="Probability of Remove (0 to 1):" />
+                <NumericUpDown Minimum="0"
+                               Maximum="1"
+                               Increment="0.01" Value="{Binding ProbOfRemove, Source={x:Static local:Config.Instance}}" />
+
+                <TextBlock Text="Probability of Update (0 to 1):" />
+                <NumericUpDown Minimum="0"
+                               Maximum="1"
+                               Increment="0.01" Value="{Binding ProbOfUpdate, Source={x:Static local:Config.Instance}}" />
+
+                <CheckBox IsChecked="{Binding FormattedOutput, Source={x:Static local:Config.Instance}}"
+                          Content="Formatted Output" />
+            </StackPanel>
+        </Border>
+    </ScrollViewer>
+</UserControl>

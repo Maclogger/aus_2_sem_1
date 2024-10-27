@@ -3,15 +3,109 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="AUS_Semestralna_Praca_1.MainWindow"
+        x:Class="AUS_Semestralna_Praca_1.FrontEnd.MainWindow"
         Title="Marek Rucki - AUS: Semestrálna práca 1">
 
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
-        <TextBlock Text="Welcome to Avalonia!" HorizontalAlignment="Center"/>
+    <Grid Background="white">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <StackPanel Grid.Column="0" Background="LightGray">
+                <Button Content="Status"
+                        Background="White"
+                        Click="OnScreen1Clicked"
+                        Height="50"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Width="190"
+                        Margin="5"
+                        Foreground="Black"
+                        FontWeight="DemiBold" />
 
-        <!-- Tlačidlá -->
-        <Button Content="Run KdTree Tester" Width="200" Click="OnRunKdTreeTester"/>
-        <Button Content="Sem_1" Width="200" Click="OnSem1"/>
-        <Button Content="Cancel" Width="200" Click="OnCancel"/>
-    </StackPanel>
+                <Button Content="Parcely"
+                        Background="White"
+                        Click="OnScreen2Clicked"
+                        Height="50"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Width="190"
+                        Margin="5"
+                        Foreground="Black"
+                        FontWeight="DemiBold" />
+
+                <Button Content="Nehnuteľnosti"
+                        Background="White"
+                        Click="OnScreen2Clicked"
+                        Height="50"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Width="190"
+                        Margin="5"
+                        Foreground="Black"
+                        FontWeight="DemiBold" />
+
+                <Button Content="Parcely a nehnuteľnosti"
+                        Background="White"
+                        Click="OnParcelAndRealestates"
+                        Height="50"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Width="190"
+                        Margin="5"
+                        Foreground="Black"
+                        FontWeight="DemiBold" />
+
+                <Button Content="Configurácia"
+                        Background="White"
+                        Click="OnConfigClicked"
+                        Height="50"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Width="190"
+                        Margin="5"
+                        Foreground="Black"
+                        FontWeight="DemiBold" />
+
+                <TextBlock Height="40"></TextBlock>
+
+
+                <Button Content="TODO"
+                        Background="White"
+                        Click="OnScreen2Clicked"
+                        Height="50"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Width="190"
+                        Margin="5"
+                        Foreground="Black"
+                        FontWeight="DemiBold" />
+
+                <Button Content="TODO"
+                        Background="White"
+                        Click="OnScreen2Clicked"
+                        Height="50"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Width="190"
+                        Margin="5"
+                        Foreground="Black"
+                        FontWeight="DemiBold" />
+
+                <Button Content="KONIEC"
+                        Background="White"
+                        Click="OnExitClicked"
+                        Height="50"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Width="190"
+                        Margin="5"
+                        Foreground="Black"
+                        FontWeight="DemiBold" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <ContentControl x:Name="ContentArea" Grid.Column="1" />
+    </Grid>
 </Window>

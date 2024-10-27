@@ -9,10 +9,10 @@ public class Config
     // double TOLERANCE
     private double _tolerance = 0.00001;
     // random generated coordination:
-    private double _minLatitude = Double.MinValue;
-    private double _maxLatitude = Double.MaxValue;
-    private double _minLongitude = Double.MinValue;
-    private double _maxLongitude = Double.MinValue;
+    private double _minLatitude = -90.0;
+    private double _maxLatitude = 90.0;
+    private double _minLongitude = -180.0;
+    private double _maxLongitude = 180.0;
 
     // testing KdTree structure:
     private double _probOfAdd = 0.25;
