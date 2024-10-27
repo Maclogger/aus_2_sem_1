@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:frontEnd="clr-namespace:AUS_Semestralna_Praca_1.FrontEnd"
+        mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="200"
+        x:Class="AUS_Semestralna_Praca_1.FrontEnd.MyMessageBox"
+        Title="{Binding Title}"
+        x:DataType="frontEnd:MyMessageBox"
+        Width="800"
+        Height="200"
+        >
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="{Binding Title}" HorizontalAlignment="Center" Margin="10" FontWeight="Bold" Grid.Row="0" />
+
+        <TextBlock x:Name="messageTextBlock" Text="{Binding Message}" HorizontalAlignment="Center" Margin="10" Grid.Row="1" VerticalAlignment="Center" />
+
+        <Button x:Name="okButton" Content="OK" HorizontalAlignment="Center" Margin="10" Grid.Row="1" VerticalAlignment="Bottom" />
+    </Grid>
+</Window>

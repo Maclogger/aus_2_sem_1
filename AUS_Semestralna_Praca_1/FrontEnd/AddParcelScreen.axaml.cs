@@ -4,11 +4,11 @@ using Avalonia.Markup.Xaml;
 
 namespace AUS_Semestralna_Praca_1.FrontEnd;
 
-public partial class StatusScreen : UserControl
+public partial class AddParcelScreen : UserControl
 {
     private readonly ContentControl _contentArea;
 
-    public StatusScreen(ContentControl contentArea)
+    public AddParcelScreen(ContentControl contentArea)
     {
         _contentArea = contentArea;
         InitializeComponent();

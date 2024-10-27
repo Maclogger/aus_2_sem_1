@@ -12,12 +12,17 @@ public class ApplicationCore
     private KdTree<Position, Parcel> _parcelasTree = new(2);
     private KdTree<Position, Asset> _assetsTree = new(2);
 
+    private int _parcelsCount = 0;
+    private int _realestatesCount = 0;
+    private int _assetsCount = 0;
+
+
     public ApplicationCore(MainApplication pMainApplication)
     {
         _mainApplication = pMainApplication;
     }
 
-    public Answer AddParcel(Position pos1, Position pos2,  Parcel parcel)
+    public Answer AddParcel(Position pos1, Position pos2, Parcel parcel)
     {
         try
         {
@@ -45,6 +50,8 @@ public class ApplicationCore
             return new Answer($"Pridanie prvku ({pos1}-{pos2})-{parcel} sa nepodarilo. {e.Message}", AnswerState.Error);
         }
 
+        _parcelsCount++;
+        _assetsCount++;
         return new Answer($"Pridanie parcely ({pos1}-{pos2})-{parcel} bolo úspešné.", AnswerState.Ok);
     }
 
@@ -86,7 +93,8 @@ public class ApplicationCore
         throw new NotImplementedException();
     }
 
-    public Answer UpdateParcel(Position oldPos1, Position oldPos2, Position newPos1, Position newPos2, Parcel newParcel, int pUid)
+    public Answer UpdateParcel(Position oldPos1, Position oldPos2, Position newPos1, Position newPos2, Parcel newParcel,
+        int pUid)
     {
         /*try
         {
@@ -130,8 +138,6 @@ public class ApplicationCore
         */
 
 
-
-
         throw new NotImplementedException();
     }
 
@@ -143,14 +149,18 @@ public class ApplicationCore
 
             if (dpParcelas.Count <= 0)
             {
-                return new Tuple<Answer, List<DataPart<Parcel>>>(new Answer($"Neexistuje žiadna parcela na súradnici {position}", AnswerState.Info), dpParcelas);
+                return new Tuple<Answer, List<DataPart<Parcel>>>(
+                    new Answer($"Neexistuje žiadna parcela na súradnici {position}", AnswerState.Info), dpParcelas);
             }
 
-            return new Tuple<Answer, List<DataPart<Parcel>>>(new Answer($"Našlo sa {dpParcelas.Count} parciel.", AnswerState.Ok), dpParcelas);
+            return new Tuple<Answer, List<DataPart<Parcel>>>(
+                new Answer($"Našlo sa {dpParcelas.Count} parciel.", AnswerState.Ok), dpParcelas);
         }
         catch (Exception e)
         {
-            return new Tuple<Answer, List<DataPart<Parcel>>>(new Answer($"Vyhľadanie parcely na súradnici {position} sa nepodarilo. {e.Message}", AnswerState.Error), new  List<DataPart<Parcel>>());
+            return new Tuple<Answer, List<DataPart<Parcel>>>(
+                new Answer($"Vyhľadanie parcely na súradnici {position} sa nepodarilo. {e.Message}", AnswerState.Error),
+                new List<DataPart<Parcel>>());
         }
     }
 
@@ -161,16 +171,75 @@ public class ApplicationCore
 
     public int GetParcelCount()
     {
-        return _parcelasTree.Size;
+        return _parcelsCount;
     }
 
     public int GetRealEstateCount()
     {
-        return _realestatesTree.Size;
+        return _realestatesCount;
     }
 
     public int GetAssetCount()
     {
-        return _assetsTree.Size;
+        return _assetsCount;
+    }
+
+    public Answer AddRealestate(Position pos1, Position pos2, Realestate realestate)
+    {
+        try
+        {
+            // adding new parcel to all realestates at pos1 and pos2
+            foreach (Parcel parcel in _parcelasTree.Find(pos1))
+            {
+                parcel.AddRealestate(realestate);
+                realestate.AddParcel(parcel);
+            }
+
+            foreach (Parcel parcel in _parcelasTree.Find(pos2))
+            {
+                parcel.AddRealestate(realestate);
+                realestate.AddParcel(parcel);
+            }
+
+            int uid1 = _realestatesTree.Add(pos1, realestate);
+            int uid2 = _realestatesTree.Add(pos2, realestate);
+
+            realestate.Uid1 = uid1;
+            realestate.Uid2 = uid2;
+        }
+        catch (Exception e)
+        {
+            return new Answer($"Pridanie nehnuteľnosti ({pos1}-{pos2})-{realestate} sa nepodarilo. {e.Message}",
+                AnswerState.Error);
+        }
+
+        _realestatesCount++;
+        _assetsCount++;
+        return new Answer($"Pridanie parcely ({pos1}-{pos2})-{realestate} bolo úspešné.", AnswerState.Ok);
+    }
+
+    public Tuple<Answer, List<DataPart<Realestate>>> FindRealestates(Position position)
+    {
+        try
+        {
+            List<DataPart<Realestate>> dpRealestates = _realestatesTree.FindDataParts(position);
+
+            if (dpRealestates.Count <= 0)
+            {
+                return new Tuple<Answer, List<DataPart<Realestate>>>(
+                    new Answer($"Neexistuje žiadna parcela na súradnici {position}", AnswerState.Info), dpRealestates);
+            }
+
+
+            return new Tuple<Answer, List<DataPart<Realestate>>>(
+                new Answer($"Našlo sa {dpRealestates.Count} parciel.", AnswerState.Ok), dpRealestates);
+        }
+        catch (Exception e)
+        {
+            return new Tuple<Answer, List<DataPart<Realestate>>>(
+                new Answer($"Vyhľadanie parcely na súradnici {position} sa nepodarilo. {e.Message}", AnswerState.Error),
+                new List<DataPart<Realestate>>());
+        }
+
     }
 }

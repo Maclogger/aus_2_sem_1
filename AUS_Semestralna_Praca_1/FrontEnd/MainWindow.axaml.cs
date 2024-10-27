@@ -11,12 +11,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();// Nastavte svetlú tému pre aplikáciu
         Application.Current!.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Dark;
-        ContentArea.Content = new Parcels();
-    }
-
-    private void OnScreen1Clicked(object? sender, RoutedEventArgs e)
-    {
-        ContentArea.Content = new Parcels();
+        ContentArea.Content = new StatusScreen(ContentArea);
     }
 
     private void OnScreen2Clicked(object? sender, RoutedEventArgs e)
@@ -34,13 +29,23 @@ public partial class MainWindow : Window
         Close();
     }
 
-    private void OnParcelAndRealestates(object? sender, RoutedEventArgs e)
+    private void OnAssetsClicked(object? sender, RoutedEventArgs e)
     {
         throw new System.NotImplementedException();
     }
 
     private void OnStatusClicked(object? sender, RoutedEventArgs e)
     {
-        ContentArea.Content = new StatusPage(ContentArea);
+        ContentArea.Content = new StatusScreen(ContentArea);
+    }
+
+    private void OnParcelsClicked(object? sender, RoutedEventArgs e)
+    {
+        ContentArea.Content = new ParcelsScreen(ContentArea);
+    }
+
+    private void OnRealestatesClicked(object? sender, RoutedEventArgs e)
+    {
+        ContentArea.Content = new RealestatesScreen(ContentArea);
     }
 }

@@ -8,6 +8,7 @@ public class Config
 
     // double TOLERANCE
     private double _tolerance = 0.00001;
+
     // random generated coordination:
     private double _minLatitude = -90.0;
     private double _maxLatitude = 90.0;
@@ -23,7 +24,9 @@ public class Config
     // printing format
     private bool _formattedOutput = true;
 
-    private Config() { }
+    private Config()
+    {
+    }
 
     public static Config Instance => _instance;
 
@@ -42,6 +45,17 @@ public class Config
     {
         get => _maxLatitude;
         set => _maxLatitude = value;
+    }
+
+
+    public double MaxLatitudeAbs
+    {
+        get => Math.Max(Math.Abs(_maxLatitude), Math.Abs(_minLatitude));
+    }
+
+    public double MaxLongitudeAbs
+    {
+        get => Math.Max(Math.Abs(_maxLongitude), Math.Abs(_minLongitude));
     }
 
     public double MinLongitude
@@ -90,5 +104,23 @@ public class Config
     {
         get => _tolerance;
         set => _tolerance = value;
+    }
+
+    public double MinLatitudeAbs
+    {
+        get
+        {
+            double min = Math.Min(_maxLatitude, _minLatitude);
+            return min < 0 ? 0.0 : min;
+        }
+    }
+
+    public double MinLongitudeAbs
+    {
+        get
+        {
+            double min = Math.Min(_maxLongitude, _minLongitude);
+            return min < 0 ? 0.0 : min;
+        }
     }
 }

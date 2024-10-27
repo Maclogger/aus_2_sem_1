@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:AUS_Semestralna_Praca_1"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AUS_Semestralna_Praca_1.FrontEnd.RealestatesScreen">
+    <Border Background="#2D2D2D" Margin="100" CornerRadius="20">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock
+                Text="{Binding Path=RealEstateCount, Source={x:Static local:MainApplication.Instance}, Mode=OneWay, StringFormat='Počet nehnuteľností: {0}'}"
+                FontSize="20"
+                Foreground="white"
+                HorizontalAlignment="Center"
+                Margin="0, 0, 0, 20"
+                Padding="200, 40, 200, 0" />
+            <TextBlock Foreground="white"
+                       Text="Akú operáciu si prajete spraviť?"
+                       FontSize="24"
+                       HorizontalAlignment="Center" />
+
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20">
+                <Button Content="Pridať nehnuteľnosť"
+                        FontWeight="Bold"
+                        Margin="10"
+                        Width="220"
+                        Height="220"
+                        FontSize="20"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="white"
+                        Foreground="black"
+                        CornerRadius="10"
+                        Click="OnAddRealestateClicked" />
+                <Button Content="Nájsť nehnuteľnosť"
+                        FontWeight="Bold"
+                        Margin="10"
+                        Width="220"
+                        FontSize="20"
+                        Height="220"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="white"
+                        Foreground="black"
+                        CornerRadius="10"
+                        Click="OnFindRealestate"
+                        />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

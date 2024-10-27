@@ -26,7 +26,7 @@
 
                 <Button Content="Parcely"
                         Background="White"
-                        Click="OnScreen2Clicked"
+                        Click="OnParcelsClicked"
                         Height="50"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
@@ -37,7 +37,7 @@
 
                 <Button Content="Nehnuteľnosti"
                         Background="White"
-                        Click="OnScreen2Clicked"
+                        Click="OnRealestatesClicked"
                         Height="50"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
@@ -48,7 +48,7 @@
 
                 <Button Content="Parcely a nehnuteľnosti"
                         Background="White"
-                        Click="OnParcelAndRealestates"
+                        Click="OnAssetsClicked"
                         Height="50"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"

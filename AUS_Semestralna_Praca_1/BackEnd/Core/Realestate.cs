@@ -7,15 +7,17 @@ public class Realestate : Asset
     private int _realestateNum; // súpisné číslo
     private string _description; // popis
     private List<Parcel> _parcelas = new(); // parcely
-    private Position _topLeft, _bottomRight;
+    private Position _pos1, _pos2;
+    private int? _uid1, _uid2;
 
-    public Realestate(int pRealestateNum, string pDescription, Position pTopLeft, Position pBottomRight)
+    public Realestate(int pRealestateNum, string pDescription, Position pPos1, Position pPos2)
     {
         _realestateNum = pRealestateNum;
         _description = pDescription;
-        _topLeft = pTopLeft;
-        _bottomRight = pBottomRight;
+        _pos1 = pPos1;
+        _pos2 = pPos2;
     }
+
 
     public void AddParcel(Parcel parcel)
     {
@@ -28,5 +30,17 @@ public class Realestate : Asset
     public void RemoveParcel(Parcel parcelToDelete)
     {
         _parcelas.Remove(parcelToDelete);
+    }
+    
+    public int? Uid1
+    {
+        get => _uid1;
+        set => _uid1 = value;
+    }
+
+    public int? Uid2
+    {
+        get => _uid2;
+        set => _uid2 = value;
     }
 }
