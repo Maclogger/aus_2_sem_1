@@ -11,7 +11,7 @@ namespace AUS_Semestralna_Praca_1.FrontEnd;
 
 public partial class FindRealestatesScreen : UserControl
 {
-    private readonly ContentControl _contentArea;
+    private ContentControl _contentArea;
 
     public FindRealestatesScreen(ContentControl contentArea)
     {
@@ -25,7 +25,7 @@ public partial class FindRealestatesScreen : UserControl
 
         ClientSys.AddToAttr(ref posAttr, "LAT", Decimal.ToDouble((decimal)Latitude1.Value!));
         ClientSys.AddToAttr(ref posAttr, "LON", Decimal.ToDouble((decimal)Longitude1.Value!));
-        ClientSys.AddToAttr(ref posAttr, "LAT_SIGN", (Longitude1Sign.SelectedValue as ComboBoxItem)!.Content!.ToString() ?? "N");
+        ClientSys.AddToAttr(ref posAttr, "LAT_SIGN", (Latitude1Sign.SelectedValue as ComboBoxItem)!.Content!.ToString() ?? "N");
         ClientSys.AddToAttr(ref posAttr, "LON_SIGN", (Longitude1Sign.SelectedValue as ComboBoxItem)!.Content!.ToString() ?? "W");
 
         Tuple<Answer,List<string>> foundTuple = MainApplication.Instance.FindRealestates(posAttr);
@@ -35,12 +35,6 @@ public partial class FindRealestatesScreen : UserControl
             return;
         }
 
-
-
-
-
-
-
-
+        _contentArea.Content = new RealestatesListScreen(foundTuple.Item2);
     }
 }

@@ -94,7 +94,7 @@ public class Position : IKey
     {
         if (Config.Instance.FormattedOutput)
         {
-            return $"( {LatitudeSign}{Latitude} ; {LongitudeSign}{Longitude} )";
+            return $"( {Math.Abs(Latitude)} {LatitudeSign} ; {Math.Abs(Longitude)} {LongitudeSign})";
         }
         return $"( {X} ; {Y} )";
     }

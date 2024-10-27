@@ -6,8 +6,8 @@ namespace AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 
 public static class ClientSys
 {
-    private const char PairSeparator = ';';
-    private const char KeyValueSeparator = ',';
+    private const char PairSeparator = '@';
+    private const char KeyValueSeparator = '$';
 
     ////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////// ADD ////////////////////////////////////

@@ -71,9 +71,9 @@
                 <TextBlock Height="40"></TextBlock>
 
 
-                <Button Content="TODO"
+                <Button Content="KD Strom TESTER"
                         Background="White"
-                        Click="OnScreen2Clicked"
+                        Click="OnTesterClicked"
                         Height="50"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
@@ -82,16 +82,6 @@
                         Foreground="Black"
                         FontWeight="DemiBold" />
 
-                <Button Content="TODO"
-                        Background="White"
-                        Click="OnScreen2Clicked"
-                        Height="50"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Width="190"
-                        Margin="5"
-                        Foreground="Black"
-                        FontWeight="DemiBold" />
 
                 <Button Content="KONIEC"
                         Background="White"

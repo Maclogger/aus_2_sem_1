@@ -42,7 +42,7 @@
             </StackPanel>
 
 
-            <Button Content="Pridať nehnuteľnosť"
+            <Button Content="Nájsť nehnuteľnosť"
                         FontWeight="Bold"
                         Margin="10"
                         Width="220"

@@ -31,7 +31,7 @@ public partial class MainWindow : Window
 
     private void OnAssetsClicked(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        ContentArea.Content = new AssetsScreen(ContentArea);
     }
 
     private void OnStatusClicked(object? sender, RoutedEventArgs e)
@@ -47,5 +47,10 @@ public partial class MainWindow : Window
     private void OnRealestatesClicked(object? sender, RoutedEventArgs e)
     {
         ContentArea.Content = new RealestatesScreen(ContentArea);
+    }
+
+    private void OnTesterClicked(object? sender, RoutedEventArgs e)
+    {
+        ContentArea.Content = new KdTreeTesterScreen(ContentArea);
     }
 }

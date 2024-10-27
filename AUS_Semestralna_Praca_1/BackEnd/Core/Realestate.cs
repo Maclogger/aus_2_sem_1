@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.Core;
 
@@ -42,5 +43,15 @@ public class Realestate : Asset
     {
         get => _uid2;
         set => _uid2 = value;
+    }
+
+    public void ToAttr(ref string attr)
+    {
+        ClientSys.AddToAttr(ref attr, "POS_1", _pos1.ToString());
+        ClientSys.AddToAttr(ref attr, "POS_2", _pos2.ToString());
+        ClientSys.AddToAttr(ref attr, "REALESTATE_NUM", _realestateNum);
+        ClientSys.AddToAttr(ref attr, "DESCRIPTION", _description);
+        ClientSys.AddToAttr(ref attr, "UID_1", (int)_uid1!);
+        ClientSys.AddToAttr(ref attr, "UID_2", (int)_uid2!);
     }
 }

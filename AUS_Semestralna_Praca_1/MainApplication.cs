@@ -20,6 +20,30 @@ public class MainApplication
     {
         _core = new ApplicationCore(this);
         _consoleGui = new ConsoleGui(this);
+
+        Position pos1 = new Position(0, 'N', 0.0, 'E');
+        Position pos2 = new Position(10, 'N', 15.0, 'W');
+        _core.AddRealestate(pos1, pos2, new Realestate(1, "Popis prvej nehnuteľnosti", pos1, pos2));
+
+        pos1 = new Position(1.0, 'N', 0.0, 'W');
+        pos2 = new Position(8.0, 'N', 19.0, 'W');
+        _core.AddRealestate(pos1, pos2, new Realestate(2, "SDfjsdlfkj", pos1, pos2));
+
+        pos1 = new Position(0.0, 'N', 0.0, 'W');
+        pos2 = new Position(12.0, 'N', 16.0, 'W');
+        _core.AddRealestate(pos1, pos2, new Realestate(3, "fsdlkfjľ", pos1, pos2));
+
+        pos1 = new Position(1.0, 'N', 2.0, 'W');
+        pos2 = new Position(0.0, 'N', 0.0, 'W');
+        _core.AddRealestate(pos1, pos2, new Realestate(16, "SLDF", pos1, pos2));
+
+        pos1 = new Position(0.0, 'N', 0.0, 'W');
+        pos2 = new Position(11.0, 'N', 19.0, 'W');
+        _core.AddRealestate(pos1, pos2, new Realestate(4, "Popis ntej", pos1, pos2));
+
+        pos1 = new Position(0.0, 'N', 0.0, 'W');
+        pos2 = new Position(5.0, 'N', 47.0, 'W');
+        _core.AddRealestate(pos1, pos2, new Realestate(24, "AHOJ", pos1, pos2));
     }
 
     public int ParcelCount
@@ -140,7 +164,9 @@ public class MainApplication
         List<string> solList = new(tuple.Item2.Count);
         foreach (DataPart<Realestate> realDp in tuple.Item2)
         {
-            solList.Add(realDp.ToString() ?? "NULL");
+            string sol = "";
+            realDp.Value.ToAttr(ref sol);
+            solList.Add(sol);
         }
 
         return new Tuple<Answer, List<string>>(tuple.Item1, solList);
