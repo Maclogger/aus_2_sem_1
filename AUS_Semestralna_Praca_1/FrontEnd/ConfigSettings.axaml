@@ -62,6 +62,27 @@
 
                 <CheckBox IsChecked="{Binding FormattedOutput, Source={x:Static local:Config.Instance}}"
                           Content="Formatted Output" />
+
+                <TextBlock Text="Probability of removing an existing element" />
+                <NumericUpDown Minimum="0"
+                               Maximum="1"
+                               Increment="0.01"
+                               Value="{Binding ProbOfAddingExistingElement, Source={x:Static local:Config.Instance}}" />
+
+                <CheckBox IsChecked="{Binding ShoudPrint, Source={x:Static local:Config.Instance}}"
+                          Content="Should print output" />
+
+                <TextBlock Text="Seed" />
+                <NumericUpDown Minimum="1"
+                               Increment="1" Value="{Binding Seed, Source={x:Static local:Config.Instance}}" />
+
+                <TextBlock Text="Počet skúšaných seedov" />
+                <NumericUpDown Minimum="1"
+                               Increment="1" Value="{Binding SeedCount, Source={x:Static local:Config.Instance}}" />
+
+                <TextBlock Text="Počet operácií pri jednom seede" />
+                <NumericUpDown Minimum="1"
+                               Increment="1" Value="{Binding OperationCount, Source={x:Static local:Config.Instance}}" />
             </StackPanel>
         </Border>
     </ScrollViewer>

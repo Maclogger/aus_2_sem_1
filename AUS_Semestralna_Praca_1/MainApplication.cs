@@ -4,6 +4,8 @@ using AUS_Semestralna_Praca_1.BackEnd.Core;
 using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
+using AUS_Semestralna_Praca_1.BackEnd.Tests;
+using Avalonia.Controls;
 
 namespace AUS_Semestralna_Praca_1;
 
@@ -28,6 +30,10 @@ public class MainApplication
         pos1 = new Position(1.0, 'N', 0.0, 'W');
         pos2 = new Position(8.0, 'N', 19.0, 'W');
         _core.AddRealestate(pos1, pos2, new Realestate(2, "SDfjsdlfkj", pos1, pos2));
+
+        pos1 = new Position(1.0, 'N', 10.0, 'W');
+        pos2 = new Position(8.0, 'N', 19.0, 'W');
+        _core.AddRealestate(pos1, pos2, new Realestate(13, "TOTO TU BYT NEMA!!!", pos1, pos2));
 
         pos1 = new Position(0.0, 'N', 0.0, 'W');
         pos2 = new Position(12.0, 'N', 16.0, 'W');
@@ -150,7 +156,8 @@ public class MainApplication
         }
         catch (Exception e)
         {
-            return new Tuple<Answer, List<string>>(new Answer("Some of the attributes are missing or invalid.", AnswerState.Error), new List<string>());
+            return new Tuple<Answer, List<string>>(
+                new Answer("Some of the attributes are missing or invalid.", AnswerState.Error), new List<string>());
         }
 
         Tuple<Answer, List<DataPart<Realestate>>> tuple = _core.FindRealestates(pos);
@@ -172,7 +179,7 @@ public class MainApplication
         return new Tuple<Answer, List<string>>(tuple.Item1, solList);
     }
 
-    public Tuple<Answer,List<string>> FindAssets(string posAttr1, string posAttr2)
+    public Tuple<Answer, List<string>> FindAssets(string posAttr1, string posAttr2)
     {
         Position pos1;
         Position pos2;
@@ -183,7 +190,8 @@ public class MainApplication
         }
         catch (Exception e)
         {
-            return new Tuple<Answer, List<string>>(new Answer("Some of the attributes are missing or invalid.", AnswerState.Error), new List<string>());
+            return new Tuple<Answer, List<string>>(
+                new Answer("Some of the attributes are missing or invalid.", AnswerState.Error), new List<string>());
         }
 
         Tuple<Answer, List<DataPart<Asset>>> tuple = _core.FindAssets(pos1, pos2);
@@ -204,5 +212,63 @@ public class MainApplication
         }
 
         return new Tuple<Answer, List<string>>(tuple.Item1, solList);
+    }
+
+
+    public void RunTest(TextBlock block, bool shouldRun2DTest = true)
+    {
+        SimulationTester simulationTester = new SimulationTester(
+            pProbAdd: Config.Instance.ProbOfAdd,
+            pProbFind: Config.Instance.ProbOfFind, pProbRemove: Config.Instance.ProbOfRemove,
+            pProbUpdate: Config.Instance.ProbOfUpdate,
+            pProbOfRemovingExistingElement: Config.Instance.ProbOfAddingExistingElement,
+            pCheckAfterOperationCount: 1000, pShouldPrint: Config.Instance.ShoudPrint
+        );
+
+
+        bool tryCath = true;
+        int startSeed = Config.Instance.Seed;
+        int seedCount = Config.Instance.SeedCount;
+        int count = Config.Instance.OperationCount;
+
+        for (int seed = startSeed; seed <= startSeed + seedCount; seed++)
+        {
+            if (tryCath)
+            {
+                try
+                {
+                    if (shouldRun2DTest)
+                    {
+                        simulationTester.Run2DTest(seed, count, block);
+                    }
+                    else
+                    {
+                        simulationTester.Run4DTest(seed, count, block);
+                    }
+
+                    if (seedCount < 100 || seed % (seedCount / 100) == 0)
+                    {
+                        block.Text += $"Seed: {seed} / {startSeed + seedCount} OK\n";
+                        Console.WriteLine($"Seed: {seed} / {startSeed + seedCount} OK");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"PADLO TO PRI SEEDE: {seed} {e.Message}");
+                    return;
+                }
+            }
+            else
+            {
+                if (shouldRun2DTest)
+                {
+                    simulationTester.Run2DTest(seed, count, block);
+                }
+                else
+                {
+                    simulationTester.Run4DTest(seed, count, block);
+                }
+            }
+        }
     }
 }

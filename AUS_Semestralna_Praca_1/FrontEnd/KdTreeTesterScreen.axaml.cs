@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace AUS_Semestralna_Praca_1.FrontEnd;
@@ -12,5 +13,15 @@ public partial class KdTreeTesterScreen : UserControl
     {
         _contentArea = contentArea;
         InitializeComponent();
+    }
+
+    private void OnRun2DTestClicked(object? sender, RoutedEventArgs e)
+    {
+        MainApplication.Instance.RunTest(MyTextBlock, true);
+    }
+
+    private void OnRun4DTestClicked(object? sender, RoutedEventArgs e)
+    {
+        MainApplication.Instance.RunTest(MyTextBlock, false);
     }
 }

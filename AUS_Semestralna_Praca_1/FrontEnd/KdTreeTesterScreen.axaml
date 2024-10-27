@@ -2,12 +2,56 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:AUS_Semestralna_Praca_1"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AUS_Semestralna_Praca_1.FrontEnd.KdTreeTesterScreen">
     <Border Background="#2D2D2D" Margin="100" CornerRadius="20">
-        <StackPanel>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 
+            <TextBlock Foreground="white"
+                       Text="Tester KD-Stromu s použitím Generátoru Operácií"
+                       FontSize="24"
+                       HorizontalAlignment="Center" />
 
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20">
+                <Button Content="Spustiť test 2D Stromu"
+                        FontWeight="Bold"
+                        Margin="10"
+                        Width="250"
+                        Height="120"
+                        FontSize="20"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="white"
+                        Foreground="black"
+                        CornerRadius="10"
+                        Click="OnRun2DTestClicked" />
+                <Button Content="Spustiť test 4D Stromu"
+                        FontWeight="Bold"
+                        Margin="10"
+                        Width="250"
+                        FontSize="20"
+                        Height="120"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="white"
+                        Foreground="black"
+                        CornerRadius="10"
+                        Click="OnRun4DTestClicked" />
+            </StackPanel>
+
+            <Border Margin="10" CornerRadius="20" Background="white" Padding="10" Width="1000" Height="500">
+                <ScrollViewer>
+                    <TextBlock x:Name="MyTextBlock"
+                               Text=""
+                               Background="white"
+                               Foreground="black" />
+                </ScrollViewer>
+            </Border>
 
         </StackPanel>
     </Border>

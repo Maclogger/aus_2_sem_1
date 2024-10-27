@@ -10,7 +10,7 @@
         <ScrollViewer>
             <StackPanel>
                 <TextBlock
-                    Text="{Binding Path=ListAssets.Count, Mode=OneWay, StringFormat='Nájdené nehnuteľnosti: {0}'}"
+                    Text="{Binding Path=ListAssets.Count, Mode=OneWay, StringFormat='Nájdené parcely/nehnuteľnosti: {0}'}"
                            FontWeight="Bold" FontSize="32" HorizontalAlignment="Center" Margin="20" />
                 <ItemsControl ItemsSource="{Binding ListAssets}">
                     <ItemsControl.ItemTemplate>

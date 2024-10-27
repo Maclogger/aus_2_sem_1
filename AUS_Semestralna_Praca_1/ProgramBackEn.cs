@@ -15,7 +15,7 @@ partial class Program
     */
     }
 
-    private static void Test()
+    private static void Test2D()
     {
         SimulationTester simulationTester = new SimulationTester(
             pProbAdd: 0.2, pProbFind: 0, pProbRemove: 0.8, pProbUpdate: 0, pProbOfRemovingExistingElement: 1,
@@ -34,7 +34,7 @@ partial class Program
             {
                 try
                 {
-                    simulationTester.RunCordInt(seed, count);
+                    simulationTester.Run2DTest(seed, count);
                     if (seed % (seedCount / 100) == 0)
                     {
                         Console.WriteLine($"Seed: {seed} / {seedCount} OK");
@@ -47,7 +47,7 @@ partial class Program
             }
             else
             {
-                simulationTester.RunCordInt(seed, count);
+                simulationTester.Run2DTest(seed, count);
             }
         }
     }

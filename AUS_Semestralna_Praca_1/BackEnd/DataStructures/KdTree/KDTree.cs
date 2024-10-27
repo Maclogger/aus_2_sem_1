@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using AUS_Semestralna_Praca_1.BackEnd.Tests;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 
@@ -532,5 +533,17 @@ public class KdTree<K, T> : IEnumerable where K : IKey
     public void Swap(K pKey1, K pKey2)
     {
         Swap(FindNode(pKey1)!, FindNode(pKey2)!);
+    }
+
+    public void Update(K key, int uid, T newData)
+    {
+        Node<K,T>? node = FindNode(key);
+        if (node == null)
+        {
+            // the node doesn't exists
+            return;
+        }
+
+        node.SetDataValue(uid, newData);
     }
 }

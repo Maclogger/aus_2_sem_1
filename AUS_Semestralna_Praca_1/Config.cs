@@ -24,6 +24,13 @@ public class Config
     // printing format
     private bool _formattedOutput = true;
 
+    private double _probOfAddingExistingElement = 0.1;
+    private bool _shoudPrint = true;
+
+    private int _seed = 1;
+    private int _seedCount = 100;
+    private int _operationCount = 100;
+
     private Config()
     {
     }
@@ -122,5 +129,35 @@ public class Config
             double min = Math.Min(_maxLongitude, _minLongitude);
             return min < 0 ? 0.0 : min;
         }
+    }
+
+    public double ProbOfAddingExistingElement
+    {
+        get => _probOfAddingExistingElement;
+        set => _probOfAddingExistingElement = value;
+    }
+
+    public bool ShoudPrint
+    {
+        get => _shoudPrint;
+        set => _shoudPrint = value;
+    }
+
+    public int Seed
+    {
+        get => _seed;
+        set => _seed = value;
+    }
+
+    public int SeedCount
+    {
+        get => _seedCount;
+        set => _seedCount = value;
+    }
+
+    public int OperationCount
+    {
+        get => _operationCount;
+        set => _operationCount = value;
     }
 }

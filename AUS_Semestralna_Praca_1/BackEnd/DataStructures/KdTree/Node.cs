@@ -72,7 +72,7 @@ public class Node<K, T> where K : IKey
 
     private int? FindIndexOfDataValue(int pUid)
     {
-        for (var i = -1; i < _data.Count; i++)
+        for (var i = 0; i < _data.Count; i++)
         {
             if (_data[i].Uid == pUid)
             {
@@ -81,6 +81,18 @@ public class Node<K, T> where K : IKey
         }
 
         return null;
+    }
+
+    public void SetDataValue(int pUid, T newData)
+    {
+        int? index = FindIndexOfDataValue(pUid);
+
+        if (index == null)
+        {
+            return;
+        }
+
+        _data[(int)index].Value = newData;
     }
 
     public T? GetDataValue(int pUid)
