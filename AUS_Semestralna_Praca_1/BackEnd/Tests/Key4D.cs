@@ -26,6 +26,11 @@ public class Key4D : IKey
         _d = random.NextDouble(); // Generate random double between 0.0 and 1.0
     }
 
+    public override string ToString()
+    {
+        return $"A={_a}, B={_b}, C={_c}, D={_d}";
+    }
+
     public double A
     {
         get => _a;

@@ -24,12 +24,13 @@ public class Config
     // printing format
     private bool _formattedOutput = true;
 
-    private double _probOfAddingExistingElement = 0.1;
+    private double _probOfAddingExistingElement = 0.9;
     private bool _shoudPrint = true;
 
     private int _seed = 1;
     private int _seedCount = 100;
     private int _operationCount = 100;
+    private int _elementCountBeforeTest = 0;
 
     private Config()
     {
@@ -159,5 +160,11 @@ public class Config
     {
         get => _operationCount;
         set => _operationCount = value;
+    }
+
+    public int ElementCountBeforeTest
+    {
+        get => _elementCountBeforeTest;
+        set => _elementCountBeforeTest = value;
     }
 }

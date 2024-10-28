@@ -49,7 +49,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
                 // the place for new item is on the left side
                 if (currentNode.LeftChild == null)
                 {
-                    pNode.Dimension = (currentDimension + 1) % 2;
+                    pNode.Dimension = (currentDimension + 1) % _k;
                     currentNode.LeftChild = pNode;
                     pNode.Father = currentNode;
                     break;
@@ -62,7 +62,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
                 // the place for new item is on the right side
                 if (currentNode.RightChild == null)
                 {
-                    pNode.Dimension = (currentDimension + 1) % 2;
+                    pNode.Dimension = (currentDimension + 1) % _k;
                     currentNode.RightChild = pNode;
                     pNode.Father = currentNode;
                     break;
@@ -106,7 +106,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
                 // the place for new item is on the left side
                 if (currentNode.LeftChild == null)
                 {
-                    currentNode.LeftChild = new Node<K, T>(pKey, pData, (currentDimension + 1) % 2);
+                    currentNode.LeftChild = new Node<K, T>(pKey, pData, (currentDimension + 1) % _k);
                     currentNode.LeftChild.Father = currentNode;
                     uid = currentNode.LeftChild.Data[0].Uid;
                     break;
@@ -119,7 +119,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
                 // the place for new item is on the right side
                 if (currentNode.RightChild == null)
                 {
-                    currentNode.RightChild = new Node<K, T>(pKey, pData, (currentDimension + 1) % 2);
+                    currentNode.RightChild = new Node<K, T>(pKey, pData, (currentDimension + 1) % _k);
                     currentNode.RightChild.Father = currentNode;
                     uid = currentNode.RightChild.Data[0].Uid;
                     break;
@@ -175,7 +175,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
             }
 
             currentNode = comp <= 0 ? currentNode.LeftChild : currentNode.RightChild;
-            dimension = (dimension + 1) % 2;
+            dimension = (dimension + 1) % _k;
         }
 
         return null; // if the node is null, then

@@ -214,9 +214,9 @@ public class MainApplication
         return new Tuple<Answer, List<string>>(tuple.Item1, solList);
     }
 
-
     public void RunTest(TextBlock block, bool shouldRun2DTest = true)
     {
+
         SimulationTester simulationTester = new SimulationTester(
             pProbAdd: Config.Instance.ProbOfAdd,
             pProbFind: Config.Instance.ProbOfFind, pProbRemove: Config.Instance.ProbOfRemove,
@@ -230,6 +230,9 @@ public class MainApplication
         int startSeed = Config.Instance.Seed;
         int seedCount = Config.Instance.SeedCount;
         int count = Config.Instance.OperationCount;
+
+        //KdTree<Cord, int> kdTree = new(2);
+
 
         for (int seed = startSeed; seed <= startSeed + seedCount; seed++)
         {

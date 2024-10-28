@@ -144,8 +144,6 @@ public class KeyInt
     }
 }
 
-
-
 public class SimulationTester
 {
     private double _probAdd;
@@ -186,6 +184,26 @@ public class SimulationTester
         KdTree<Cord, int> tree = new(2);
 
         Cord notExisting = new Cord(gen); // randomly generated 1 node which will never exist in tree
+
+        int countBeforeTest = Config.Instance.ElementCountBeforeTest;
+        for (int i = 0; i < countBeforeTest; i++)
+        {
+            Cord randomKey;
+            while (true)
+            {
+                randomKey =
+                    new Cord(gen); // random generated new Key4D (could be existing although the probability is low)
+                if (!notExisting.Equals(randomKey))
+                {
+                    break; // the probability is low but not zero => now is zero
+                }
+            }
+
+            int randomValue = genForRandomOperation.Next(-100000, 100000);
+
+            tree.Add(randomKey, randomValue); // adding randomly generated Key4D into tree, data is just an i
+            expectedInTree.Add(new KeyInt(randomKey, randomValue));
+        }
 
         for (int i = 0; i < count; i++)
         {
@@ -237,7 +255,8 @@ public class SimulationTester
                         }
                     }
 
-                    tree.Remove((Cord)randomExistingElement.Key, itemsWithMatchingKey[j].Uid); // removing item from the tree
+                    tree.Remove((Cord)randomExistingElement.Key,
+                        itemsWithMatchingKey[j].Uid); // removing item from the tree
                     expectedInTree.RemoveAt(indexOfElementToRemove);
                     if (_shouldPrint)
                     {
@@ -289,7 +308,8 @@ public class SimulationTester
                     {
                         Console.WriteLine(
                             $"Updating element {(Cord)randomExistingElement.Key} {randomExistingElement.Data} at index {indexOfElementToUpdate}");
-                        block.Text += $"Updating element {(Cord)randomExistingElement.Key} {randomExistingElement.Data}\n";
+                        block.Text +=
+                            $"Updating element {(Cord)randomExistingElement.Key} {randomExistingElement.Data}\n";
                     }
                 }
             }
@@ -360,9 +380,30 @@ public class SimulationTester
 
         List<KeyInt> expectedInTree = new();
 
-        KdTree<Key4D, int> tree = new(2);
+        KdTree<Key4D, int> tree = new(4);
 
         Key4D notExisting = new Key4D(gen); // randomly generated 1 node which will never exist in tree
+
+        int countBeforeTest = Config.Instance.ElementCountBeforeTest;
+        for (int i = 0; i < countBeforeTest; i++)
+        {
+            Key4D randomKey;
+            while (true)
+            {
+                randomKey =
+                    new Key4D(gen); // random generated new Key4D (could be existing although the probability is low)
+                if (!notExisting.Equals(randomKey))
+                {
+                    break; // the probability is low but not zero => now is zero
+                }
+            }
+
+            int randomValue = genForRandomOperation.Next(10, 10);
+
+            tree.Add(randomKey, randomValue); // adding randomly generated Key4D into tree, data is just an i
+            expectedInTree.Add(new KeyInt(randomKey, randomValue));
+        }
+
 
         for (int i = 0; i < count; i++)
         {
@@ -380,9 +421,10 @@ public class SimulationTester
                     }
                 }
 
-                tree.Add(randomKey, i); // adding randomly generated Key4D into tree, data is just an i
+                int randomData = genForRandomOperation.Next(-100000, 100000);
+                tree.Add(randomKey, randomData);
 
-                expectedInTree.Add(new KeyInt(randomKey, i));
+                expectedInTree.Add(new KeyInt(randomKey, randomData));
                 if (_shouldPrint)
                 {
                     Console.WriteLine($"Adding element {randomKey} {i}");
@@ -414,7 +456,8 @@ public class SimulationTester
                         }
                     }
 
-                    tree.Remove((Key4D)randomExistingElement.Key, itemsWithMatchingKey[j].Uid); // removing item from the tree
+                    tree.Remove((Key4D)randomExistingElement.Key,
+                        itemsWithMatchingKey[j].Uid); // removing item from the tree
                     expectedInTree.RemoveAt(indexOfElementToRemove);
                     if (_shouldPrint)
                     {
@@ -466,7 +509,8 @@ public class SimulationTester
                     {
                         Console.WriteLine(
                             $"Updating element {(Key4D)randomExistingElement.Key} {randomExistingElement.Data} at index {indexOfElementToUpdate}");
-                        block.Text += $"Updating element {(Key4D)randomExistingElement.Key} {randomExistingElement.Data}\n";
+                        block.Text +=
+                            $"Updating element {(Key4D)randomExistingElement.Key} {randomExistingElement.Data}\n";
                     }
                 }
             }
@@ -1102,7 +1146,6 @@ public class KdTreeTest
             }
             else if (op == Operation.Find)
             {
-                // !!!!!!! WIP - not working yet !!!!!!!
                 double randomNumber = gen.NextDouble();
                 if (inserted.Count > 0 && randomNumber < probOfFindingExistingElement)
                 {

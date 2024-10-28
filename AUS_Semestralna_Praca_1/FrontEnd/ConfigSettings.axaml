@@ -83,6 +83,10 @@
                 <TextBlock Text="Počet operácií pri jednom seede" />
                 <NumericUpDown Minimum="1"
                                Increment="1" Value="{Binding OperationCount, Source={x:Static local:Config.Instance}}" />
+
+                <TextBlock Text="Počet prvkov v strome pred testom" />
+                <NumericUpDown Minimum="0"
+                               Increment="1" Value="{Binding ElementCountBeforeTest, Source={x:Static local:Config.Instance}}" />
             </StackPanel>
         </Border>
     </ScrollViewer>
