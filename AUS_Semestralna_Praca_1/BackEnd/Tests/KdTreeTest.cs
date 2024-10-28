@@ -167,7 +167,7 @@ public class SimulationTester
         _shouldPrint = pShouldPrint;
     }
 
-    public void Run2DTest(int pSeed = 1, int pCount = 100, TextBlock? block = null)
+    public void Run2DTest(KdTree<Cord, int> tree, List<KeyInt> expectedInTree, int pSeed = 1, int pCount = 100, TextBlock? block = null)
     {
         if (block == null) return;
         int seed = pSeed;
@@ -179,31 +179,7 @@ public class SimulationTester
         Random genForRemovingExistingElement = new(seed * 2); // for generating random numbers
         Random genForRandomOperation = new(seed * 2); // for generating random numbers
 
-        List<KeyInt> expectedInTree = new();
-
-        KdTree<Cord, int> tree = new(2);
-
         Cord notExisting = new Cord(gen); // randomly generated 1 node which will never exist in tree
-
-        int countBeforeTest = Config.Instance.ElementCountBeforeTest;
-        for (int i = 0; i < countBeforeTest; i++)
-        {
-            Cord randomKey;
-            while (true)
-            {
-                randomKey =
-                    new Cord(gen); // random generated new Key4D (could be existing although the probability is low)
-                if (!notExisting.Equals(randomKey))
-                {
-                    break; // the probability is low but not zero => now is zero
-                }
-            }
-
-            int randomValue = genForRandomOperation.Next(-100000, 100000);
-
-            tree.Add(randomKey, randomValue); // adding randomly generated Key4D into tree, data is just an i
-            expectedInTree.Add(new KeyInt(randomKey, randomValue));
-        }
 
         for (int i = 0; i < count; i++)
         {
@@ -366,7 +342,8 @@ public class SimulationTester
         CollectionAssert.AreEqual(actual, expected);
     }
 
-    public void Run4DTest(int pSeed = 1, int pCount = 100, TextBlock? block = null)
+    public void Run4DTest(KdTree<Key4D, int> tree, List<KeyInt> expectedInTree, int pSeed = 1,
+        int pCount = 100, TextBlock? block = null)
     {
         if (block == null) return;
         int seed = pSeed;
@@ -378,32 +355,8 @@ public class SimulationTester
         Random genForRemovingExistingElement = new(seed * 2); // for generating random numbers
         Random genForRandomOperation = new(seed * 2); // for generating random numbers
 
-        List<KeyInt> expectedInTree = new();
 
-        KdTree<Key4D, int> tree = new(4);
-
-        Key4D notExisting = new Key4D(gen); // randomly generated 1 node which will never exist in tree
-
-        int countBeforeTest = Config.Instance.ElementCountBeforeTest;
-        for (int i = 0; i < countBeforeTest; i++)
-        {
-            Key4D randomKey;
-            while (true)
-            {
-                randomKey =
-                    new Key4D(gen); // random generated new Key4D (could be existing although the probability is low)
-                if (!notExisting.Equals(randomKey))
-                {
-                    break; // the probability is low but not zero => now is zero
-                }
-            }
-
-            int randomValue = genForRandomOperation.Next(10, 10);
-
-            tree.Add(randomKey, randomValue); // adding randomly generated Key4D into tree, data is just an i
-            expectedInTree.Add(new KeyInt(randomKey, randomValue));
-        }
-
+        Key4D notExisting = new Key4D(genForRandomOperation);
 
         for (int i = 0; i < count; i++)
         {

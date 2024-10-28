@@ -18,6 +18,10 @@ public class MainApplication
     private ApplicationCore _core;
     private ConsoleGui _consoleGui;
 
+
+    private KdTree<Key4D, int> _kdTestTree = new(4);
+    private KdTree<Key4D, int> _kdTestCordTree = new(2);
+
     private MainApplication()
     {
         _core = new ApplicationCore(this);
@@ -216,7 +220,6 @@ public class MainApplication
 
     public void RunTest(TextBlock block, bool shouldRun2DTest = true)
     {
-
         SimulationTester simulationTester = new SimulationTester(
             pProbAdd: Config.Instance.ProbOfAdd,
             pProbFind: Config.Instance.ProbOfFind, pProbRemove: Config.Instance.ProbOfRemove,
@@ -231,9 +234,6 @@ public class MainApplication
         int seedCount = Config.Instance.SeedCount;
         int count = Config.Instance.OperationCount;
 
-        //KdTree<Cord, int> kdTree = new(2);
-
-
         for (int seed = startSeed; seed <= startSeed + seedCount; seed++)
         {
             if (tryCath)
@@ -242,11 +242,11 @@ public class MainApplication
                 {
                     if (shouldRun2DTest)
                     {
-                        simulationTester.Run2DTest(seed, count, block);
+                        simulationTester.Run2DTest(_core.CordTree, _core.ExpectedInCordTree, seed, count, block);
                     }
                     else
                     {
-                        simulationTester.Run4DTest(seed, count, block);
+                        simulationTester.Run4DTest(_core.Key4DTree, _core.ExpectedInKey4DTree, seed, count, block);
                     }
 
                     if (seedCount < 100 || seed % (seedCount / 100) == 0)
@@ -265,13 +265,27 @@ public class MainApplication
             {
                 if (shouldRun2DTest)
                 {
-                    simulationTester.Run2DTest(seed, count, block);
+                    simulationTester.Run2DTest(_core.CordTree, _core.ExpectedInCordTree, seed, count, block);
                 }
                 else
                 {
-                    simulationTester.Run4DTest(seed, count, block);
+                    simulationTester.Run4DTest(_core.Key4DTree, _core.ExpectedInKey4DTree, seed, count, block);
                 }
             }
         }
+    }
+
+    public void PrintOut4DTree(TextBlock myTextBlock)
+    {
+        myTextBlock.Text = "";
+        foreach (Tuple<Key4D, int> tuple in _core.Key4DTree.EntryInOrderIterator())
+        {
+            myTextBlock.Text += $"{tuple.Item1} - {tuple.Item2} \n";
+        }
+    }
+
+    public void InitializeTestTrees()
+    {
+        _core.InitializeTestTrees();
     }
 }

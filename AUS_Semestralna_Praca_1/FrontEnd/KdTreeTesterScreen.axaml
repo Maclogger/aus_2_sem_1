@@ -42,6 +42,21 @@
                         Foreground="black"
                         CornerRadius="10"
                         Click="OnRun4DTestClicked" />
+
+                <Button Content="Vypísať prvky 4D stromu"
+                        FontWeight="Bold"
+                        Margin="10"
+                        Width="250"
+                        FontSize="20"
+                        Height="120"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="white"
+                        Foreground="black"
+                        CornerRadius="10"
+                        Click="OnPrintTreeClicked" />
             </StackPanel>
 
             <Border Margin="10" CornerRadius="20" Background="white" Padding="10" Width="1000" Height="500">

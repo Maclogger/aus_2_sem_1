@@ -413,7 +413,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
     }
 
     // public in order iterator method for a user => it returns tuple of <K, T>
-    public IEnumerator EntryInOrderIterator()
+    public IEnumerable<Tuple<K, T>> EntryInOrderIterator()
     {
         foreach (Node<K, T> node in InOrderIteratorImpl())
         {

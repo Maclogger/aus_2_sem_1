@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
+using AUS_Semestralna_Praca_1.BackEnd.Tests;
+using Avalonia.Remote.Protocol.Input;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.Core;
 
@@ -12,6 +14,12 @@ public class ApplicationCore
     private KdTree<Position, Parcel> _parcelasTree = new(2);
     private KdTree<Position, Asset> _assetsTree = new(2);
 
+
+    private KdTree<Cord, int> _cordTree;
+    private KdTree<Key4D, int> _key4DTree;
+    private List<KeyInt> _expectedInCordTree;
+    private List<KeyInt> _expectedInKey4DTree;
+
     private int _parcelsCount = 0;
     private int _realestatesCount = 0;
     private int _assetsCount = 0;
@@ -20,6 +28,36 @@ public class ApplicationCore
     public ApplicationCore(MainApplication pMainApplication)
     {
         _mainApplication = pMainApplication;
+        Tuple<KdTree<Cord, int>, List<KeyInt>> tuple = Create2DTree();
+        CordTree = tuple.Item1;
+        ExpectedInCordTree = tuple.Item2;
+        var tuple2 = Create4DTree();
+        Key4DTree = tuple2.Item1;
+        ExpectedInKey4DTree = tuple2.Item2;
+    }
+
+    public KdTree<Cord, int> CordTree
+    {
+        get => _cordTree;
+        set => _cordTree = value;
+    }
+
+    public KdTree<Key4D, int> Key4DTree
+    {
+        get => _key4DTree;
+        set => _key4DTree = value;
+    }
+
+    public List<KeyInt> ExpectedInCordTree
+    {
+        get => _expectedInCordTree;
+        set => _expectedInCordTree = value;
+    }
+
+    public List<KeyInt> ExpectedInKey4DTree
+    {
+        get => _expectedInKey4DTree;
+        set => _expectedInKey4DTree = value;
     }
 
     public Answer AddParcel(Position pos1, Position pos2, Parcel parcel)
@@ -266,7 +304,8 @@ public class ApplicationCore
             if (dpAssets.Count <= 0)
             {
                 return new Tuple<Answer, List<DataPart<Asset>>>(
-                    new Answer($"Neexistuje žiadna parcela/nehnuteľnosť na súradniciach {pos1},{pos2}", AnswerState.Info), dpAssets);
+                    new Answer($"Neexistuje žiadna parcela/nehnuteľnosť na súradniciach {pos1},{pos2}",
+                        AnswerState.Info), dpAssets);
             }
 
 
@@ -276,8 +315,59 @@ public class ApplicationCore
         catch (Exception e)
         {
             return new Tuple<Answer, List<DataPart<Asset>>>(
-                new Answer($"Vyhľadanie parcely na súradnici {pos1},{pos2} sa nepodarilo. {e.Message}", AnswerState.Error),
+                new Answer($"Vyhľadanie parcely na súradnici {pos1},{pos2} sa nepodarilo. {e.Message}",
+                    AnswerState.Error),
                 new List<DataPart<Asset>>());
         }
+    }
+
+    public Tuple<KdTree<Cord, int>, List<KeyInt>> Create2DTree()
+    {
+        int countBeforeTest = Config.Instance.ElementCountBeforeTest;
+
+        Random gen = new();
+        KdTree<Cord, int> tree = new(2);
+        List<KeyInt> expectedInTree = new(countBeforeTest);
+
+        for (int i = 0; i < countBeforeTest; i++)
+        {
+            Cord randomKey = new Cord(gen); // random generated new Key4D (could be existing although the probability is low)
+            int randomValue = gen.Next(10, 10);
+
+            tree.Add(randomKey, randomValue); // adding randomly generated Key4D into tree, data is just an i
+            expectedInTree.Add(new KeyInt(randomKey, randomValue));
+        }
+
+        return new Tuple<KdTree<Cord, int>, List<KeyInt>>(tree, expectedInTree);
+    }
+
+    public Tuple<KdTree<Key4D, int>, List<KeyInt>> Create4DTree()
+    {
+        int countBeforeTest = Config.Instance.ElementCountBeforeTest;
+
+        Random gen = new();
+        KdTree<Key4D, int> tree = new(2);
+        List<KeyInt> expectedInTree = new(countBeforeTest);
+
+        for (int i = 0; i < countBeforeTest; i++)
+        {
+            Key4D randomKey = new Key4D(gen); // random generated new Key4D (could be existing although the probability is low)
+            int randomValue = gen.Next(10, 10);
+
+            tree.Add(randomKey, randomValue); // adding randomly generated Key4D into tree, data is just an i
+            expectedInTree.Add(new KeyInt(randomKey, randomValue));
+        }
+
+        return new Tuple<KdTree<Key4D, int>, List<KeyInt>>(tree, expectedInTree);
+    }
+
+    public void InitializeTestTrees()
+    {
+        var tuple = Create2DTree();
+        var tuple2 = Create4DTree();
+        _cordTree = tuple.Item1;
+        _expectedInCordTree = tuple.Item2;
+        _key4DTree = tuple2.Item1;
+        _expectedInKey4DTree = tuple2.Item2;
     }
 }
