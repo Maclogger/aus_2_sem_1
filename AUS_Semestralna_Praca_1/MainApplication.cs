@@ -5,6 +5,7 @@ using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 using AUS_Semestralna_Praca_1.BackEnd.Tests;
+using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree.Keys;
 using Avalonia.Controls;
 
 namespace AUS_Semestralna_Praca_1;
@@ -27,6 +28,7 @@ public class MainApplication
         _core = new ApplicationCore(this);
         _consoleGui = new ConsoleGui(this);
 
+        /*
         Position pos1 = new Position(0, 'N', 0.0, 'E');
         Position pos2 = new Position(10, 'N', 15.0, 'W');
         _core.AddRealestate(pos1, pos2, new Realestate(1, "Popis prvej nehnuteľnosti", pos1, pos2));
@@ -54,6 +56,7 @@ public class MainApplication
         pos1 = new Position(0.0, 'N', 0.0, 'W');
         pos2 = new Position(5.0, 'N', 47.0, 'W');
         _core.AddRealestate(pos1, pos2, new Realestate(24, "AHOJ", pos1, pos2));
+    */
     }
 
     public int ParcelCount
@@ -124,10 +127,10 @@ public class MainApplication
         _core.PrintParcelTree();
     }
 
-
     ///////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////// REALESTATE //////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////
+
     public Answer AddRealestate(string pos1Attr, string pos2Attr, string realestateAttr)
     {
         int? realestateNum = ClientSys.GetIntFromAttr(realestateAttr, "REALESTATE_NUM");
@@ -218,61 +221,10 @@ public class MainApplication
         return new Tuple<Answer, List<string>>(tuple.Item1, solList);
     }
 
-    public void RunTest(TextBlock block, bool shouldRun2DTest = true)
+    public void RunTest(TextBlock block)
     {
-        SimulationTester simulationTester = new SimulationTester(
-            pProbAdd: Config.Instance.ProbOfAdd,
-            pProbFind: Config.Instance.ProbOfFind, pProbRemove: Config.Instance.ProbOfRemove,
-            pProbUpdate: Config.Instance.ProbOfUpdate,
-            pProbOfRemovingExistingElement: Config.Instance.ProbOfAddingExistingElement,
-            pCheckAfterOperationCount: 1000, pShouldPrint: Config.Instance.ShoudPrint
-        );
+        _core.RunSimTest(block);
 
-
-        bool tryCath = true;
-        int startSeed = Config.Instance.Seed;
-        int seedCount = Config.Instance.SeedCount;
-        int count = Config.Instance.OperationCount;
-
-        for (int seed = startSeed; seed <= startSeed + seedCount; seed++)
-        {
-            if (tryCath)
-            {
-                try
-                {
-                    if (shouldRun2DTest)
-                    {
-                        simulationTester.Run2DTest(_core.CordTree, _core.ExpectedInCordTree, seed, count, block);
-                    }
-                    else
-                    {
-                        simulationTester.Run4DTest(_core.Key4DTree, _core.ExpectedInKey4DTree, seed, count, block);
-                    }
-
-                    if (seedCount < 100 || seed % (seedCount / 100) == 0)
-                    {
-                        block.Text += $"Seed: {seed} / {startSeed + seedCount} OK\n";
-                        Console.WriteLine($"Seed: {seed} / {startSeed + seedCount} OK");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"PADLO TO PRI SEEDE: {seed} {e.Message}");
-                    return;
-                }
-            }
-            else
-            {
-                if (shouldRun2DTest)
-                {
-                    simulationTester.Run2DTest(_core.CordTree, _core.ExpectedInCordTree, seed, count, block);
-                }
-                else
-                {
-                    simulationTester.Run4DTest(_core.Key4DTree, _core.ExpectedInKey4DTree, seed, count, block);
-                }
-            }
-        }
     }
 
     public void PrintOut4DTree(TextBlock myTextBlock)

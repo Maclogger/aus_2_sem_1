@@ -5,120 +5,44 @@ namespace AUS_Semestralna_Praca_1;
 public class Config
 {
     private static readonly Config _instance = new();
+    public static Config Instance => _instance;
 
     // double TOLERANCE
-    private double _tolerance = 0.00001;
+    public double Tolerance { get; set; } = 0.00001;
 
     // random generated coordination:
-    private double _minLatitude = -90.0;
-    private double _maxLatitude = 90.0;
-    private double _minLongitude = -180.0;
-    private double _maxLongitude = 180.0;
+    public double MinLatitude { get; set; } = -90.0;
+    public double MaxLatitude { get; set; } = 90.0;
+    public double MinLongitude { get; set; } = -180.0;
+    public double MaxLongitude { get; set; } = 180.0;
 
     // testing KdTree structure:
-    private double _probOfAdd = 0.25;
-    private double _probOfFind = 0.25;
-    private double _probOfRemove = 0.25;
-    private double _probOfUpdate = 0.25;
+    public double ProbOfAdd { get; set; } = 0.25;
+    public double ProbOfFind { get; set; } = 1.25;
+    public double ProbOfRemove { get; set; } = 0.25;
+    public double ProbOfUpdate { get; set; } = 0.25;
 
-    // printing format
-    private bool _formattedOutput = true;
+    public bool FormattedOutput { get; set; } = true;
 
-    private double _probOfAddingExistingElement = 0.9;
-    private bool _shoudPrint = true;
+    public double ProbOfDuplicate { get; set; } = 0.9;
+    public bool ShoudPrint { get; set; } = true;
 
-    private int _seed = 1;
-    private int _seedCount = 100;
-    private int _operationCount = 100;
-    private int _elementCountBeforeTest = 0;
-
+    public int Seed { get; set; } = 1;
+    public int SeedCount { get; set; } = 100;
+    public int OperationCount { get; set; } = 100;
+    public int ElementCountBeforeTest { get; set; } = 0;
+    public int CheckAfterOperationCount { get; set; } = 100;
+    
     private Config()
     {
     }
 
-    public static Config Instance => _instance;
-
-    public bool ProbabilityCheck()
-    {
-        return Math.Abs(_probOfAdd + _probOfFind + _probOfRemove + _probOfUpdate - 1) < Tolerance;
-    }
-
-    public double MinLatitude
-    {
-        get => _minLatitude;
-        set => _minLatitude = value;
-    }
-
-    public double MaxLatitude
-    {
-        get => _maxLatitude;
-        set => _maxLatitude = value;
-    }
-
-
-    public double MaxLatitudeAbs
-    {
-        get => Math.Max(Math.Abs(_maxLatitude), Math.Abs(_minLatitude));
-    }
-
-    public double MaxLongitudeAbs
-    {
-        get => Math.Max(Math.Abs(_maxLongitude), Math.Abs(_minLongitude));
-    }
-
-    public double MinLongitude
-    {
-        get => _minLongitude;
-        set => _minLongitude = value;
-    }
-
-    public double MaxLongitude
-    {
-        get => _maxLongitude;
-        set => _maxLongitude = value;
-    }
-
-    public double ProbOfAdd
-    {
-        get => _probOfAdd;
-        set => _probOfAdd = value;
-    }
-
-    public double ProbOfFind
-    {
-        get => _probOfFind;
-        set => _probOfFind = value;
-    }
-
-    public double ProbOfRemove
-    {
-        get => _probOfRemove;
-        set => _probOfRemove = value;
-    }
-
-    public double ProbOfUpdate
-    {
-        get => _probOfUpdate;
-        set => _probOfUpdate = value;
-    }
-
-    public bool FormattedOutput
-    {
-        get => _formattedOutput;
-        set => _formattedOutput = value;
-    }
-
-    public double Tolerance
-    {
-        get => _tolerance;
-        set => _tolerance = value;
-    }
 
     public double MinLatitudeAbs
     {
         get
         {
-            double min = Math.Min(_maxLatitude, _minLatitude);
+            double min = Math.Min(MaxLatitude, MinLatitude);
             return min < 0 ? 0.0 : min;
         }
     }
@@ -127,44 +51,18 @@ public class Config
     {
         get
         {
-            double min = Math.Min(_maxLongitude, _minLongitude);
+            double min = Math.Min(MaxLongitude, MinLongitude);
             return min < 0 ? 0.0 : min;
         }
     }
 
-    public double ProbOfAddingExistingElement
+    public double MaxLatitudeAbs
     {
-        get => _probOfAddingExistingElement;
-        set => _probOfAddingExistingElement = value;
+        get => Math.Max(Math.Abs(MaxLatitude), Math.Abs(MinLatitude));
     }
 
-    public bool ShoudPrint
+    public double MaxLongitudeAbs
     {
-        get => _shoudPrint;
-        set => _shoudPrint = value;
-    }
-
-    public int Seed
-    {
-        get => _seed;
-        set => _seed = value;
-    }
-
-    public int SeedCount
-    {
-        get => _seedCount;
-        set => _seedCount = value;
-    }
-
-    public int OperationCount
-    {
-        get => _operationCount;
-        set => _operationCount = value;
-    }
-
-    public int ElementCountBeforeTest
-    {
-        get => _elementCountBeforeTest;
-        set => _elementCountBeforeTest = value;
+        get => Math.Max(Math.Abs(MaxLongitude), Math.Abs(MinLongitude));
     }
 }

@@ -67,7 +67,7 @@
                 <NumericUpDown Minimum="0"
                                Maximum="1"
                                Increment="0.01"
-                               Value="{Binding ProbOfAddingExistingElement, Source={x:Static local:Config.Instance}}" />
+                               Value="{Binding ProbOfDuplicate, Source={x:Static local:Config.Instance}}" />
 
                 <CheckBox IsChecked="{Binding ShoudPrint, Source={x:Static local:Config.Instance}}"
                           Content="Should print output" />

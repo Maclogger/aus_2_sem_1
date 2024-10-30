@@ -1,7 +1,7 @@
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.Queue;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace AUS_Semestralna_Praca_1.BackEnd.Tests;
+namespace AUS_Semestralna_Praca_1.BackEnd.Tests.Queue;
 
 public class QueueTest
 {

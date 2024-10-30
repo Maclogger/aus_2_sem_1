@@ -1,7 +1,7 @@
 using System;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 
-namespace AUS_Semestralna_Praca_1.BackEnd.Tests;
+namespace AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree.Keys;
 
 public class Key4D : IKey
 {

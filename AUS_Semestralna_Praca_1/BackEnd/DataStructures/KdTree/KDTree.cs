@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using AUS_Semestralna_Praca_1.BackEnd.Tests;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 
@@ -519,7 +518,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
                 count += currentNode.Data.Count;
                 sol += currentNode.ToString();
                 queue.Add(currentNode.LeftChild);
-                queue.Add(currentNode?.RightChild);
+                queue.Add(currentNode.RightChild);
             }
             else
             {

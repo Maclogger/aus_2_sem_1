@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace AUS_Semestralna_Praca_1.BackEnd.Tests;
+namespace AUS_Semestralna_Praca_1.BackEnd.Tests.Stack;
 
 public class StackTests
 {

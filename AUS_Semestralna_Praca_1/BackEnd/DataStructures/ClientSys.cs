@@ -26,6 +26,7 @@ public static class ClientSys
     public static void AddToAttr(ref string attr, string key, double value)
     {
         attr = $"{attr}{key}{KeyValueSeparator}{value.ToString(CultureInfo.InvariantCulture)}{PairSeparator}";
+        attr = $"{attr}{key}{KeyValueSeparator}{value.ToString(CultureInfo.InvariantCulture)}{PairSeparator}";
     }
 
     public static void AddToAttr(ref string attr, string key, bool value)

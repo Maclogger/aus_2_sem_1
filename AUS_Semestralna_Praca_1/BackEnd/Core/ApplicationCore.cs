@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 using AUS_Semestralna_Praca_1.BackEnd.Tests;
+using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree;
+using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree.Keys;
+using Avalonia.Controls;
 using Avalonia.Remote.Protocol.Input;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.Core;
@@ -369,5 +372,39 @@ public class ApplicationCore
         _expectedInCordTree = tuple.Item2;
         _key4DTree = tuple2.Item1;
         _expectedInKey4DTree = tuple2.Item2;
+    }
+
+    public void RunSimTest(TextBlock block)
+    {
+        bool tryCath = true;
+        int startSeed = Config.Instance.Seed;
+        int seedCount = Config.Instance.SeedCount;
+        int count = Config.Instance.OperationCount;
+
+        for (int seed = startSeed; seed <= startSeed + seedCount; seed++)
+        {
+            if (tryCath)
+            {
+                try
+                {
+                    SimulationTester.RunSimTest(Key4DTree, ExpectedInKey4DTree, seed, count, block);
+
+                    if (seedCount < 100 || seed % (seedCount / 100) == 0)
+                    {
+                        block.Text += $"Seed: {seed} / {startSeed + seedCount} OK\n";
+                        Console.WriteLine($"Seed: {seed} / {startSeed + seedCount} OK");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"PADLO TO PRI SEEDE: {seed} {e.Message}");
+                    return;
+                }
+            }
+            else
+            {
+                SimulationTester.RunSimTest(Key4DTree, ExpectedInKey4DTree, seed, count, block);
+            }
+        }
     }
 }

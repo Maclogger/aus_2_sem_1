@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:AUS_Semestralna_Praca_1"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AUS_Semestralna_Praca_1.FrontEnd.KdTreeTesterScreen">
     <Border Background="#2D2D2D" Margin="100" CornerRadius="20">
@@ -14,21 +13,7 @@
                        HorizontalAlignment="Center" />
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20">
-                <Button Content="Spustiť test 2D Stromu"
-                        FontWeight="Bold"
-                        Margin="10"
-                        Width="250"
-                        Height="120"
-                        FontSize="20"
-                        HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Center"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Background="white"
-                        Foreground="black"
-                        CornerRadius="10"
-                        Click="OnRun2DTestClicked" />
-                <Button Content="Spustiť test 4D Stromu"
+                <Button Content="Spustiť test"
                         FontWeight="Bold"
                         Margin="10"
                         Width="250"
@@ -43,7 +28,7 @@
                         CornerRadius="10"
                         Click="OnRun4DTestClicked" />
 
-                <Button Content="Vypísať prvky 4D stromu"
+                <Button Content="Vypísať prvky"
                         FontWeight="Bold"
                         Margin="10"
                         Width="250"

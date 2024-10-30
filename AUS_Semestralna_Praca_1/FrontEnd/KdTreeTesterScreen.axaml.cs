@@ -16,14 +16,9 @@ public partial class KdTreeTesterScreen : UserControl
         MainApplication.Instance.InitializeTestTrees();
     }
 
-    private void OnRun2DTestClicked(object? sender, RoutedEventArgs e)
-    {
-        MainApplication.Instance.RunTest(MyTextBlock, true);
-    }
-
     private void OnRun4DTestClicked(object? sender, RoutedEventArgs e)
     {
-        MainApplication.Instance.RunTest(MyTextBlock, false);
+        MainApplication.Instance.RunTest(MyTextBlock);
     }
 
     private void OnPrintTreeClicked(object? sender, RoutedEventArgs e)
