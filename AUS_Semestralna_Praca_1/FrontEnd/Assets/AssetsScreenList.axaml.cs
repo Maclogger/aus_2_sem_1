@@ -83,7 +83,16 @@ public partial class AssetsScreenList : UserControl
         }
 
         ListAssets = new ObservableCollection<AssetData>(list);
-        Headline.Text = "Nájdené " + (sign == 'R' ? "nehnuteľnosti" : "parcely") + ": " + ListAssets.Count;
+
+        if (sign == 'A')
+        {
+            Headline.Text = $"Nájdené nehnuteľnosti a parcely: {ListAssets.Count}";
+        }
+        else
+        {
+            Headline.Text = "Nájdené " + (sign == 'R' ? "nehnuteľnosti" : "parcely") + ": " + ListAssets.Count;
+        }
+
         DataContext = this;
     }
 
