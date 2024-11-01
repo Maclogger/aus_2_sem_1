@@ -39,6 +39,6 @@ public partial class ParcelsScreen : UserControl
             return;
         }
 
-        _contentArea.Content = new AssetsScreenList(realestates);
+        _contentArea.Content = new AssetsScreenList(realestates, 'P');
     }
 }

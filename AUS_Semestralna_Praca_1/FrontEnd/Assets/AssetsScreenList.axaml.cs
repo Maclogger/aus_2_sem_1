@@ -51,10 +51,9 @@ public partial class AssetsScreenList : UserControl
 {
     public ObservableCollection<AssetData> ListAssets { get; set; }
 
-    public AssetsScreenList(List<string> listOfAssets)
+    public AssetsScreenList(List<string> listOfAssets, char sign)
     {
         InitializeComponent();
-
         List<AssetData> list = new(listOfAssets.Count);
         foreach (string attr in listOfAssets)
         {
@@ -83,6 +82,7 @@ public partial class AssetsScreenList : UserControl
         }
 
         ListAssets = new ObservableCollection<AssetData>(list);
+        Headline.Text = "Nájdené " + (sign == 'R' ? "nehnuteľnosti" : "parcely") + ": " + ListAssets.Count;
         DataContext = this;
     }
 }

@@ -10,24 +10,69 @@
         <ScrollViewer>
             <StackPanel>
                 <TextBlock
-                    Text="{Binding Path=ListAssets.Count, Mode=OneWay, StringFormat='Nájdené parcely/nehnuteľnosti: {0}'}"
-                           FontWeight="Bold" FontSize="32" HorizontalAlignment="Center" Margin="20" />
-                <ItemsControl ItemsSource="{Binding ListAssets}">
+                    x:Name="Headline"
+                    Text="HEADLINE"
+                    FontWeight="Bold" FontSize="32" HorizontalAlignment="Center" Margin="300 60 300 50" />
+                <ItemsControl ItemsSource="{Binding ListAssets}" Margin="0 0 0 90">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="#FFDDDDDD" BorderThickness="1" CornerRadius="10" Margin="5"
+                            <Border BorderBrush="#FFDDDDDD" BorderThickness="2" CornerRadius="10" Margin="100 0 100 10"
                                     Padding="10">
-                                <StackPanel>
-                                    <TextBlock Text="{Binding Num, StringFormat='Súpisné číslo: {0}'}" FontWeight="Bold" FontSize="18"
-                                               Foreground="White" />
-                                    <TextBlock Text="{Binding TypeClient, StringFormat='TYP: {0}'}" Foreground="White" Margin="0,5,0,0" />
-                                    <TextBlock Text="{Binding Description, StringFormat='Popis 1: {0}'}" Foreground="White" Margin="0,5,0,0" />
-                                    <TextBlock Text="GPS Pozície:" Foreground="LightGray" Margin="0,10,0,0" />
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Pos1Data.Formatted, StringFormat='Pozícia 1: {0}'}" Foreground="White" Margin="10,0,0,0" />
-                                        <TextBlock Text="{Binding Pos2Data.Formatted, StringFormat='Pozícia 2: {0}'}" Foreground="White" Margin="10,0,0,0" />
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Textová časť -->
+                                    <StackPanel Orientation="Vertical" Grid.Column="0">
+                                        <TextBlock Text="{Binding Num, StringFormat='Súpisné číslo: {0}'}"
+                                                   FontWeight="Bold" FontSize="18"
+                                                   Foreground="White" />
+                                        <TextBlock Text="{Binding TypeClient, StringFormat='TYP: {0}'}"
+                                                   Foreground="White"
+                                                   Margin="0,5,0,0" />
+                                        <TextBlock Text="{Binding Description, StringFormat='Popis 1: {0}'}"
+                                                   Foreground="White" Margin="0,5,0,0" />
+                                        <TextBlock Text="GPS Pozície:" Foreground="LightGray" Margin="0,10,0,0" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock
+                                                Text="{Binding Pos1Data.Formatted, StringFormat='Pozícia 1: {0}'}"
+                                                Foreground="White" Margin="10,0,0,0" />
+                                            <TextBlock
+                                                Text="{Binding Pos2Data.Formatted, StringFormat='Pozícia 2: {0}'}"
+                                                Foreground="White" Margin="10,0,0,0" />
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
+
+                                    <!-- Tlačidlá vpravo -->
+                                    <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+                                        <Button Content="EDIT"
+                                                FontWeight="Bold"
+                                                Margin="10"
+                                                Width="100"
+                                                Height="100"
+                                                FontSize="20"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalContentAlignment="Center"
+                                                Background="white"
+                                                Foreground="black"
+                                                CornerRadius="10" />
+                                        <Button Content="DELETE"
+                                                FontWeight="Bold"
+                                                Margin="10"
+                                                Width="100"
+                                                Height="100"
+                                                FontSize="20"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalContentAlignment="Center"
+                                                Background="red"
+                                                Foreground="white"
+                                                CornerRadius="10" />
+                                    </StackPanel>
+                                </Grid>
+
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

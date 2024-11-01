@@ -40,6 +40,6 @@ public partial class FindSpecAssetsScreen : UserControl
             return;
         }
 
-        _contentArea.Content = new AssetsScreenList(specificAssets);
+        _contentArea.Content = new AssetsScreenList(specificAssets, 'R');
     }
 }
