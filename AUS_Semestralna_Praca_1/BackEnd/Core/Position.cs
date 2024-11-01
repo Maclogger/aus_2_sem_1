@@ -10,7 +10,7 @@ public class Position : IKey
     public double Latitude;
     public char LongitudeSign; // W or E
     public double Longitude;
-    private int? Uid { get; set; }
+    public int? Uid { get; set; }
     public double X { get; set; }
 
     public double Y { get; set; }

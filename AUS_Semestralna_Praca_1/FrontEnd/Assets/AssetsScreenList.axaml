@@ -69,7 +69,10 @@
                                                 VerticalContentAlignment="Center"
                                                 Background="red"
                                                 Foreground="white"
-                                                CornerRadius="10" />
+                                                CornerRadius="10"
+                                                CommandParameter="{Binding}"
+                                                Click="OnRemoveRecordClicked"
+                                                />
                                     </StackPanel>
                                 </Grid>
 

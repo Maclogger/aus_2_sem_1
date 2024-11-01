@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using AUS_Semestralna_Praca_1.BackEnd.Core;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 
 namespace AUS_Semestralna_Praca_1.FrontEnd.Assets;
 
@@ -46,7 +48,6 @@ public class PositionData
     public string Formatted => Position.ToFormattedString(Uid, Latitude, LatitudeSign, Longitude, LongitudeSign);
 }
 
-
 public partial class AssetsScreenList : UserControl
 {
     public ObservableCollection<AssetData> ListAssets { get; set; }
@@ -75,7 +76,7 @@ public partial class AssetsScreenList : UserControl
             string latitudeSign2 = ClientSys.GetStringFromAttr(attr, "LAT_SIGN_2")!;
             double longitude2 = (double)ClientSys.GetDoubleFromAttr(attr, "LON_2")!;
             string longitudeSign2 = ClientSys.GetStringFromAttr(attr, "LON_SIGN_2")!;
-            
+
             PositionData pos2Data = new(uid2, latitude2, latitudeSign2, longitude2, longitudeSign2);
 
             list.Add(new AssetData(num, description, pos1Data, pos2Data, type));
@@ -84,5 +85,15 @@ public partial class AssetsScreenList : UserControl
         ListAssets = new ObservableCollection<AssetData>(list);
         Headline.Text = "Nájdené " + (sign == 'R' ? "nehnuteľnosti" : "parcely") + ": " + ListAssets.Count;
         DataContext = this;
+    }
+
+
+    private void OnRemoveRecordClicked(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is AssetData asset)
+        {
+            ListAssets.Remove(asset);
+            MainApplication.Instance.RemoveAsset(asset);
+        }
     }
 }

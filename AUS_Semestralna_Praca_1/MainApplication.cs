@@ -5,6 +5,7 @@ using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree.Keys;
+using AUS_Semestralna_Praca_1.FrontEnd.Assets;
 using Avalonia.Controls;
 
 namespace AUS_Semestralna_Praca_1;
@@ -241,5 +242,15 @@ public class MainApplication
         }
 
         return (answer, sol);
+    }
+
+    public void RemoveAsset(AssetData asset)
+    {
+        Position pos1 = new(asset.Pos1Data.Latitude, asset.Pos1Data.LatitudeSign[0], asset.Pos1Data.Longitude, asset.Pos1Data.LongitudeSign[0]);
+        pos1.Uid = asset.Pos1Data.Uid;
+        Position pos2 = new(asset.Pos2Data.Latitude, asset.Pos2Data.LatitudeSign[0], asset.Pos2Data.Longitude, asset.Pos2Data.LongitudeSign[0]);
+        pos2.Uid = asset.Pos2Data.Uid;
+
+        Core.RemoveAsset(pos1, pos2, asset.Type[0]);
     }
 }

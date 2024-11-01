@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree;
 using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree.Keys;
+using AUS_Semestralna_Praca_1.FrontEnd.Assets;
 using Avalonia.Controls;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.Core;
@@ -203,5 +205,60 @@ public class ApplicationCore
         }
 
         return (new Answer("V systéme sa nenachádzajú žiadne nehnuteľnosti.", AnswerState.Info), assets);
+    }
+
+    public Answer RemoveAsset(Position pos1, Position pos2, char sign)
+    {
+        // pos has to contain UID also
+        switch (sign)
+        {
+            case 'R':
+            {
+                Realestate? realestate = RealestatesTree.FindExact(pos1);
+                if (realestate == null)
+                {
+                    return new Answer($"Nehnuteľnosť na pozícii {pos1}-{pos2} sa už v systéme nenašla.",
+                        AnswerState.Error);
+                }
+
+                foreach (Parcel prc in realestate.Parcelas)
+                {
+                    prc.RemoveRealestate(realestate);
+                }
+
+                RealestatesTree.Remove(pos1);
+                RealestatesTree.Remove(pos2);
+                RealestatesCount--;
+                break;
+            }
+            case 'P':
+            {
+                Parcel? parcel = ParcelsTree.FindExact(pos1);
+                if (parcel == null)
+                {
+                    return new Answer($"Parcela na pozícii {pos1}-{pos2} sa už v systéme nenašla.",
+                        AnswerState.Error);
+                }
+
+                foreach (Realestate rls in parcel.Realestates)
+                {
+                    rls.RemoveParcel(parcel);
+                }
+
+                ParcelsTree.Remove(pos1);
+                ParcelsTree.Remove(pos2);
+                ParcelsCount--;
+                break;
+            }
+            default:
+            {
+                throw new UnreachableException("Unknown asset type!");
+            }
+        }
+
+        AssetsTree.Remove(pos1);
+        AssetsTree.Remove(pos2);
+        AssetsCount--;
+        return new Answer("OK", AnswerState.Ok);
     }
 }

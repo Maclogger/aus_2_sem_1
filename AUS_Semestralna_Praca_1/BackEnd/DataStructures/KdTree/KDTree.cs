@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using AUS_Semestralna_Praca_1.BackEnd.Core;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 
@@ -155,6 +156,12 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         }
 
         return sol;
+    }
+    public T? FindExact(K key)
+    {
+        Node<K, T>? node = FindNode(key);
+        if (node != null) return node.Data;
+        return default;
     }
 
     private Node<K, T>? FindNode(K pKey)

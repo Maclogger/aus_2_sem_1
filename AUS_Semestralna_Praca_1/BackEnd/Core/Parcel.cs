@@ -51,4 +51,9 @@ public class Parcel : Asset
         ClientSys.AddToAttr(ref attr, "DESCRIPTION", Description);
         ClientSys.AddToAttr(ref attr, "TYPE", "P");
     }
+
+    public void RemoveRealestate(Realestate realestate)
+    {
+        Realestates.Remove(realestate);
+    }
 }
