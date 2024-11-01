@@ -21,7 +21,6 @@ public class MainApplication
     private KdTree<Key4D, int> _kdTestCordTree = new(2);
 
 
-
     private MainApplication()
     {
         Core = new ApplicationCore(this);
@@ -58,14 +57,15 @@ public class MainApplication
     }
 
 
-    public int RealestateCount => Core.RealestatesTree.Size;
-    public int ParcelCount => Core.ParcelsTree.Size;
-    public int AssetsCount => Core.AssetsTree.Size;
+    public int RealestateCount => Core.RealestatesCount;
+    public int ParcelCount => Core.ParcelsCount;
+    public int AssetsCount => Core.AssetsCount;
 
-    public Answer AddParcel(string pos1Attr, string pos2Attr, string parcelAttr)
+    public Answer
+        AddAsset(string pos1Attr, string pos2Attr, string assetAttr, char sign) // sign: 'R': realestate, 'P': parcel
     {
-        int? parcelNum = ClientSys.GetIntFromAttr(parcelAttr, "PARCEL_NUM");
-        string description = ClientSys.GetStringFromAttr(parcelAttr, "DESCRIPTION")!;
+        int? assetNum = ClientSys.GetIntFromAttr(assetAttr, "NUM");
+        string description = ClientSys.GetStringFromAttr(assetAttr, "DESCRIPTION")!;
 
         Position? pos1;
         Position? pos2;
@@ -73,125 +73,173 @@ public class MainApplication
         {
             pos1 = new(pos1Attr); // it can throw inside
             pos2 = new(pos2Attr); // it can throw inside
-            int dummy = (int)parcelNum!; // if parcelNum is not a number => crash
+            int dummy = (int)assetNum!; // if parcelNum/realestateNum is not a number => crash
         }
         catch
         {
             return new Answer("Some of the attributes are missing or invalid.", AnswerState.Error);
         }
 
-        Parcel parcel = new((int)parcelNum, description, pos1, pos2);
-
-        return Core.AddAsset(pos1, pos2, parcel);
-    }
-
-    public Answer RemoveParcel(string attr)
-    {
-        throw new NotImplementedException();
-    }
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////// REALESTATE //////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////
-
-    public Answer AddRealestate(string pos1Attr, string pos2Attr, string realestateAttr)
-    {
-        int? realestateNum = ClientSys.GetIntFromAttr(realestateAttr, "REALESTATE_NUM");
-        string description = ClientSys.GetStringFromAttr(realestateAttr, "DESCRIPTION")!;
-
-        Position? pos1;
-        Position? pos2;
-        try
+        Asset asset;
+        if (sign == 'R')
         {
-            pos1 = new(pos1Attr); // it can throw inside
-            pos2 = new(pos2Attr); // it can throw inside
-            int dummy = (int)realestateNum!; // if parcelNum is not a number => crash
+            asset = new Realestate((int)assetNum, description, pos1, pos2);
         }
-        catch
+        else
         {
-            return new Answer("Some of the attributes are missing or invalid.", AnswerState.Error);
+            asset = new Parcel((int)assetNum, description, pos1, pos2);
         }
 
-        Realestate realestate = new((int)realestateNum, description, pos1, pos2);
-
-        return Core.AddAsset(pos1, pos2, realestate);
+        return Core.AddAsset(pos1, pos2, asset);
     }
 
-    public Tuple<Answer, List<string>> FindRealestates(string posAttr)
+    public (Answer, List<string>) FindAssets(string posAttr, char sign) // 'R': realestate, 'P': parcel, 'A': asset
     {
-        throw new NotImplementedException();
-        // TODO TODO
-        /*
         Position pos;
         try
         {
             pos = new(posAttr);
+            pos.SetUidNull(); // easier to test, uid is null
         }
         catch (Exception e)
         {
-            return new Tuple<Answer, List<string>>(
-                new Answer("Some of the attributes are missing or invalid.", AnswerState.Error), new List<string>());
+            return (new Answer("Some of the attributes are missing or invalid.", AnswerState.Error),
+                new List<string>());
         }
 
-        Tuple<Answer, List<DataPart<Realestate>>> tuple = _core.FindRealestates(pos);
+        List<string> sol = new();
+        Answer answer;
 
-        if (tuple.Item1.State is AnswerState.Error or AnswerState.Info)
+        switch (sign)
         {
-            return new Tuple<Answer, List<string>>(tuple.Item1, new List<string>());
+            case 'R':
+            {
+                (answer, List<Realestate> realestates) = Core.FindRealestates(pos);
+                foreach (Realestate realestate in realestates)
+                {
+                    string realestateStr = "";
+                    realestate.ToAttr(ref realestateStr);
+                    sol.Add(realestateStr);
+                }
+
+                break;
+            }
+            case 'P':
+            {
+                (answer, List<Parcel> parcels) = Core.FindParcels(pos);
+                foreach (Parcel parcel in parcels)
+                {
+                    string parcelStr = "";
+                    parcel.ToAttr(ref parcelStr);
+                    sol.Add(parcelStr);
+                }
+
+                break;
+            }
+            default:
+            {
+                (answer, List<Asset> assets) = Core.FindAssets(pos);
+                foreach (Asset asset in assets)
+                {
+                    string assetStr = "";
+                    asset.ToAttr(ref assetStr);
+                    sol.Add(assetStr);
+                }
+
+                break;
+            }
         }
 
-        // Order has to be correct
-        List<string> solList = new(tuple.Item2.Count);
-        foreach (DataPart<Realestate> realDp in tuple.Item2)
+        if (answer.State is AnswerState.Error or AnswerState.Info)
         {
-            string sol = "";
-            realDp.Value.ToAttr(ref sol);
-            solList.Add(sol);
+            return (answer, new List<string>());
         }
 
-        return new Tuple<Answer, List<string>>(tuple.Item1, solList);
-    */
+        return (answer, sol);
     }
 
-    public Tuple<Answer, List<string>> FindAssets(string posAttr1, string posAttr2)
-    {
-        throw new NotImplementedException();
-        /*Position pos1;
-        Position pos2;
-        try
-        {
-            pos1 = new(posAttr1);
-            pos2 = new(posAttr2);
-        }
-        catch (Exception e)
-        {
-            return new Tuple<Answer, List<string>>(
-                new Answer("Some of the attributes are missing or invalid.", AnswerState.Error), new List<string>());
-        }
-
-        Tuple<Answer, List<DataPart<Asset>>> tuple = _core.FindAssets(pos1, pos2);
-
-        if (tuple.Item1.State is AnswerState.Error or AnswerState.Info)
-        {
-            return new Tuple<Answer, List<string>>(tuple.Item1, new List<string>());
-        }
-
-        // Order has to be correct
-        List<string> solList = new(tuple.Item2.Count);
-        foreach (DataPart<Asset> realDp in tuple.Item2)
-        {
-            string sol = "";
-            realDp.Value.ToAttr(ref sol);
-            ClientSys.AddToAttr(ref sol, "TYPE", realDp.Value is Realestate ? "RS" : "PC");
-            solList.Add(sol);
-        }
-
-        return new Tuple<Answer, List<string>>(tuple.Item1, solList);*/
-    }
 
     public void RunTest(TextBlock block)
     {
         Core.RunSimTest(block);
+    }
+
+    public (Answer answer, List<string> assets) FindAssets(string posAttr1, string posAttr2)
+    {
+        (Answer answer, List<string> assets) = FindAssets(posAttr1, 'A');
+        (Answer answer2, List<string> assetsOther) = FindAssets(posAttr2, 'A');
+
+        if (answer.State is AnswerState.Error)
+        {
+            return (answer, new List<string>());
+        }
+
+        if (answer2.State is AnswerState.Error)
+        {
+            return (answer2, new List<string>());
+        }
+
+
+        foreach (string assetStr in assetsOther)
+        {
+            if (!assets.Contains(assetStr))
+            {
+                assets.Add(assetStr);
+            }
+        }
+
+        return (answer, assets);
+    }
+
+    public (Answer answer, List<string> assets) FindAllAssets(char sign)
+    {
+        Answer answer;
+        List<string> sol = new();
+        switch (sign)
+        {
+            case 'R':
+            {
+                (answer, List<Realestate> realestates) = Core.FindAllRealestates();
+                foreach (Realestate realestate in realestates)
+                {
+                    string realestateStr = "";
+                    realestate.ToAttr(ref realestateStr);
+                    sol.Add(realestateStr);
+                }
+
+                break;
+            }
+            case 'P':
+            {
+                (answer, List<Parcel> parcels) = Core.FindAllParcels();
+                foreach (Parcel parcel in parcels)
+                {
+                    string parcelStr = "";
+                    parcel.ToAttr(ref parcelStr);
+                    sol.Add(parcelStr);
+                }
+
+                break;
+            }
+            default:
+            {
+                (answer, List<Asset> assets) = Core.FindAllAssets();
+                foreach (Asset asset in assets)
+                {
+                    string assetStr = "";
+                    asset.ToAttr(ref assetStr);
+                    sol.Add(assetStr);
+                }
+
+                break;
+            }
+        }
+
+        if (answer.State is AnswerState.Error or AnswerState.Info)
+        {
+            return (answer, new List<string>());
+        }
+
+        return (answer, sol);
     }
 }

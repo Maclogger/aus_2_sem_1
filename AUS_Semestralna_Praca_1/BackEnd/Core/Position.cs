@@ -6,12 +6,15 @@ namespace AUS_Semestralna_Praca_1.BackEnd.Core;
 
 public class Position : IKey
 {
-    private char _latitudeSign; // N or S
-    private double _latitude;
-    private char _longitudeSign; // W or E
-    private double _longitude;
-    private double _x;
-    private double _y;
+    public char LatitudeSign; // N or S
+    public double Latitude;
+    public char LongitudeSign; // W or E
+    public double Longitude;
+    private int? Uid { get; set; }
+    public double X { get; set; }
+
+    public double Y { get; set; }
+
 
     public Position(double pLatitude, char pLatitudeSign, double pLongitude, char pLongitudeSign)
     {
@@ -38,65 +41,7 @@ public class Position : IKey
         LatitudeSign = pLatitudeSign;
         Longitude = pLongitude;
         LongitudeSign = pLongitudeSign;
-    }
-
-    public Position(Random? pRandom = null)
-    {
-        Random random = pRandom ?? new Random();
-
-        // Generate random coordinates within valid range
-        double pLatitude = Utils.GetRandomDoubleInRange(Config.Instance.MinLatitude, Config.Instance.MaxLatitude);
-        double pLongitude = Utils.GetRandomDoubleInRange(Config.Instance.MinLongitude, Config.Instance.MaxLongitude);
-    }
-
-    public bool Equals(Position other)
-    {
-        return Math.Abs(X - other.X) < Config.Instance.Tolerance && Math.Abs(Y - other.Y) < Config.Instance.Tolerance;
-    }
-
-    public double X
-    {
-        get => _x;
-        set => _x = value;
-    }
-
-    public double Y
-    {
-        get => _y;
-        set => _y = value;
-    }
-
-    public char LatitudeSign
-    {
-        get => _latitudeSign;
-        set => _latitudeSign = value;
-    }
-
-    public double Latitude
-    {
-        get => _latitude;
-        set => _latitude = value;
-    }
-
-    public char LongitudeSign
-    {
-        get => _longitudeSign;
-        set => _longitudeSign = value;
-    }
-
-    public double Longitude
-    {
-        get => _longitude;
-        set => _longitude = value;
-    }
-
-    public override string ToString()
-    {
-        if (Config.Instance.FormattedOutput)
-        {
-            return $"( {Math.Abs(Latitude)} {LatitudeSign} ; {Math.Abs(Longitude)} {LongitudeSign})";
-        }
-        return $"( {X} ; {Y} )";
+        Uid = Utils.GetNextVal();
     }
 
     public int CompareTo(IKey pOther, int pDimension)
@@ -126,7 +71,23 @@ public class Position : IKey
     public bool Equals(IKey pOther)
     {
         if (pOther is not Position pOtherPos) return false;
-        return Math.Abs(_x - pOtherPos.X) < Config.Instance.Tolerance &&
-               Math.Abs(_y - pOtherPos.Y) < Config.Instance.Tolerance;
+        return Math.Abs(X - pOtherPos.X) < Config.Instance.Tolerance &&
+               Math.Abs(Y - pOtherPos.Y) < Config.Instance.Tolerance &&
+               Uid == pOtherPos.Uid && Uid != null;
+    }
+
+    public override string ToString()
+    {
+        if (Config.Instance.FormattedOutput)
+        {
+            return $"( {Math.Abs(Latitude)} {LatitudeSign} ; {Math.Abs(Longitude)} {LongitudeSign})";
+        }
+
+        return $"( {X} ; {Y} )";
+    }
+
+    public void SetUidNull()
+    {
+        Uid = null;
     }
 }

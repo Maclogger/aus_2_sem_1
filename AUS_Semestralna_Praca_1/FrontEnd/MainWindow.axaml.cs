@@ -11,17 +11,12 @@ public partial class MainWindow : Window
     {
         InitializeComponent();// Nastavte svetlú tému pre aplikáciu
         Application.Current!.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Dark;
-        ContentArea.Content = new StatusScreen(ContentArea);
-    }
-
-    private void OnScreen2Clicked(object? sender, RoutedEventArgs e)
-    {
-        ContentArea.Content = new Screen2();
+        ContentArea.Content = new Assets.StatusScreen(ContentArea);
     }
 
     private void OnConfigClicked(object? sender, RoutedEventArgs e)
     {
-        ContentArea.Content = new ConfigSettings();
+        ContentArea.Content = new Utils.ConfigSettings();
     }
 
     private void OnExitClicked(object? sender, RoutedEventArgs e)
@@ -31,12 +26,12 @@ public partial class MainWindow : Window
 
     private void OnAssetsClicked(object? sender, RoutedEventArgs e)
     {
-        ContentArea.Content = new AssetsScreen(ContentArea);
+        ContentArea.Content = new Assets.AssetsScreen(ContentArea);
     }
 
     private void OnStatusClicked(object? sender, RoutedEventArgs e)
     {
-        ContentArea.Content = new StatusScreen(ContentArea);
+        ContentArea.Content = new Assets.StatusScreen(ContentArea);
     }
 
     private void OnParcelsClicked(object? sender, RoutedEventArgs e)
@@ -46,11 +41,11 @@ public partial class MainWindow : Window
 
     private void OnRealestatesClicked(object? sender, RoutedEventArgs e)
     {
-        ContentArea.Content = new RealestatesScreen(ContentArea);
+        ContentArea.Content = new Realestates.RealestatesScreen(ContentArea);
     }
 
     private void OnTesterClicked(object? sender, RoutedEventArgs e)
     {
-        ContentArea.Content = new KdTreeTesterScreen(ContentArea);
+        ContentArea.Content = new Testing.KdTreeTesterScreen(ContentArea);
     }
 }

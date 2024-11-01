@@ -1,8 +1,6 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 
-namespace AUS_Semestralna_Praca_1.FrontEnd;
+namespace AUS_Semestralna_Praca_1.FrontEnd.Assets;
 
 public partial class StatusScreen : UserControl
 {

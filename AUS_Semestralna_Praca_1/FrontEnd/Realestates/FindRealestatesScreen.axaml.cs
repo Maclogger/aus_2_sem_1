@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
-using Avalonia;
+using AUS_Semestralna_Praca_1.FrontEnd.GuiUtils;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 
-namespace AUS_Semestralna_Praca_1.FrontEnd;
+namespace AUS_Semestralna_Praca_1.FrontEnd.Realestates;
 
 public partial class FindRealestatesScreen : UserControl
 {
@@ -28,13 +27,15 @@ public partial class FindRealestatesScreen : UserControl
         ClientSys.AddToAttr(ref posAttr, "LAT_SIGN", (Latitude1Sign.SelectedValue as ComboBoxItem)!.Content!.ToString() ?? "N");
         ClientSys.AddToAttr(ref posAttr, "LON_SIGN", (Longitude1Sign.SelectedValue as ComboBoxItem)!.Content!.ToString() ?? "W");
 
-        Tuple<Answer,List<string>> foundTuple = MainApplication.Instance.FindRealestates(posAttr);
-        if (foundTuple.Item1.State is not AnswerState.Ok)
+
+        (Answer answer, List<string> realestates) = MainApplication.Instance.FindAssets(posAttr, 'R');
+
+        if (answer.State is not AnswerState.Ok)
         {
-            new MyMessageBox(foundTuple.Item1).Show();
+            new MyMessageBox(answer).Show();
             return;
         }
 
-        _contentArea.Content = new RealestatesListScreen(foundTuple.Item2);
+        _contentArea.Content = new RealestatesListScreen(realestates);
     }
 }

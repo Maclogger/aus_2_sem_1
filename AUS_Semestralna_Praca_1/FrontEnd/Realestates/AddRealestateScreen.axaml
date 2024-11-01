@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:AUS_Semestralna_Praca_1"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="AUS_Semestralna_Praca_1.FrontEnd.AddRealestateScreen">
+             x:Class="AUS_Semestralna_Praca_1.FrontEnd.Realestates.AddRealestateScreen">
 
 
     <Border Background="#2D2D2D" Margin="100" CornerRadius="20">
@@ -100,20 +100,40 @@
                 <TextBox x:Name="Description" Width="500"></TextBox>
             </StackPanel>
 
-            <Button Content="Pridať nehnuteľnosť"
-                        FontWeight="Bold"
-                        Margin="10"
-                        Width="220"
-                        Height="50"
-                        FontSize="20"
-                        HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Center"
+            <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Background="white"
-                        Foreground="black"
-                        CornerRadius="10"
-                        Click="OnAddRealestateClicked" />
+                        >
+                <Button Content="Pridať nehnuteľnosť"
+                            FontWeight="Bold"
+                            Margin="10"
+                            Width="220"
+                            Height="50"
+                            FontSize="20"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="white"
+                            Foreground="black"
+                            CornerRadius="10"
+                            Click="OnAddRealestateClicked" />
+                <Button Content="Vygenerovať RANDOM"
+                            FontWeight="Bold"
+                            Margin="10"
+                            Width="220"
+                            Height="50"
+                            FontSize="20"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="white"
+                            Foreground="black"
+                            CornerRadius="10"
+                            Click="OnRandomRealestateClicked" />
+            </StackPanel>
+
         </StackPanel>
     </Border>
 

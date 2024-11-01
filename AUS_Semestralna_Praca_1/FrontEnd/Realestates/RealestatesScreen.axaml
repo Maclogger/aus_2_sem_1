@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:AUS_Semestralna_Praca_1"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="AUS_Semestralna_Praca_1.FrontEnd.RealestatesScreen">
+             x:Class="AUS_Semestralna_Praca_1.FrontEnd.Realestates.RealestatesScreen">
     <Border Background="#2D2D2D" Margin="100" CornerRadius="20">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock
@@ -50,6 +50,20 @@
                         CornerRadius="10"
                         Click="OnFindRealestate"
                         />
+                <Button Content="Nájsť všetky nehnuteľnosti"
+                        FontWeight="Bold"
+                        Margin="10"
+                        Width="220"
+                        Height="220"
+                        FontSize="20"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="white"
+                        Foreground="black"
+                        CornerRadius="10"
+                        Click="OnFindAllRealestates" />
             </StackPanel>
         </StackPanel>
     </Border>

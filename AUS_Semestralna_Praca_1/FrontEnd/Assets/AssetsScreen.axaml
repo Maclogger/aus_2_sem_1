@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:AUS_Semestralna_Praca_1"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="AUS_Semestralna_Praca_1.FrontEnd.AssetsScreen">
+             x:Class="AUS_Semestralna_Praca_1.FrontEnd.Assets.AssetsScreen">
 
     <Border Background="#2D2D2D" Margin="100" CornerRadius="20">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical">
@@ -66,20 +66,39 @@
             </StackPanel>
 
 
-            <Button Content="Nájsť nehnuteľnosť"
-                    FontWeight="Bold"
-                    Margin="10"
-                    Width="220"
-                    Height="50"
-                    FontSize="20"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Background="white"
-                    Foreground="black"
-                    CornerRadius="10"
-                    Click="OnFindAssetsClicked" />
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Nájsť \n nehnuteľnosti / parcely"
+                        FontWeight="Bold"
+                        Margin="10"
+                        Width="220"
+                        Height="50"
+                        FontSize="20"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="white"
+                        Foreground="black"
+                        CornerRadius="10"
+                        Click="OnFindAssetsClicked" />
+
+                <Button Content="Nájsť všetky \n nehnuteľnosti / parcely"
+                        FontWeight="Bold"
+                        Margin="10"
+                        Width="220"
+                        Height="50"
+                        FontSize="20"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="white"
+                        Foreground="black"
+                        CornerRadius="10"
+                        Click="OnFindAllAssetsClicked" />
+
+
+            </StackPanel>
 
         </StackPanel>
     </Border>

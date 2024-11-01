@@ -11,9 +11,6 @@ public class Parcel : Asset
     public Position Pos1 { get; set; }
     public Position Pos2 { get; set; }
 
-    public int? Uid1 { get; set; }
-    public int? Uid2 { get; set; }
-
     public Parcel(int pParcelNum, string pDescription, Position pPos1, Position pPos2)
     {
         ParcelNum = pParcelNum;
@@ -50,9 +47,8 @@ public class Parcel : Asset
     {
         ClientSys.AddToAttr(ref attr, "POS_1", Pos1.ToString());
         ClientSys.AddToAttr(ref attr, "POS_2", Pos2.ToString());
-        ClientSys.AddToAttr(ref attr, "PARCEL_NUM", ParcelNum);
+        ClientSys.AddToAttr(ref attr, "NUM", ParcelNum);
         ClientSys.AddToAttr(ref attr, "DESCRIPTION", Description);
-        ClientSys.AddToAttr(ref attr, "UID_1", (int)Uid1!);
-        ClientSys.AddToAttr(ref attr, "UID_2", (int)Uid2!);
+        ClientSys.AddToAttr(ref attr, "TYPE", "P");
     }
 }

@@ -3,9 +3,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:frontEnd="clr-namespace:AUS_Semestralna_Praca_1.FrontEnd"
+             xmlns:assets="clr-namespace:AUS_Semestralna_Praca_1.FrontEnd.Assets"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="AUS_Semestralna_Praca_1.FrontEnd.AssetsScreenList"
-             x:DataType="frontEnd:AssetsScreenList">
+             x:Class="AUS_Semestralna_Praca_1.FrontEnd.Assets.AssetsScreenList"
+             x:DataType="assets:AssetsScreenList">
     <Border Background="#2D2D2D" Margin="100" CornerRadius="20">
         <ScrollViewer>
             <StackPanel>

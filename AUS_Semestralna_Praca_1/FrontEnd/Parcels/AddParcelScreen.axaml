@@ -2,7 +2,137 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:AUS_Semestralna_Praca_1"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AUS_Semestralna_Praca_1.FrontEnd.AddParcelScreen">
-    Welcome to Avalonia!
+
+    <Border Background="#2D2D2D" Margin="100" CornerRadius="20">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="Pridanie parcely" FontWeight="Bold" FontSize="32" HorizontalAlignment="Center" Margin="20" />
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="10" HorizontalAlignment="Center">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Pozícia 1" FontSize="18" Margin="0, 0, 0, 10" FontWeight="Bold"
+                               HorizontalAlignment="Center" />
+                    <StackPanel Orientation="Horizontal">
+                        <NumericUpDown x:Name="Latitude1"
+                                       Width="250"
+                                       Minimum="{Binding MinLatitudeAbs, Source={x:Static local:Config.Instance}, Mode=OneWay}"
+                                       Maximum="{Binding MaxLatitudeAbs, Source={x:Static local:Config.Instance}, Mode=OneWay}"
+                                       Increment="1"
+                                       Value="{Binding MinLatitudeAbs, Source={x:Static local:Config.Instance}, Mode=OneWay}"
+                                       />
+                        <ComboBox x:Name="Latitude1Sign" Width="80" SelectedIndex="0" >
+                            <ComboBoxItem>N</ComboBoxItem>
+                            <ComboBoxItem>S</ComboBoxItem>
+                        </ComboBox>
+                        <TextBlock Width="20"></TextBlock>
+                        <NumericUpDown x:Name="Longitude1"
+                                       Width="250"
+                                       Minimum="{Binding MinLongitudeAbs, Source={x:Static local:Config.Instance}, Mode=OneWay}"
+                                       Maximum="{Binding MaxLongitudeAbs, Source={x:Static local:Config.Instance}, Mode=OneWay}"
+                                       Increment="1"
+                                       Value="{Binding MinLongitudeAbs, Source={x:Static local:Config.Instance}, Mode=OneWay}"
+                                       />
+                        <ComboBox x:Name="Longitude1Sign" Width="80" SelectedIndex="0">
+                            <ComboBoxItem>E</ComboBoxItem>
+                            <ComboBoxItem>W</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="10" HorizontalAlignment="Center">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Pozícia 2" FontSize="18" Margin="0, 0, 0, 10" FontWeight="Bold"
+                               HorizontalAlignment="Center" />
+                    <StackPanel Orientation="Horizontal">
+                        <NumericUpDown x:Name="Latitude2"
+                                       Width="250"
+                                       Minimum="{Binding MinLatitudeAbs, Source={x:Static local:Config.Instance}, Mode=OneWay}"
+                                       Maximum="{Binding MaxLatitudeAbs, Source={x:Static local:Config.Instance}, Mode=OneWay}"
+                                       Increment="1"
+                                       Value="{Binding MinLatitudeAbs, Source={x:Static local:Config.Instance}, Mode=OneWay}"
+                                       />
+                        <ComboBox x:Name="Latitude2Sign" Width="80" SelectedIndex="0">
+                            <ComboBoxItem>N</ComboBoxItem>
+                            <ComboBoxItem>S</ComboBoxItem>
+                        </ComboBox>
+                        <TextBlock Width="20"></TextBlock>
+                        <NumericUpDown x:Name="Longitude2"
+                                       Width="250"
+                                       Minimum="{Binding MinLongitudeAbs, Source={x:Static local:Config.Instance}, Mode=OneWay}"
+                                       Maximum="{Binding MaxLongitudeAbs, Source={x:Static local:Config.Instance}, Mode=OneWay}"
+                                       Increment="1"
+                                       Value="{Binding MinLongitudeAbs, Source={x:Static local:Config.Instance}, Mode=OneWay}"
+                                       />
+                        <ComboBox x:Name="Longitude2Sign" Width="80" SelectedIndex="0">
+                            <ComboBoxItem>E</ComboBoxItem>
+                            <ComboBoxItem>W</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical" Grid.Row="2" Margin="10" HorizontalAlignment="Center">
+                <TextBlock Text="Číslo parcely"
+                           FontSize="18"
+                           Margin="0, 0, 0, 10"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center" />
+
+                <NumericUpDown x:Name="ParcelNum"
+                                       Width="250"
+                                       Minimum="0"
+                                       Increment="1"
+                                       Value="1"
+                                       />
+            </StackPanel>
+
+
+            <StackPanel Orientation="Vertical" Grid.Row="2" Margin="10" HorizontalAlignment="Center">
+                <TextBlock Text="Popis"
+                           FontSize="18"
+                           Margin="0, 0, 0, 10"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center" />
+
+                <TextBox x:Name="Description" Width="500"></TextBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        >
+                <Button Content="Pridať parcelu"
+                            FontWeight="Bold"
+                            Margin="10"
+                            Width="220"
+                            Height="50"
+                            FontSize="20"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="white"
+                            Foreground="black"
+                            CornerRadius="10"
+                            Click="OnAddParcelClicked" />
+                <Button Content="Vygenerovať RANDOM"
+                            FontWeight="Bold"
+                            Margin="10"
+                            Width="220"
+                            Height="50"
+                            FontSize="20"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="white"
+                            Foreground="black"
+                            CornerRadius="10"
+                            Click="OnRandomParcelClicked" />
+            </StackPanel>
+
+        </StackPanel>
+    </Border>
 </UserControl>

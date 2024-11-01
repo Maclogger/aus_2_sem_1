@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
-using Avalonia;
+using AUS_Semestralna_Praca_1.FrontEnd.GuiUtils;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 
-namespace AUS_Semestralna_Praca_1.FrontEnd;
+namespace AUS_Semestralna_Praca_1.FrontEnd.Assets;
 
 public partial class AssetsScreen : UserControl
 {
@@ -35,13 +34,27 @@ public partial class AssetsScreen : UserControl
         ClientSys.AddToAttr(ref posAttr2, "LAT_SIGN", (Latitude2Sign.SelectedValue as ComboBoxItem)!.Content!.ToString() ?? "N");
         ClientSys.AddToAttr(ref posAttr2, "LON_SIGN", (Longitude2Sign.SelectedValue as ComboBoxItem)!.Content!.ToString() ?? "W");
 
-        Tuple<Answer,List<string>> foundTuple = MainApplication.Instance.FindAssets(posAttr1, posAttr2);
-        if (foundTuple.Item1.State is not AnswerState.Ok)
+        (Answer answer, List<string> assets) = MainApplication.Instance.FindAssets(posAttr1, posAttr2);
+
+        if (answer.State is not AnswerState.Ok)
         {
-            new MyMessageBox(foundTuple.Item1).Show();
+            new MyMessageBox(answer).Show();
             return;
         }
 
-        _contentArea.Content = new AssetsScreenList(foundTuple.Item2);
+        _contentArea.Content = new AssetsScreenList(assets);
+    }
+
+    private void OnFindAllAssetsClicked(object? sender, RoutedEventArgs e)
+    {
+        (Answer answer, List<string> assets) = MainApplication.Instance.FindAllAssets('A');
+
+        if (answer.State is not AnswerState.Ok)
+        {
+            new MyMessageBox(answer).Show();
+            return;
+        }
+
+        _contentArea.Content = new AssetsScreenList(assets);
     }
 }

@@ -57,14 +57,37 @@ public class ApplicationCore
             }
 
             RealestatesCount++;
-            AssetsCount++;
-            message = $"Pridanie parcely ({pos1}-{pos2})-{realestate} bolo úspešné.";
+            message = $"Pridanie nehnuteľnosti ({pos1}-{pos2})-{realestate} bolo úspešné.";
         }
-        /*
         else if (asset is Parcel parcel)
         {
+            try
+            {
+                // adding new parcel to all realestates at pos1 and pos2
+                foreach (Realestate rls in RealestatesTree.Find(pos1))
+                {
+                    rls.AddParcel(parcel);
+                    parcel.AddRealestate(rls);
+                }
+
+                foreach (Realestate rls in RealestatesTree.Find(pos2))
+                {
+                    rls.AddParcel(parcel);
+                    parcel.AddRealestate(rls);
+                }
+
+                ParcelsTree.Add(pos1, parcel);
+                ParcelsTree.Add(pos2, parcel);
+            }
+            catch (Exception e)
+            {
+                return new Answer($"Pridanie parcely ({pos1}-{pos2})-{parcel} sa nepodarilo. {e.Message}",
+                    AnswerState.Error);
+            }
+
+            ParcelsCount++;
+            message = $"Pridanie parcely ({pos1}-{pos2})-{parcel} bolo úspešné.";
         }
-        */
         else
         {
             throw new ArgumentException($"Asset type {asset.GetType()} is not supported.");
@@ -72,13 +95,113 @@ public class ApplicationCore
 
         AssetsTree.Add(pos1, asset);
         AssetsTree.Add(pos2, asset);
+
+        AssetsCount++;
         return new Answer(message, AnswerState.Ok);
     }
-
 
 
     public void RunSimTest(TextBlock block)
     {
         // TODO SimulationTester.RunSimTests();
+    }
+
+    public Tuple<Answer, List<Asset>> FindAssets(Position pos, char sign)
+    {
+        throw new NotImplementedException();
+    }
+
+    public (Answer, List<Realestate>) FindRealestates(Position pos)
+    {
+        List<Realestate> realestates = RealestatesTree.Find(pos);
+
+        if (realestates.Count == 0)
+        {
+            return new(new Answer($"Neboli nájdené žiadne nehnuteľnosti na pozícii: {pos}", AnswerState.Info),
+                realestates);
+        }
+
+        return (new Answer($"OK", AnswerState.Ok), realestates);
+    }
+
+    public (Answer answer, List<Parcel> parcels) FindParcels(Position pos)
+    {
+        List<Parcel> parcels = ParcelsTree.Find(pos);
+
+        if (parcels.Count == 0)
+        {
+            return new(new Answer($"Neboli nájdené žiadne nehnuteľnosti na pozícii: {pos}", AnswerState.Info), parcels);
+        }
+
+        return (new Answer($"OK", AnswerState.Ok), parcels);
+    }
+
+    public (Answer answer, List<Asset> parcels) FindAssets(Position pos)
+    {
+        List<Asset> assets = AssetsTree.Find(pos);
+
+        if (assets.Count == 0)
+        {
+            return new(new Answer($"Neboli nájdené žiadne nehnuteľnosti na pozícii: {pos}", AnswerState.Info), assets);
+        }
+
+        return (new Answer($"OK", AnswerState.Ok), assets);
+    }
+
+    public (Answer answer, List<Realestate> realestates) FindAllRealestates()
+    {
+        List<Realestate> realestates = new();
+        foreach (Realestate realestate in RealestatesTree.LevelOrder())
+        {
+            if (!realestates.Contains(realestate))
+            {
+                realestates.Add(realestate);
+            }
+        }
+
+        if (realestates.Count > 0)
+        {
+            return (new Answer("OK", AnswerState.Ok), realestates);
+        }
+
+        return (new Answer("V systéme sa nenachádzajú žiadne nehnuteľnosti.", AnswerState.Info), realestates);
+    }
+
+    public (Answer answer, List<Parcel> realestates) FindAllParcels()
+    {
+        List<Parcel> parcels = new();
+        foreach (Parcel parcel in ParcelsTree.LevelOrder())
+        {
+            if (!parcels.Contains(parcel))
+            {
+                parcels.Add(parcel);
+            }
+        }
+
+        if (parcels.Count > 0)
+        {
+            return (new Answer("OK", AnswerState.Ok), parcels);
+        }
+
+        return (new Answer("V systéme sa nenachádzajú žiadne nehnuteľnosti.", AnswerState.Info), parcels);
+    }
+
+    public (Answer answer, List<Asset> realestates) FindAllAssets()
+    {
+        List<Asset> assets = new();
+        foreach (Asset asset in AssetsTree.LevelOrder())
+        {
+            if (!assets.Contains(asset))
+            {
+                assets.Add(asset);
+            }
+        }
+
+        if (assets.Count > 0)
+        {
+            return (new Answer("OK", AnswerState.Ok), assets);
+        }
+
+        return (new Answer("V systéme sa nenachádzajú žiadne nehnuteľnosti.", AnswerState.Info), assets);
     }
 }

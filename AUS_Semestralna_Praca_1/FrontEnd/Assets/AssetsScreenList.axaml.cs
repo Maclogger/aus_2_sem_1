@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 
-namespace AUS_Semestralna_Praca_1.FrontEnd;
+namespace AUS_Semestralna_Praca_1.FrontEnd.Assets;
 
 public class AssetData
 {
@@ -42,7 +40,7 @@ public partial class AssetsScreenList : UserControl
         {
             string type = ClientSys.GetStringFromAttr(attr, "TYPE")!;
 
-            int num = (int)ClientSys.GetIntFromAttr(attr, type == "RS" ? "REALESTATE_NUM" : "PARCEL_NUM")!;
+            int num = (int)ClientSys.GetIntFromAttr(attr, "NUM")!;
             string pDescription = ClientSys.GetStringFromAttr(attr, "DESCRIPTION")!;
             int pUid1 = (int)ClientSys.GetIntFromAttr(attr, "UID_1")!;
             int pUid2 = (int)ClientSys.GetIntFromAttr(attr, "UID_2")!;
