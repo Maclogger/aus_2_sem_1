@@ -6,16 +6,20 @@ using AUS_Semestralna_Praca_1.FrontEnd.GuiUtils;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
-namespace AUS_Semestralna_Praca_1.FrontEnd.Realestates;
+namespace AUS_Semestralna_Praca_1.FrontEnd.Assets;
 
-public partial class FindRealestatesScreen : UserControl
+public partial class FindSpecAssetsScreen : UserControl
 {
+    public char Sign { get; }
     private ContentControl _contentArea;
-
-    public FindRealestatesScreen(ContentControl contentArea)
+    //public string Headline => Sign == 'R' ? "Vyhľadávanie nehnuteľností" : "Vyhľadávanie parciel";
+    public FindSpecAssetsScreen(ContentControl contentArea, char sign)
     {
+        Sign = sign;
         _contentArea = contentArea;
         InitializeComponent();
+        Headline.Text = Sign == 'R' ? "Vyhľadávanie nehnuteľností" : "Vyhľadávanie parciel";
+        FindButton.Content = Sign == 'R' ? "Vyhľadať nehnuteľnsti" : "Vyhľadať parcely";
     }
 
     private void OnFindRealestatesClicked(object? sender, RoutedEventArgs e)
@@ -28,7 +32,7 @@ public partial class FindRealestatesScreen : UserControl
         ClientSys.AddToAttr(ref posAttr, "LON_SIGN", (Longitude1Sign.SelectedValue as ComboBoxItem)!.Content!.ToString() ?? "W");
 
 
-        (Answer answer, List<string> realestates) = MainApplication.Instance.FindAssets(posAttr, 'R');
+        (Answer answer, List<string> specificAssets) = MainApplication.Instance.FindAssets(posAttr, Sign);
 
         if (answer.State is not AnswerState.Ok)
         {
@@ -36,6 +40,6 @@ public partial class FindRealestatesScreen : UserControl
             return;
         }
 
-        _contentArea.Content = new RealestatesListScreen(realestates);
+        _contentArea.Content = new AssetsScreenList(specificAssets);
     }
 }

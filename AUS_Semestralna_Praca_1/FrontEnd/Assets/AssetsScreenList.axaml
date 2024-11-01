@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:frontEnd="clr-namespace:AUS_Semestralna_Praca_1.FrontEnd"
              xmlns:assets="clr-namespace:AUS_Semestralna_Praca_1.FrontEnd.Assets"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AUS_Semestralna_Praca_1.FrontEnd.Assets.AssetsScreenList"
@@ -23,14 +22,11 @@
                                                Foreground="White" />
                                     <TextBlock Text="{Binding TypeClient, StringFormat='TYP: {0}'}" Foreground="White" Margin="0,5,0,0" />
                                     <TextBlock Text="{Binding Description, StringFormat='Popis 1: {0}'}" Foreground="White" Margin="0,5,0,0" />
-                                    <!--
-                                    <TextBlock Text="UIDs:" Foreground="LightGray" Margin="0,10,0,0" />
-                                    <TextBlock Text="{Binding Uid1}" Foreground="White" Margin="10,0,0,0" />
-                                    <TextBlock Text="{Binding Uid2}" Foreground="White" Margin="10,0,0,0" />
-                                    -->
                                     <TextBlock Text="GPS Pozície:" Foreground="LightGray" Margin="0,10,0,0" />
-                                    <TextBlock Text="{Binding Pos1, StringFormat='Pozícia 1: {0}'}" Foreground="White" Margin="10,0,0,0" />
-                                    <TextBlock Text="{Binding Pos2, StringFormat='Pozícia 2: {0}'}" Foreground="White" Margin="10,0,0,0" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Pos1Data.Formatted, StringFormat='Pozícia 1: {0}'}" Foreground="White" Margin="10,0,0,0" />
+                                        <TextBlock Text="{Binding Pos2Data.Formatted, StringFormat='Pozícia 2: {0}'}" Foreground="White" Margin="10,0,0,0" />
+                                    </StackPanel>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>

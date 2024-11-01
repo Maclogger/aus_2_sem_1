@@ -35,8 +35,8 @@ public class Realestate : Asset
     
     public override void ToAttr(ref string attr)
     {
-        ClientSys.AddToAttr(ref attr, "POS_1", Pos1.ToString());
-        ClientSys.AddToAttr(ref attr, "POS_2", Pos2.ToString());
+        Pos1.AddToAttr(ref attr, 1);
+        Pos2.AddToAttr(ref attr, 2);
         ClientSys.AddToAttr(ref attr, "NUM", RealestateNum);
         ClientSys.AddToAttr(ref attr, "DESCRIPTION", Description);
         ClientSys.AddToAttr(ref attr, "TYPE", "R");

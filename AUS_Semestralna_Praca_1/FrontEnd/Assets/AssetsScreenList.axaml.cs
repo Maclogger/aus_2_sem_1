@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using AUS_Semestralna_Praca_1.BackEnd.Core;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using Avalonia.Controls;
 
@@ -11,26 +12,45 @@ public class AssetData
     public string TypeClient { get; set; }
     public int Num { get; set; }
     public string Description { get; set; }
-    public int Uid1 { get; set; }
-    public int Uid2 { get; set; }
-    public string Pos1 { get; set; }
-    public string Pos2 { get; set; }
+    public PositionData Pos1Data { get; }
+    public PositionData Pos2Data { get; }
 
-    public AssetData(int num, string description, int uid1, int uid2, string pos1, string pos2, string type)
+    public AssetData(int num, string description, PositionData pos1Data, PositionData pos2Data, string type)
     {
         Type = type;
         Num = num;
         Description = description;
-        Uid1 = uid1;
-        Uid2 = uid2;
-        Pos1 = pos1;
-        Pos2 = pos2;
-        TypeClient = type == "RS" ? "Nehnuteľnosť" : "Parcela";
+        Pos1Data = pos1Data;
+        Pos2Data = pos2Data;
+        TypeClient = type == "R" ? "Nehnuteľnosť" : "Parcela";
     }
 }
+
+public class PositionData
+{
+    public int Uid { get; }
+    public double Latitude { get; }
+    public string LatitudeSign { get; }
+    public double Longitude { get; }
+    public string LongitudeSign { get; }
+
+    public PositionData(int uid, double latitude, string latitudeSign, double longitude, string longitudeSign)
+    {
+        Uid = uid;
+        Latitude = latitude;
+        LatitudeSign = latitudeSign;
+        Longitude = longitude;
+        LongitudeSign = longitudeSign;
+    }
+
+    public string Formatted => Position.ToFormattedString(Uid, Latitude, LatitudeSign, Longitude, LongitudeSign);
+}
+
+
 public partial class AssetsScreenList : UserControl
 {
     public ObservableCollection<AssetData> ListAssets { get; set; }
+
     public AssetsScreenList(List<string> listOfAssets)
     {
         InitializeComponent();
@@ -41,13 +61,25 @@ public partial class AssetsScreenList : UserControl
             string type = ClientSys.GetStringFromAttr(attr, "TYPE")!;
 
             int num = (int)ClientSys.GetIntFromAttr(attr, "NUM")!;
-            string pDescription = ClientSys.GetStringFromAttr(attr, "DESCRIPTION")!;
-            int pUid1 = (int)ClientSys.GetIntFromAttr(attr, "UID_1")!;
-            int pUid2 = (int)ClientSys.GetIntFromAttr(attr, "UID_2")!;
-            string pPos1 = ClientSys.GetStringFromAttr(attr, "POS_1")!;
-            string pPos2 = ClientSys.GetStringFromAttr(attr, "POS_2")!;
+            string description = ClientSys.GetStringFromAttr(attr, "DESCRIPTION")!;
 
-            list.Add(new AssetData(num, pDescription, pUid1, pUid2, pPos1, pPos2, type));
+            int uid1 = (int)ClientSys.GetIntFromAttr(attr, "UID_1")!;
+            double latitude1 = (double)ClientSys.GetDoubleFromAttr(attr, "LAT_1")!;
+            string latitudeSign1 = ClientSys.GetStringFromAttr(attr, "LAT_SIGN_1")!;
+            double longitude1 = (double)ClientSys.GetDoubleFromAttr(attr, "LON_1")!;
+            string longitudeSign1 = ClientSys.GetStringFromAttr(attr, "LON_SIGN_1")!;
+
+            PositionData pos1Data = new(uid1, latitude1, latitudeSign1, longitude1, longitudeSign1);
+
+            int uid2 = (int)ClientSys.GetIntFromAttr(attr, "UID_2")!;
+            double latitude2 = (double)ClientSys.GetDoubleFromAttr(attr, "LAT_2")!;
+            string latitudeSign2 = ClientSys.GetStringFromAttr(attr, "LAT_SIGN_2")!;
+            double longitude2 = (double)ClientSys.GetDoubleFromAttr(attr, "LON_2")!;
+            string longitudeSign2 = ClientSys.GetStringFromAttr(attr, "LON_SIGN_2")!;
+            
+            PositionData pos2Data = new(uid2, latitude2, latitudeSign2, longitude2, longitudeSign2);
+
+            list.Add(new AssetData(num, description, pos1Data, pos2Data, type));
         }
 
         ListAssets = new ObservableCollection<AssetData>(list);

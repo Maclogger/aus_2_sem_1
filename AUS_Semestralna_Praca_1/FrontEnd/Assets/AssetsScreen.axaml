@@ -66,13 +66,13 @@
             </StackPanel>
 
 
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Nájsť \n nehnuteľnosti / parcely"
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button Content="Nájsť nehnuteľnosti / parcely"
                         FontWeight="Bold"
                         Margin="10"
-                        Width="220"
+                        Width="320"
                         Height="50"
-                        FontSize="20"
+                        FontSize="16"
                         HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Center"
                         HorizontalAlignment="Center"
@@ -82,12 +82,12 @@
                         CornerRadius="10"
                         Click="OnFindAssetsClicked" />
 
-                <Button Content="Nájsť všetky \n nehnuteľnosti / parcely"
+                <Button Content="Nájsť všetky majetky"
                         FontWeight="Bold"
                         Margin="10"
-                        Width="220"
+                        Width="320"
                         Height="50"
-                        FontSize="20"
+                        FontSize="16"
                         HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Center"
                         HorizontalAlignment="Center"

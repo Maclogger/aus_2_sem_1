@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
+using AUS_Semestralna_Praca_1.FrontEnd.Assets;
 using AUS_Semestralna_Praca_1.FrontEnd.GuiUtils;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -18,12 +19,12 @@ public partial class RealestatesScreen : UserControl
 
     private void OnAddRealestateClicked(object? sender, RoutedEventArgs e)
     {
-        _contentArea.Content = new Realestates.AddRealestateScreen(_contentArea);
+        _contentArea.Content = new AddRealestateScreen(_contentArea);
     }
 
     private void OnFindRealestate(object? sender, RoutedEventArgs e)
     {
-        _contentArea.Content = new Realestates.FindRealestatesScreen(_contentArea);
+        _contentArea.Content = new FindSpecAssetsScreen(_contentArea, 'R');
     }
 
     private void OnFindAllRealestates(object? sender, RoutedEventArgs e)
@@ -37,6 +38,6 @@ public partial class RealestatesScreen : UserControl
             return;
         }
 
-        _contentArea.Content = new RealestatesListScreen(realestates);
+        _contentArea.Content = new AssetsScreenList(realestates);
     }
 }

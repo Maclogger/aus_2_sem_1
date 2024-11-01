@@ -44,10 +44,6 @@
         <DependentUpon>AssetsScreenList.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-      <Compile Update="FrontEnd\Realestates\FindRealestatesScreen.axaml.cs">
-        <DependentUpon>FindRealestatesScreen.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
       <Compile Update="FrontEnd\Testing\KdTreeTesterScreen.axaml.cs">
         <DependentUpon>KdTreeTesterScreen.axaml</DependentUpon>
         <SubType>Code</SubType>
@@ -64,16 +60,16 @@
         <DependentUpon>RealestatesScreen.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-      <Compile Update="FrontEnd\Realestates\RealestatesList.axaml.cs">
-        <DependentUpon>RealestatesList.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
       <Compile Update="FrontEnd\Parcels\ParcelsScreen.axaml.cs">
         <DependentUpon>ParcelsScreen.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
       <Compile Update="FrontEnd\Assets\StatusPage.axaml.cs">
         <DependentUpon>StatusPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="FrontEnd\Assets\FindSpecAssetsScreen.axaml.cs">
+        <DependentUpon>FindRealestatesScreen.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>

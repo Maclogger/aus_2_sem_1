@@ -78,16 +78,30 @@ public class Position : IKey
 
     public override string ToString()
     {
-        if (Config.Instance.FormattedOutput)
-        {
-            return $"( {Math.Abs(Latitude)} {LatitudeSign} ; {Math.Abs(Longitude)} {LongitudeSign})";
-        }
-
-        return $"( {X} ; {Y} )";
+        return $"({Uid}: {X} ; {Y} )";
     }
 
     public void SetUidNull()
     {
         Uid = null;
+    }
+
+
+    public void AddToAttr(ref string sol, int postFix)
+    {
+        ClientSys.AddToAttr(ref sol, $"LAT_{postFix}", Latitude);
+        ClientSys.AddToAttr(ref sol, $"LAT_SIGN_{postFix}", LatitudeSign.ToString());
+        ClientSys.AddToAttr(ref sol, $"LON_{postFix}", Longitude);
+        ClientSys.AddToAttr(ref sol, $"LON_SIGN_{postFix}", LongitudeSign.ToString());
+        ClientSys.AddToAttr(ref sol, $"UID_{postFix}", Uid ?? -1);
+    }
+
+    public static string ToFormattedString(int uid, double latitude, string latitudeSign, double longitude, string longitudeSign)
+    {
+        if (Config.Instance.FormattedOutput)
+        {
+            return $"([{Math.Abs(latitude)}{latitudeSign}, {Math.Abs(longitude)}{longitudeSign}])";
+        }
+        return $"(UID:{uid}, [{Math.Abs(latitude)}{latitudeSign}, {Math.Abs(longitude)}{longitudeSign}])";
     }
 }

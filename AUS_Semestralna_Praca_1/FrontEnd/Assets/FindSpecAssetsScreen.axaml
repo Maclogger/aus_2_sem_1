@@ -3,12 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:AUS_Semestralna_Praca_1"
+             xmlns:assets="clr-namespace:AUS_Semestralna_Praca_1.FrontEnd.Assets"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="AUS_Semestralna_Praca_1.FrontEnd.Realestates.FindRealestatesScreen">
+             x:Class="AUS_Semestralna_Praca_1.FrontEnd.Assets.FindSpecAssetsScreen">
     <Border Background="#2D2D2D" Margin="100" CornerRadius="20">
 
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical">
-            <TextBlock Text="Hľadanie nehnuteľností" FontWeight="Bold" FontSize="32" HorizontalAlignment="Center"
+            <TextBlock x:Name="Headline" Text="TEMPORARY" FontWeight="Bold" FontSize="32" HorizontalAlignment="Center"
                        Margin="20" />
             <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="10" HorizontalAlignment="Center">
                 <StackPanel Orientation="Vertical">
@@ -42,7 +43,8 @@
             </StackPanel>
 
 
-            <Button Content="Nájsť nehnuteľnosť"
+            <Button x:Name="FindButton"
+                Content="Nájsť nehnuteľnosť"
                         FontWeight="Bold"
                         Margin="10"
                         Width="220"

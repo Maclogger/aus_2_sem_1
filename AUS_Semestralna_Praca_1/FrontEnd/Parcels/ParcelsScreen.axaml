@@ -35,7 +35,7 @@
                         Foreground="black"
                         CornerRadius="10"
                         Click="OnAddParcelClicked" />
-                <Button Content="Nájsť parcelu"
+                <Button Content="Nájsť parcely"
                         FontWeight="Bold"
                         Margin="10"
                         Width="220"
@@ -47,7 +47,22 @@
                         VerticalAlignment="Center"
                         Background="white"
                         Foreground="black"
-                        CornerRadius="10" />
+                        CornerRadius="10"
+                        Click="OnFindParcelsClicked" />
+                <Button Content="Všetky parcely"
+                        FontWeight="Bold"
+                        Margin="10"
+                        Width="220"
+                        FontSize="20"
+                        Height="220"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="white"
+                        Foreground="black"
+                        CornerRadius="10"
+                        Click="OnFindAllParcelsClicked"/>
             </StackPanel>
         </StackPanel>
     </Border>
