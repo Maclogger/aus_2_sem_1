@@ -43,7 +43,7 @@
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center" />
                         <TextBlock
-                            Text="{Binding Path=RealEstateCount, Source={x:Static local:MainApplication.Instance}, Mode=OneWay, FallbackValue=12}"
+                            Text="{Binding Path=RealestateCount, Source={x:Static local:MainApplication.Instance}, Mode=OneWay, FallbackValue=12}"
                             FontSize="40"
                             FontWeight="Bold"
                             Foreground="black"
@@ -61,7 +61,7 @@
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center" />
                         <TextBlock
-                            Text="{Binding Path=AssetCount, Source={x:Static local:MainApplication.Instance}, Mode=OneWay, FallbackValue=12}"
+                            Text="{Binding Path=AssetsCount, Source={x:Static local:MainApplication.Instance}, Mode=OneWay, FallbackValue=12}"
                             FontSize="40"
                             FontWeight="Bold"
                             Foreground="black"

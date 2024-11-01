@@ -1,60 +1,38 @@
 using System;
+using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree.Keys;
 
 public class Key4D : IKey
 {
-    private double _a;
-    private string _b;
-    private int _c;
-    private double _d;
+    public double A { get; set; }
+    public string B { get; set; }
+    public int C { get; set; }
+    public double D { get; set; }
+    public int Uid { get; set; }
 
     public Key4D(double a, string b, int c, double d)
     {
-        _a = a;
-        _b = b;
-        _c = c;
-        _d = d;
+        A = a;
+        B = b;
+        C = c;
+        D = d;
     }
 
     public Key4D(Random random)
     {
-        _a = random.NextDouble(); // Generate random double between 0.0 and 1.0
-        _b = Guid.NewGuid().ToString(); // Generate random string using GUID
-        _c = random.Next(); // Generate random integer
-        _d = random.NextDouble(); // Generate random double between 0.0 and 1.0
+        A = random.NextDouble(); // Generate random double between 0.0 and 1.0
+        B = Guid.NewGuid().ToString(); // Generate random string using GUID
+        C = random.Next(); // Generate random integer
+        D = random.NextDouble(); // Generate random double between 0.0 and 1.0
+        Uid = Utils.GetNextVal();
     }
 
     public override string ToString()
     {
-        return $"A={_a}, B={_b}, C={_c}, D={_d}";
+        return $"A={A}, B={B}, C={C}, D={D}";
     }
-
-    public double A
-    {
-        get => _a;
-        set => _a = value;
-    }
-
-    public string B
-    {
-        get => _b;
-        set => _b = value;
-    }
-
-    public int C
-    {
-        get => _c;
-        set => _c = value;
-    }
-
-    public double D
-    {
-        get => _d;
-        set => _d = value;
-    }
-
 
     public int CompareTo(IKey pOther, int pDimension)
     {
@@ -84,6 +62,7 @@ public class Key4D : IKey
                 {
                     return C < pOtherKey.C ? -1 : C > pOtherKey.C ? 1 : 0;
                 }
+
                 return comp;
             }
         }
@@ -92,9 +71,13 @@ public class Key4D : IKey
     public bool Equals(IKey pOther)
     {
         if (pOther is not Key4D pOtherKey) return false;
-        return (Math.Abs(A - pOtherKey.A) < Config.Instance.Tolerance &&
-                B == pOtherKey.B &&
-                C == pOtherKey.C &&
-                Math.Abs(D - pOtherKey.D) < Config.Instance.Tolerance);
+
+        return (
+            Math.Abs(A - pOtherKey.A) < Config.Instance.Tolerance &&
+            B == pOtherKey.B &&
+            C == pOtherKey.C &&
+            Math.Abs(D - pOtherKey.D) < Config.Instance.Tolerance &&
+            Uid == pOtherKey.Uid
+        );
     }
 }

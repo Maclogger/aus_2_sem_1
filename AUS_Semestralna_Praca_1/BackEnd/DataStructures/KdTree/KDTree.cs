@@ -26,7 +26,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
     public int Size => _size;
 
 
-    private void AddNodeBack(Node<K, T> pNode) // implementation method => only used in Remove() when inserting nodes back
+    private void AddNodeBack(Node<K, T> pNode) // implementation method => only used in Remove when inserting nodes back
     {
         if (Size <= 0 || _root == null)
         {
@@ -74,31 +74,23 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         }
     }
 
-    public int Add(K pKey, T pData)
+    public void Add(K pKey, T pData)
     {
         if (Size <= 0 || _root == null)
         {
             // if the tree is empty
             _root = new Node<K, T>(pKey, pData, 0);
             _size = 1;
-            return _root.Data[0].Uid;
+            return;
         }
 
         Node<K, T> currentNode = _root;
 
-        int? uid = null;
         // on the left side of the tree, there are items less or equal to
         int currentDimension = 0;
         while (true)
         {
             int comp = pKey.CompareTo(currentNode.Key, currentDimension);
-
-            if (comp == 0 && currentNode.Key.Equals(pKey))
-            {
-                // if there is already a node with the exact same Key, then we store the data part in List in Node
-                uid = currentNode.AddData(pData);
-                break;
-            }
 
             if (comp <= 0)
             {
@@ -107,7 +99,6 @@ public class KdTree<K, T> : IEnumerable where K : IKey
                 {
                     currentNode.LeftChild = new Node<K, T>(pKey, pData, (currentDimension + 1) % _k);
                     currentNode.LeftChild.Father = currentNode;
-                    uid = currentNode.LeftChild.Data[0].Uid;
                     break;
                 }
 
@@ -120,7 +111,6 @@ public class KdTree<K, T> : IEnumerable where K : IKey
                 {
                     currentNode.RightChild = new Node<K, T>(pKey, pData, (currentDimension + 1) % _k);
                     currentNode.RightChild.Father = currentNode;
-                    uid = currentNode.RightChild.Data[0].Uid;
                     break;
                 }
 
@@ -131,31 +121,45 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         }
 
         _size++;
-        return (int)uid!;
     }
 
-    public List<DataPart<T>> FindDataParts(K pKey)
+    private bool HasSameKeysInAllDimension(K key1, K key2)
     {
-        return FindNode(pKey)?.Data ?? new List<DataPart<T>>();
-    }
+        for (int i = 0; i < _k; i++)
+        {
+            if (key1.CompareTo(key2, i) != 0) return false;
+        }
 
+        return true;
+    }
 
     public List<T> Find(K pKey)
     {
-        List<DataPart<T>> dataParts = FindDataParts(pKey);
-        List<T> data = new();
-        foreach (DataPart<T> dataPart in dataParts)
+        List<T> sol = new();
+
+        foreach (Node<K, T> node in InOrderIteratorImpl(pPredicate: n => HasSameKeysInAllDimension(pKey, n.Key)))
         {
-            data.Add(dataPart.Value);
+            sol.Add(node.Data);
         }
 
-        return data;
+        return sol;
     }
 
+    public List<Tuple<K, T>> FindEntries(K pKey)
+    {
+        List<Tuple<K, T>> sol = new();
+
+        foreach (Node<K, T> node in InOrderIteratorImpl(pPredicate: n => HasSameKeysInAllDimension(pKey, n.Key)))
+        {
+            sol.Add(new Tuple<K, T>(node.Key, node.Data));
+        }
+
+        return sol;
+    }
 
     private Node<K, T>? FindNode(K pKey)
     {
-        // returns the node we want to find with the pKey and also it's parent
+        // returns the node we want to find with the pKey
         if (_size <= 0 || _root == null)
         {
             return null;
@@ -180,7 +184,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         return null; // if the node is null, then
     }
 
-    public void Remove(K pKey, int pUid)
+    public void Remove(K pKey)
     {
         if (_size <= 1 && _root != null)
         {
@@ -198,16 +202,6 @@ public class KdTree<K, T> : IEnumerable where K : IKey
 
         if (nodeToDelete == null)
         {
-            return;
-        }
-
-
-        RemoveDuplicateFromNodesDuplicates(nodeToDelete, pUid);
-
-        if (pUid > 0 && pUid < nodeToDelete.Data.Count) // (0; count) -> removing only when there is at least one left
-        {
-            nodeToDelete.Data.RemoveAt(pUid); // TODO
-            _size--;
             return;
         }
 
@@ -237,22 +231,22 @@ public class KdTree<K, T> : IEnumerable where K : IKey
                 {
                     // Case when nodeToDelete is not a leaf, and it doesn't have a LEFT child =>
                     // => have to remove some from the right side
-                    List<Node<K, T>> nodes = FindNodesWithLowestKeyInDim(node.RightChild!, node.Dimension);
+                    List<Node<K, T>> nodesWithLowestKeyInDim = FindNodesWithLowestKeyInDim(node.RightChild!, node.Dimension);
 
-                    if (nodes.Count <= 0)
+                    if (nodesWithLowestKeyInDim.Count <= 0)
                     {
                         throw new UnreachableException(
                             "The list of nodes with lowest key was empty => this cannot happen since node is not a leaf and LeftChild is null");
                     }
 
-                    Swap(nodes[0], node);
+                    Swap(nodesWithLowestKeyInDim[0], node);
 
-                    for (int i = 1; i < nodes.Count; i++)
+                    for (int i = 1; i < nodesWithLowestKeyInDim.Count; i++)
                     {
-                        if (!nodes[i].IsInStack)
+                        if (!nodesWithLowestKeyInDim[i].IsInStack)
                         {
-                            nodesToRemove.Push(nodes[i]);
-                            nodes[i].IsInStack = true;
+                            nodesToRemove.Push(nodesWithLowestKeyInDim[i]);
+                            nodesWithLowestKeyInDim[i].IsInStack = true;
                         }
                     }
                 }
@@ -276,13 +270,6 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         _size--;
     }
 
-    private void RemoveDuplicateFromNodesDuplicates(Node<K, T> node, int pUid)
-    {
-
-
-
-    }
-
     private Node<K, T> FindNodeWithHighestKeyInDim(Node<K, T> pStartNode, int pDimension)
     {
         Node<K, T> nodeWithHighestKeyInDim = pStartNode;
@@ -301,7 +288,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
     }
 
 
-    private List<Node<K, T>> FindNodesWithLowestKeyInDim(Node<K,T> pStartNode, int pDimension)
+    private List<Node<K, T>> FindNodesWithLowestKeyInDim(Node<K, T> pStartNode, int pDimension)
     {
         List<Node<K, T>> nodesWithLowestKeyInDim = new();
         K lowestKey = pStartNode.Key;
@@ -325,13 +312,28 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         return nodesWithLowestKeyInDim;
     }
 
+    public void Update(K oldKey, K newKey, T newData)
+    {
+        Node<K, T>? node = FindNode(oldKey);
+
+        // the node doesn't exists
+        if (node == null) return;
+
+        if (oldKey.Equals(newKey))
+        {
+            node.Data = newData;
+        }
+        else
+        {
+            Remove(oldKey);
+            Add(newKey, newData);
+        }
+    }
+
     private void Swap(Node<K, T> node1, Node<K, T> node2)
     {
-        if (node1 == node2 || node1.Key.Equals(node2.Key))
-        {
-            // when swapping the same nodes
-            return;
-        }
+        // when swapping the same nodes
+        if (node1 == node2 || node1.Key.Equals(node2.Key)) return;
 
         if (node1.Father != null && node1.Father == node2.Father)
         {
@@ -355,38 +357,19 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         (node1.Father, node2.Father) = (node2.Father, node1.Father);
         (node1.Dimension, node2.Dimension) = (node2.Dimension, node1.Dimension);
 
-        if (node1.LeftChild != null)
-        {
-            node1.LeftChild.Father = node1;
-        }
+        if (node1.LeftChild != null) node1.LeftChild.Father = node1;
 
-        if (node1.RightChild != null)
-        {
-            node1.RightChild.Father = node1;
-        }
+        if (node1.RightChild != null) node1.RightChild.Father = node1;
 
-        if (node2.LeftChild != null)
-        {
-            node2.LeftChild.Father = node2;
-        }
+        if (node2.LeftChild != null) node2.LeftChild.Father = node2;
 
-        if (node2.RightChild != null)
-        {
-            node2.RightChild.Father = node2;
-        }
+        if (node2.RightChild != null) node2.RightChild.Father = node2;
 
         // Update root reference if necessary
-        if (_root != null)
-        {
-            if (node1.Key.Equals(_root.Key))
-            {
-                _root = node2;
-            }
-            else if (node2.Key.Equals(_root.Key))
-            {
-                _root = node1;
-            }
-        }
+        if (_root == null) return;
+
+        if (node1.Key.Equals(_root.Key)) _root = node2;
+        else if (node2.Key.Equals(_root.Key)) _root = node1;
     }
 
     // ---------------------------------------------------
@@ -404,39 +387,20 @@ public class KdTree<K, T> : IEnumerable where K : IKey
     {
         foreach (Node<K, T> node in InOrderIteratorImpl())
         {
-            foreach (DataPart<T> data in node.Data)
-            {
-                yield return data.Value;
-            }
+            yield return node.Data;
         }
     }
 
-    // public in order iterator method for a user => it returns tuple of <K, T>
-    public IEnumerable<Tuple<K, T>> EntryInOrderIterator()
-    {
-        foreach (Node<K, T> node in InOrderIteratorImpl())
-        {
-            foreach (DataPart<T> data in node.Data)
-            {
-                yield return new Tuple<K, T>(node.Key, data.Value);
-            }
-        }
-    }
-
-    // public level order iterator method for a user => it returns the !!! DATA of type T !!!
     public IEnumerable<T> LevelOrder()
     {
-        foreach (Node<K, T> node in LevelOrderImpl())
+        foreach (Node<K,T> node in LevelOrderImpl())
         {
-            foreach (DataPart<T> data in node.Data)
-            {
-                yield return data.Value;
-            }
+            yield return node.Data;
         }
     }
 
     // this is implementation of InOrderIterator -> only used in this class => it returns the !!! NODE !!!
-    private IEnumerable<Node<K, T>> InOrderIteratorImpl(Node<K, T>? pStartNode = null)
+    private IEnumerable<Node<K, T>> InOrderIteratorImpl(Node<K, T>? pStartNode = null, Func<Node<K, T>, bool>? pPredicate = null)
     {
         Node<K, T>? currentNode = pStartNode ?? _root;
 
@@ -455,7 +419,13 @@ public class KdTree<K, T> : IEnumerable where K : IKey
 
             currentNode = stack.Pop(); // we go up one level to father
 
-            yield return currentNode;
+            if (pPredicate == null)
+            {
+                yield return currentNode;
+            } else if (pPredicate(currentNode))
+            {
+                yield return currentNode;
+            }
 
             currentNode = currentNode.RightChild; // we go to right node
         }
@@ -515,7 +485,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
             Node<K, T>? currentNode = queue.Pop()!;
             if (currentNode != null)
             {
-                count += currentNode.Data.Count;
+                count++;
                 sol += currentNode.ToString();
                 queue.Add(currentNode.LeftChild);
                 queue.Add(currentNode.RightChild);
@@ -529,20 +499,4 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         Console.WriteLine(sol);
     }
 
-    public void Swap(K pKey1, K pKey2)
-    {
-        Swap(FindNode(pKey1)!, FindNode(pKey2)!);
-    }
-
-    public void Update(K key, int uid, T newData)
-    {
-        Node<K,T>? node = FindNode(key);
-        if (node == null)
-        {
-            // the node doesn't exists
-            return;
-        }
-
-        node.SetDataValue(uid, newData);
-    }
 }

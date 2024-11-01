@@ -5,36 +5,31 @@ namespace AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 
 public class Node<K, T> where K : IKey
 {
-    private Node<K, T>? _leftChild = null, _rightChild = null, _father = null;
-    private K _key;
-    private int _dimension;
-    private List<DataPart<T>> _data = new();
-    private bool _isInStack = false;
+    public Node<K, T>? LeftChild { get; set; } = null;
+    public Node<K, T>? RightChild { get; set; } = null;
+    public Node<K, T>? Father { get; set; } = null;
+    public K Key { get; set; }
+    public int Dimension { get; set; }
+    public T Data { get; set; }
+    public bool IsInStack { get; set; } = false;
 
 
     public Node(K pKey, T pData, int dimension)
     {
-        _key = pKey;
-        _dimension = dimension;
-        _data.Add(new DataPart<T>(pData));
-    }
-
-    public int AddData(T pData)
-    {
-        DataPart<T> dataPart = new DataPart<T>(pData);
-        _data.Add(dataPart);
-        return dataPart.Uid;
+        Key = pKey;
+        Dimension = dimension;
+        Data = pData;
     }
 
     public void ReplaceChild(Node<K, T> pChild, Node<K, T>? pChildReplacement, int pK)
     {
-        if (_leftChild != null && _leftChild.Key.Equals(pChild.Key))
+        if (LeftChild != null && LeftChild.Key.Equals(pChild.Key))
         {
-            _leftChild = pChildReplacement;
+            LeftChild = pChildReplacement;
         }
-        else if (_rightChild != null && _rightChild.Key.Equals(pChild.Key))
+        else if (RightChild != null && RightChild.Key.Equals(pChild.Key))
         {
-            _rightChild = pChildReplacement;
+            RightChild = pChildReplacement;
         }
         else
         {
@@ -44,122 +39,22 @@ public class Node<K, T> where K : IKey
 
     public bool IsLeaf()
     {
-        return _leftChild == null && _rightChild == null;
+        return LeftChild == null && RightChild == null;
     }
 
     public override string ToString()
     {
-        string sol = _key.ToString() ?? "";
-        sol += $"({_dimension}):";
-        DataPart<T> last = _data[^1];
-        foreach (DataPart<T> item in _data)
-        {
-            if (item.Value == null) continue;
-            sol += item.Value.ToString();
-            if (item.Uid != last.Uid)
-            {
-                sol += "->";
-            }
-        }
+        string sol = Key.ToString() ?? "";
+        sol += $"({Dimension}):";
 
+        if (Data == null) return sol;
+
+        sol += Data.ToString();
         return sol;
     }
 
     public void SwapChilds()
     {
-        (_leftChild, _rightChild) = (_rightChild, _leftChild);
-    }
-
-    private int? FindIndexOfDataValue(int pUid)
-    {
-        for (var i = 0; i < _data.Count; i++)
-        {
-            if (_data[i].Uid == pUid)
-            {
-                return i;
-            }
-        }
-
-        return null;
-    }
-
-    public void SetDataValue(int pUid, T newData)
-    {
-        int? index = FindIndexOfDataValue(pUid);
-
-        if (index == null)
-        {
-            return;
-        }
-
-        _data[(int)index].Value = newData;
-    }
-
-    public T? GetDataValue(int pUid)
-    {
-        int? index = FindIndexOfDataValue(pUid);
-
-        if (index == null)
-        {
-            return default;
-        }
-
-        return _data[(int)index].Value;
-    }
-
-    public void RemoveDataValue(int pUid)
-    {
-        int? index = FindIndexOfDataValue(pUid);
-
-        if (index == null)
-        {
-            return;
-        }
-
-        _data.RemoveAt((int)index);
-    }
-
-    // GETTERS AND SETTERS
-    public K Key
-    {
-        get => _key;
-        set => _key = value;
-    }
-
-    public Node<K, T>? LeftChild
-    {
-        get => _leftChild;
-        set => _leftChild = value;
-    }
-
-    public Node<K, T>? RightChild
-    {
-        get => _rightChild;
-        set => _rightChild = value;
-    }
-
-    public Node<K, T>? Father
-    {
-        get => _father;
-        set => _father = value;
-    }
-
-    public int Dimension
-    {
-        get => _dimension;
-        set => _dimension = value;
-    }
-
-    public bool IsInStack
-    {
-        get => _isInStack;
-        set => _isInStack = value;
-    }
-
-    public List<DataPart<T>> Data
-    {
-        get => _data;
-        set => _data = value;
+        (LeftChild, RightChild) = (RightChild, LeftChild);
     }
 }
-

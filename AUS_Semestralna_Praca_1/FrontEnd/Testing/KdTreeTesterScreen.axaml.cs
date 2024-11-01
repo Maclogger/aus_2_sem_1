@@ -13,7 +13,6 @@ public partial class KdTreeTesterScreen : UserControl
     {
         _contentArea = contentArea;
         InitializeComponent();
-        MainApplication.Instance.InitializeTestTrees();
     }
 
     private void OnRun4DTestClicked(object? sender, RoutedEventArgs e)
@@ -23,6 +22,6 @@ public partial class KdTreeTesterScreen : UserControl
 
     private void OnPrintTreeClicked(object? sender, RoutedEventArgs e)
     {
-        MainApplication.Instance.PrintOut4DTree(MyTextBlock);
+        // TODO MainApplication.Instance.PrintOut4DTree(MyTextBlock);
     }
 }

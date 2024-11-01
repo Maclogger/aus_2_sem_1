@@ -4,7 +4,6 @@ using AUS_Semestralna_Praca_1.BackEnd.Core;
 using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
-using AUS_Semestralna_Praca_1.BackEnd.Tests;
 using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree.Keys;
 using Avalonia.Controls;
 
@@ -16,17 +15,16 @@ public class MainApplication
     private static readonly MainApplication _instance = new();
     public static MainApplication Instance => _instance;
 
-    private ApplicationCore _core;
-    private ConsoleGui _consoleGui;
-
+    public ApplicationCore Core { get; set; }
 
     private KdTree<Key4D, int> _kdTestTree = new(4);
     private KdTree<Key4D, int> _kdTestCordTree = new(2);
 
+
+
     private MainApplication()
     {
-        _core = new ApplicationCore(this);
-        _consoleGui = new ConsoleGui(this);
+        Core = new ApplicationCore(this);
 
         /*
         Position pos1 = new Position(0, 'N', 0.0, 'E');
@@ -59,22 +57,11 @@ public class MainApplication
     */
     }
 
-    public int ParcelCount
-    {
-        get => _core.GetParcelCount();
-    }
 
-    public int RealEstateCount
-    {
-        get => _core.GetRealEstateCount();
-    }
+    public int RealestateCount => Core.RealestatesTree.Size;
+    public int ParcelCount => Core.ParcelsTree.Size;
+    public int AssetsCount => Core.AssetsTree.Size;
 
-    public int AssetCount
-    {
-        get => _core.GetAssetCount();
-    }
-
-    // GUI => Core
     public Answer AddParcel(string pos1Attr, string pos2Attr, string parcelAttr)
     {
         int? parcelNum = ClientSys.GetIntFromAttr(parcelAttr, "PARCEL_NUM");
@@ -95,7 +82,7 @@ public class MainApplication
 
         Parcel parcel = new((int)parcelNum, description, pos1, pos2);
 
-        return _core.AddParcel(pos1, pos2, parcel);
+        return Core.AddAsset(pos1, pos2, parcel);
     }
 
     public Answer RemoveParcel(string attr)
@@ -103,29 +90,6 @@ public class MainApplication
         throw new NotImplementedException();
     }
 
-    public void Run()
-    {
-        _consoleGui.Run();
-    }
-
-    public int GetUidFromUserByChoosingFromList<T>(List<DataPart<T>> list)
-    {
-        List<string?> optionsForUser = new();
-        foreach (DataPart<T> dataPart in list)
-        {
-            string option = dataPart.Value?.ToString() ?? "NULL";
-            optionsForUser.Add(option);
-        }
-
-        int index = _consoleGui.ChooseFromList(optionsForUser); // TODO implement GUI
-
-        return list[index].Uid;
-    }
-
-    public void PrintParcelTree()
-    {
-        _core.PrintParcelTree();
-    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////// REALESTATE //////////////////////////////////////////
@@ -151,11 +115,14 @@ public class MainApplication
 
         Realestate realestate = new((int)realestateNum, description, pos1, pos2);
 
-        return _core.AddRealestate(pos1, pos2, realestate);
+        return Core.AddAsset(pos1, pos2, realestate);
     }
 
     public Tuple<Answer, List<string>> FindRealestates(string posAttr)
     {
+        throw new NotImplementedException();
+        // TODO TODO
+        /*
         Position pos;
         try
         {
@@ -184,11 +151,13 @@ public class MainApplication
         }
 
         return new Tuple<Answer, List<string>>(tuple.Item1, solList);
+    */
     }
 
     public Tuple<Answer, List<string>> FindAssets(string posAttr1, string posAttr2)
     {
-        Position pos1;
+        throw new NotImplementedException();
+        /*Position pos1;
         Position pos2;
         try
         {
@@ -218,26 +187,11 @@ public class MainApplication
             solList.Add(sol);
         }
 
-        return new Tuple<Answer, List<string>>(tuple.Item1, solList);
+        return new Tuple<Answer, List<string>>(tuple.Item1, solList);*/
     }
 
     public void RunTest(TextBlock block)
     {
-        _core.RunSimTest(block);
-
-    }
-
-    public void PrintOut4DTree(TextBlock myTextBlock)
-    {
-        myTextBlock.Text = "";
-        foreach (Tuple<Key4D, int> tuple in _core.Key4DTree.EntryInOrderIterator())
-        {
-            myTextBlock.Text += $"{tuple.Item1} - {tuple.Item2} \n";
-        }
-    }
-
-    public void InitializeTestTrees()
-    {
-        _core.InitializeTestTrees();
+        Core.RunSimTest(block);
     }
 }

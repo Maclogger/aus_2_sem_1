@@ -28,6 +28,54 @@
         <DependentUpon>App.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="FrontEnd\Parcels\AddParcelScreen.axaml.cs">
+        <DependentUpon>AddParcelScreen.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="FrontEnd\Realestates\AddRealestateScreen.axaml.cs">
+        <DependentUpon>AddRealestateScreen.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="FrontEnd\Assets\AssetsScreen.axaml.cs">
+        <DependentUpon>AssetsScreen.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="FrontEnd\Assets\AssetsScreenList.axaml.cs">
+        <DependentUpon>AssetsScreenList.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="FrontEnd\Realestates\FindRealestatesScreen.axaml.cs">
+        <DependentUpon>FindRealestatesScreen.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="FrontEnd\Testing\KdTreeTesterScreen.axaml.cs">
+        <DependentUpon>KdTreeTesterScreen.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="FrontEnd\Utils\MyMessageBox.axaml.cs">
+        <DependentUpon>MyMessageBox.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="FrontEnd\Utils\ConfigSettings.axaml.cs">
+        <DependentUpon>ConfigSettings.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="FrontEnd\Realestates\RealestatesScreen.axaml.cs">
+        <DependentUpon>RealestatesScreen.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="FrontEnd\Realestates\RealestatesList.axaml.cs">
+        <DependentUpon>RealestatesList.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="FrontEnd\Parcels\ParcelsScreen.axaml.cs">
+        <DependentUpon>ParcelsScreen.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="FrontEnd\Assets\StatusPage.axaml.cs">
+        <DependentUpon>StatusPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>

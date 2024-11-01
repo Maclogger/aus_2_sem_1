@@ -32,7 +32,8 @@ public class Config
     public int OperationCount { get; set; } = 100;
     public int ElementCountBeforeTest { get; set; } = 0;
     public int CheckAfterOperationCount { get; set; } = 100;
-    
+    public bool UidPrint { get; set; } = true; // TODO change to false
+
     private Config()
     {
     }
@@ -65,4 +66,5 @@ public class Config
     {
         get => Math.Max(Math.Abs(MaxLongitude), Math.Abs(MinLongitude));
     }
+
 }

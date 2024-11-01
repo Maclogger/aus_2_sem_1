@@ -1,37 +1,32 @@
 using System;
+using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree.Keys;
 public class Cord : IKey
 {
-    private int _x;
-    private int _y;
+    public int X { get; set; }
+    public int Y { get; set; }
+    public int Uid { get; set; }
+
 
     public Cord(int pX, int pY)
     {
-        _x = pX;
-        _y = pY;
+        X = pX;
+        Y = pY;
+        Uid = Utils.GetNextVal();
     }
 
     public Cord(Random random)
     {
-        _x = random.Next(int.MinValue, int.MaxValue);
-        _y = random.Next(int.MinValue, int.MaxValue);
-    }
-
-    public int X
-    {
-        get => _x;
-    }
-
-    public int Y
-    {
-        get => _y;
+        X = random.Next(int.MinValue, int.MaxValue);
+        Y = random.Next(int.MinValue, int.MaxValue);
+        Uid = Utils.GetNextVal();
     }
 
     public override string ToString()
     {
-        return $"[{_x};{_y}]";
+        return Config.Instance.UidPrint ? $"[{X};{Y};{Uid}]" : $"[{X};{Y}]";
     }
 
     public int CompareTo(IKey pOther, int pDimension)
@@ -43,24 +38,24 @@ public class Cord : IKey
 
         if (pDimension == 0)
         {
-            if (_x < cord.X)
+            if (X < cord.X)
             {
                 return -1;
             }
 
-            if (_x > cord.X)
+            if (X > cord.X)
             {
                 return 1;
             }
         }
         else if (pDimension == 1)
         {
-            if (_y < cord.Y)
+            if (Y < cord.Y)
             {
                 return -1;
             }
 
-            if (_y > cord.Y)
+            if (Y > cord.Y)
             {
                 return 1;
             }
@@ -72,6 +67,6 @@ public class Cord : IKey
     public bool Equals(IKey pOther)
     {
         if (pOther is not Cord cord) return false;
-        return _x == cord.X && _y == cord.Y;
+        return X == cord.X && Y == cord.Y && Uid == cord.Uid;
     }
 }

@@ -5,68 +5,28 @@ namespace AUS_Semestralna_Praca_1.BackEnd.Core;
 
 public class Parcel : Asset
 {
-    private int _parcelNum; // číslo parcely
-    private string _description; // popis
-    private List<Realestate> _realestates = new(); // nehnuteľnosti
-    private Position _pos1, _pos2;
-    private int? _uid1, _uid2;
+    public int ParcelNum { get; set; }// číslo parcely
+    public string Description { get; set; } // popis
+    public List<Realestate> Realestates { get; set; } = new(); // nehnuteľnosti
+    public Position Pos1 { get; set; }
+    public Position Pos2 { get; set; }
+
+    public int? Uid1 { get; set; }
+    public int? Uid2 { get; set; }
 
     public Parcel(int pParcelNum, string pDescription, Position pPos1, Position pPos2)
     {
-        _parcelNum = pParcelNum;
-        _description = pDescription;
-        _pos1 = pPos1;
-        _pos2 = pPos2;
-    }
-
-
-    public int ParcelNum
-    {
-        get => _parcelNum;
-        set => _parcelNum = value;
-    }
-
-    public string Description
-    {
-        get => _description;
-        set => _description = value;
-    }
-
-    public List<Realestate> Realestates
-    {
-        get => _realestates;
-        set => _realestates = value;
-    }
-
-    public Position Pos1
-    {
-        get => _pos1;
-        set => _pos1 = value;
-    }
-
-    public Position Pos2
-    {
-        get => _pos2;
-        set => _pos2 = value;
-    }
-
-    public int? Uid1
-    {
-        get => _uid1;
-        set => _uid1 = value;
-    }
-
-    public int? Uid2
-    {
-        get => _uid2;
-        set => _uid2 = value;
+        ParcelNum = pParcelNum;
+        Description = pDescription;
+        Pos1 = pPos1;
+        Pos2 = pPos2;
     }
 
     public void AddRealestate(Realestate realestate)
     {
         if (!Realestates.Contains(realestate))
         {
-            _realestates.Add(realestate);
+            Realestates.Add(realestate);
         }
     }
 
@@ -76,23 +36,23 @@ public class Parcel : Asset
         {
             string sol = "";
 
-            sol += $"\nParcela ({_pos1}-{_pos2})\n";
-            sol += $"Číslo parcely: {_parcelNum}\n";
-            sol += $"Popis: '{_description}'\n";
+            sol += $"\nParcela ({Pos1}-{Pos2})\n";
+            sol += $"Číslo parcely: {ParcelNum}\n";
+            sol += $"Popis: '{Description}'\n";
 
             return sol;
         }
 
-        return $"{_parcelNum}: {_description}";
+        return $"{ParcelNum}: {Description}";
     }
 
     public override void ToAttr(ref string attr)
     {
-        ClientSys.AddToAttr(ref attr, "POS_1", _pos1.ToString());
-        ClientSys.AddToAttr(ref attr, "POS_2", _pos2.ToString());
-        ClientSys.AddToAttr(ref attr, "PARCEL_NUM", _parcelNum);
-        ClientSys.AddToAttr(ref attr, "DESCRIPTION", _description);
-        ClientSys.AddToAttr(ref attr, "UID_1", (int)_uid1!);
-        ClientSys.AddToAttr(ref attr, "UID_2", (int)_uid2!);
+        ClientSys.AddToAttr(ref attr, "POS_1", Pos1.ToString());
+        ClientSys.AddToAttr(ref attr, "POS_2", Pos2.ToString());
+        ClientSys.AddToAttr(ref attr, "PARCEL_NUM", ParcelNum);
+        ClientSys.AddToAttr(ref attr, "DESCRIPTION", Description);
+        ClientSys.AddToAttr(ref attr, "UID_1", (int)Uid1!);
+        ClientSys.AddToAttr(ref attr, "UID_2", (int)Uid2!);
     }
 }

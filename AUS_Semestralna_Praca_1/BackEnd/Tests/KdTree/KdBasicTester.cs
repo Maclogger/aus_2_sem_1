@@ -14,7 +14,7 @@ public class KdBasicTester
     {
         RemoveRightTest();
         return;
-        SwapTest();
+        //SwapTest();
         TestPrint();
         // Add
         TestAdd();
@@ -30,8 +30,8 @@ public class KdBasicTester
         TestFindWithDuplicates();
         // Operation Generator
         //TestWithOperationGenerator();
-        SwapTest();
-        RandomizedSwapTest();
+        //SwapTest();
+        //RandomizedSwapTest();
         // Remove
         // Leaf
         RemoveTest();
@@ -61,14 +61,14 @@ public class KdBasicTester
 
         tree.Add(new Cord(27, 43), "Nováky");
 
-        tree.Remove(new Cord(24, 40), 0);
-        tree.Remove(new Cord(27, 43), 0);
-        tree.Remove(new Cord(22, 39), 0);
-        tree.Remove(new Cord(30, 33), 0);
-        tree.Remove(new Cord(24, 36), 0);
-        tree.Remove(new Cord(24, 34), 0);
-        tree.Remove(new Cord(24, 35), 0);
-        tree.Remove(new Cord(29, 46), 0);
+        tree.Remove(new Cord(24, 40));
+        tree.Remove(new Cord(27, 43));
+        tree.Remove(new Cord(22, 39));
+        tree.Remove(new Cord(30, 33));
+        tree.Remove(new Cord(24, 36));
+        tree.Remove(new Cord(24, 34));
+        tree.Remove(new Cord(24, 35));
+        tree.Remove(new Cord(29, 46));
 
         Assert.AreEqual(0, tree.Size);
     }
@@ -77,11 +77,11 @@ public class KdBasicTester
     {
         KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
 
-        tree.Remove(new Cord(12, 41), 0);
-        tree.Remove(new Cord(22, 32), 0);
-        tree.Remove(new Cord(22, 31), 0);
-        tree.Remove(new Cord(22, 42), 0);
-        tree.Remove(new Cord(22, 39), 0);
+        tree.Remove(new Cord(12, 41));
+        tree.Remove(new Cord(22, 32));
+        tree.Remove(new Cord(22, 31));
+        tree.Remove(new Cord(22, 42));
+        tree.Remove(new Cord(22, 39));
 
         List<string> expected = new();
         expected.Add("Nitra");
@@ -106,7 +106,7 @@ public class KdBasicTester
     {
         KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
 
-        tree.Remove(new Cord(27, 43), 0);
+        tree.Remove(new Cord(27, 43));
 
         List<string> expected = new();
         expected.Add("Senica - úrad");
@@ -135,7 +135,7 @@ public class KdBasicTester
     {
         KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
 
-        tree.Remove(new Cord(29, 46), 0);
+        tree.Remove(new Cord(29, 46));
 
         List<string> expected = new();
         expected.Add("Senica - úrad");
@@ -164,7 +164,7 @@ public class KdBasicTester
     {
         KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
 
-        tree.Remove(new Cord(23, 35), 0);
+        tree.Remove(new Cord(23, 35));
 
         List<string> expected = new();
         expected.Add("Senica - škola");
@@ -193,7 +193,7 @@ public class KdBasicTester
     {
         KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
 
-        tree.Remove(new Cord(22, 42), 0);
+        tree.Remove(new Cord(22, 42));
 
         List<string> expected = new();
         expected.Add("Senica - úrad");
@@ -222,7 +222,7 @@ public class KdBasicTester
     {
         KdTree<Cord, string> tree = SetUpRemoveTreeTest1();
 
-        tree.Remove(new Cord(24, 36), 0);
+        tree.Remove(new Cord(24, 36));
 
         List<string> expected = new();
         expected.Add("Senica - úrad");
@@ -284,6 +284,7 @@ public class KdBasicTester
         (pList[pIndex1], pList[pIndex2]) = (pList[pIndex2], pList[pIndex1]);
     }
 
+    /*
     public static void RandomizedSwapTest()
     {
         int count = 1000;
@@ -337,7 +338,9 @@ public class KdBasicTester
 
         Console.WriteLine("ok");
     }
+    */
 
+    /*
     public static void SwapTest()
     {
         TestSwapUni([
@@ -392,8 +395,9 @@ public class KdBasicTester
             ], new Cord(20, 33), new Cord(25, 36)
         );
     }
+    */
 
-    private static void TestSwapUni(List<string> expected, Cord cord1, Cord cord2)
+    /*private static void TestSwapUni(List<string> expected, Cord cord1, Cord cord2)
     {
         KdTree<Cord, string> tree = Create2dTreeEx1();
         tree.Swap(cord1, cord2);
@@ -406,7 +410,7 @@ public class KdBasicTester
         }
 
         CollectionAssert.AreEqual(expected, actual);
-    }
+    }*/
 
     private static KdTree<MyIntKey, int> SetUpRandomIntTree(int pCount, int pMin, int pMax)
     {

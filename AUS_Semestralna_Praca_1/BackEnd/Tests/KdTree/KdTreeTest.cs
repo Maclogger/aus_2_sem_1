@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using System.Collections.Generic;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree.Keys;
@@ -34,7 +34,67 @@ public static class SimulationTester
         CollectionAssert.AreEqual(actual, expected);
     }
 
-    public static void RunSimTest(
+    private static Tuple<KdTree<Key4D, int>, List<KeyInt>> Create4DTree()
+    {
+        int countBeforeTest = Config.Instance.ElementCountBeforeTest;
+
+        Random gen = new();
+        KdTree<Key4D, int> tree = new(2);
+        List<KeyInt> expectedInTree = new(countBeforeTest);
+
+        for (int i = 0; i < countBeforeTest; i++)
+        {
+            Key4D
+                randomKey = new Key4D(
+                    gen); // random generated new Key4D (could be existing although the probability is low)
+            int randomValue = gen.Next(10, 10);
+
+            tree.Add(randomKey, randomValue); // adding randomly generated Key4D into tree, data is just an i
+            expectedInTree.Add(new KeyInt(randomKey, randomValue));
+        }
+
+        return new Tuple<KdTree<Key4D, int>, List<KeyInt>>(tree, expectedInTree);
+    }
+
+    public static void RunSimTests(TextBlock block)
+    {
+        var tuple = Create4DTree();
+        KdTree<Key4D, int> key4DTree = tuple.Item1;
+        List<KeyInt> expectedInKey4DTree = tuple.Item2;
+
+        bool tryCath = true;
+        int startSeed = Config.Instance.Seed;
+        int seedCount = Config.Instance.SeedCount;
+        int count = Config.Instance.OperationCount;
+
+        for (int seed = startSeed; seed <= startSeed + seedCount; seed++)
+        {
+            if (tryCath)
+            {
+                try
+                {
+                    RunOneSimTest(key4DTree, expectedInKey4DTree, seed, count, block);
+
+                    if (seedCount < 100 || seed % (seedCount / 100) == 0)
+                    {
+                        block.Text += $"Seed: {seed} / {startSeed + seedCount} OK\n";
+                        Console.WriteLine($"Seed: {seed} / {startSeed + seedCount} OK");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"PADLO TO PRI SEEDE: {seed} {e.Message}");
+                    return;
+                }
+            }
+            else
+            {
+                RunOneSimTest(key4DTree, expectedInKey4DTree, seed, count, block);
+            }
+        }
+    }
+
+    public static void RunOneSimTest(
         KdTree<Key4D, int> tree,
         List<KeyInt> expectedInTree,
         int pSeed = 1,
@@ -104,7 +164,8 @@ public static class SimulationTester
             }
             else
             {
-                randomKey = new Key4D(gen); // rand generated new Key4D (could be existing although the probability is low)
+                randomKey = new Key4D(
+                    gen); // rand generated new Key4D (could be existing although the probability is low)
             }
 
             if (!_notExistingKey.Equals(randomKey))
@@ -156,7 +217,7 @@ public static class SimulationTester
             int indexOfElementToRemove = gen.Next(0, expectedInTree.Count);
             KeyInt randomExistingElement = expectedInTree[indexOfElementToRemove];
 
-            List<DataPart<int>> itemsWithMatchingKey = tree.FindDataParts((Key4D)randomExistingElement.Key);
+            List<int> itemsWithMatchingKey = tree.Find((Key4D)randomExistingElement.Key);
 
             if (itemsWithMatchingKey == null)
             {
@@ -236,4 +297,4 @@ public static class SimulationTester
             }
         }
     }
-}
+}*/
