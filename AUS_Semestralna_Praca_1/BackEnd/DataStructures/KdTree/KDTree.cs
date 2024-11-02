@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using AUS_Semestralna_Praca_1.BackEnd.Core;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 
@@ -238,6 +237,8 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         List<Node<K, T>> nodesToAddBack = new();
 
         nodesToRemove.Push(nodeToDelete);
+        Console.WriteLine($"{Program.counter2}:Removing node {nodeToDelete}");
+        Program.counter2++;
 
         do
         {
@@ -279,6 +280,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
                         }
                     }
                 }
+
             }
 
             if (node.Father == null)
@@ -288,6 +290,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
             }
 
             node.Father.ReplaceChild(node, null, _k); // this will remove the node from the tree
+
         } while (nodesToRemove.Count > 0);
 
         foreach (Node<K, T> node in nodesToAddBack)
@@ -316,7 +319,6 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         return nodeWithHighestKeyInDim;
     }
 
-
     private List<Node<K, T>> FindNodesWithLowestKeyInDim(Node<K, T> pStartNode, int pDimension)
     {
         List<Node<K, T>> nodesWithLowestKeyInDim = new();
@@ -341,28 +343,14 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         return nodesWithLowestKeyInDim;
     }
 
-    public void Update(K oldKey, K newKey, T newData)
-    {
-        Node<K, T>? node = FindNode(oldKey);
-
-        // the node doesn't exists
-        if (node == null) return;
-
-        if (oldKey.Equals(newKey))
-        {
-            node.Data = newData;
-        }
-        else
-        {
-            Remove(oldKey);
-            Add(newKey, newData);
-        }
-    }
 
     private void Swap(Node<K, T> node1, Node<K, T> node2)
     {
         // when swapping the same nodes
-        if (node1 == node2 || node1.Key.Equals(node2.Key)) return;
+        //if (node1 == node2) return;
+        Config.Instance.FormattedOutput = false;
+        Program.counter++;
+        Console.WriteLine($"{Program.counter}: Swapping {node1} and {node2}");
 
         if (node1.Father != null && node1.Father == node2.Father)
         {
@@ -401,6 +389,16 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         else if (node2.Key.Equals(_root.Key)) _root = node1;
     }
 
+    public void Update(K oldKey, T newData)
+    {
+        Node<K, T>? node = FindNode(oldKey);
+
+        // the node doesn't exist
+        if (node == null) return;
+
+        node.Data = newData;
+    }
+
     // ---------------------------------------------------
     // -------------------- ITERATORS --------------------
     // ---------------------------------------------------
@@ -428,51 +426,8 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         }
     }
 
-
-    private IEnumerable<Node<K, T>> PreOrderTraversalWithoutStack(Node<K, T>? pStartNode = null,
-        Func<Node<K, T>, bool>? pPredicate = null)
-    {
-        Node<K, T>? currentNode = pStartNode ?? _root;
-
-        while (currentNode != null)
-        {
-            if (pPredicate == null || pPredicate(currentNode))
-            {
-                yield return currentNode;
-            }
-
-            if (currentNode.LeftChild != null)
-            {
-                currentNode = currentNode.LeftChild;
-            }
-            else if (currentNode.RightChild != null)
-            {
-                currentNode = currentNode.RightChild;
-            }
-            else
-            {
-                while (currentNode.Father != null &&
-                       (currentNode == currentNode.Father.RightChild || currentNode.Father.RightChild == null))
-                {
-                    currentNode = currentNode.Father;
-                }
-
-                if (currentNode.Father != null)
-                {
-                    currentNode = currentNode.Father.RightChild;
-                }
-                else
-                {
-                    currentNode = null;
-                }
-            }
-        }
-    }
-
-
     // this is implementation of InOrderIterator -> only used in this class => it returns the !!! NODE !!!
-    private IEnumerable<Node<K, T>> InOrderIteratorImpl(Node<K, T>? pStartNode = null,
-        Func<Node<K, T>, bool>? pPredicate = null)
+    private IEnumerable<Node<K, T>> InOrderIteratorImpl(Node<K, T>? pStartNode = null)
     {
         Node<K, T>? currentNode = pStartNode ?? _root;
 
@@ -491,14 +446,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
 
             currentNode = stack.Pop(); // we go up one level to father
 
-            if (pPredicate == null)
-            {
-                yield return currentNode;
-            }
-            else if (pPredicate(currentNode))
-            {
-                yield return currentNode;
-            }
+            yield return currentNode;
 
             currentNode = currentNode.RightChild; // we go to right node
         }

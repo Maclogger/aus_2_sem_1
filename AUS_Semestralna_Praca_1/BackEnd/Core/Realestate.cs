@@ -30,13 +30,10 @@ public class Realestate : Asset
 
     public void AddParcel(Parcel parcel)
     {
-        Parcelas.Add(parcel);
-        /*
         if (!Parcelas.Contains(parcel))
         {
             Parcelas.Add(parcel);
         }
-    */
     }
 
     public void RemoveParcel(Parcel parcelToDelete)

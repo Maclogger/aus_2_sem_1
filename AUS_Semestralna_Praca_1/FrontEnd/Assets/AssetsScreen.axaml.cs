@@ -42,7 +42,7 @@ public partial class AssetsScreen : UserControl
             return;
         }
 
-        _contentArea.Content = new AssetsScreenList(assets, 'A');
+        _contentArea.Content = new AssetsScreenList(assets, 'A', _contentArea);
     }
 
     private void OnFindAllAssetsClicked(object? sender, RoutedEventArgs e)
@@ -55,6 +55,6 @@ public partial class AssetsScreen : UserControl
             return;
         }
 
-        _contentArea.Content = new AssetsScreenList(assets, 'A');
+        _contentArea.Content = new AssetsScreenList(assets, 'A', _contentArea);
     }
 }

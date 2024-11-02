@@ -30,13 +30,10 @@ public class Parcel : Asset
 
     public void AddRealestate(Realestate realestate)
     {
-        /*
         if (!Realestates.Contains(realestate))
         {
             Realestates.Add(realestate);
         }
-    */
-        Realestates.Add(realestate);
     }
 
     public override string ToString()

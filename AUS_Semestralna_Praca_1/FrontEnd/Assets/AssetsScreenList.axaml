@@ -58,7 +58,9 @@
                                                 VerticalContentAlignment="Center"
                                                 Background="white"
                                                 Foreground="black"
-                                                CornerRadius="10" />
+                                                CornerRadius="10"
+                                                CommandParameter="{Binding}"
+                                                Click="OnEditRecordClicked"/>
                                         <Button Content="DELETE"
                                                 FontWeight="Bold"
                                                 Margin="10"

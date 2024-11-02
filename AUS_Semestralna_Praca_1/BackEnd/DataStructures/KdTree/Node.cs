@@ -12,7 +12,6 @@ public class Node<K, T> where K : IKey
     public int Dimension { get; set; }
     public T Data { get; set; }
     public bool IsInStack { get; set; } = false;
-    public bool WasVisited { get; set; } = false;
 
 
     public Node(K pKey, T pData, int dimension)

@@ -256,75 +256,98 @@ public class MainApplication
         Core.RemoveAsset(pos1, pos2, asset.Type[0]);
     }
 
-    public Answer FillUpSystem(double probabilityOfDuplicates, int elementCount, double realestateParcelRatio)
+
+    private (Position, Position) GetRandomPositionsWithOverlay(
+        List<Position> positions,
+        Random random,
+        double probabilityOfOverlay
+    )
     {
-        Random random = new();
-        List<Parcel> generatedParcels = new();
-        List<Realestate> generatedRealestates = new();
+        Position pos1;
+        Position pos2;
+        if (random.NextDouble() < probabilityOfOverlay && positions.Count >= 2)
+        {
+            pos1 = positions[random.Next(0, positions.Count)];
+        }
+        else
+        {
+            pos1 = new(random);
+        }
+
+        if (random.NextDouble() < probabilityOfOverlay && positions.Count >= 2)
+        {
+            pos2 = positions[random.Next(0, positions.Count)];
+        }
+        else
+        {
+            pos2 = new(random);
+        }
+
+        if (pos1.Equals(pos2))
+        {
+            pos2 = new(random);
+        }
+
+        return (pos1, pos2);
+    }
+
+    public Answer FillUpSystem(double probabilityOfOverlay, int elementCount, double realestateParcelRatio)
+    {
+        Random random = new(1);
+        List<Position> positionsOfRealestate = new(); // TODO add optimization => we +- know how many there will be
+        List<Position> positionsOfParcels = new(); // TODO add optimization => we +- know how many there will be
 
         for (int i = 0; i < elementCount; i++)
         {
-            Console.WriteLine($"{i + 1} / {elementCount}");
+            if (!Config.Instance.ShoudPrint) Console.WriteLine($"{i + 1} / {elementCount}");
             if (random.NextDouble() < realestateParcelRatio)
             {
                 // generating new realestate
-                Realestate realestate;
-                Position pos1;
-                Position pos2;
-                if (random.NextDouble() < probabilityOfDuplicates && generatedRealestates.Count > 0)
-                {
-                    // adding a duplicate realestate
-                    int index = random.Next(0, generatedRealestates.Count);
-                    realestate = generatedRealestates[index];
-                    realestate = Realestate.GetDeepCopy(realestate);
-
-                    pos1 = realestate.Pos1;
-                    pos2 = realestate.Pos2;
-                }
-                else
-                {
-                    pos1 = new(random);
-                    pos2 = new(random);
-
-                    realestate = new(random, pos1, pos2);
-
-                    generatedRealestates.Add(realestate);
-                }
-
+                (Position pos1, Position pos2) = GetRandomPositionsWithOverlay(positionsOfParcels, random, probabilityOfOverlay);
+                Realestate realestate = new(random, pos1, pos2);
+                positionsOfParcels.Add(pos1);
+                positionsOfParcels.Add(pos2);
                 Core.AddAsset(pos1, pos2, realestate);
             }
             else
             {
                 // generating new parcel
-                Parcel parcel;
-                Position pos1;
-                Position pos2;
-                if (random.NextDouble() < probabilityOfDuplicates && generatedParcels.Count > 0)
-                {
-                    // adding a duplicate realestate
-                    int index = random.Next(0, generatedParcels.Count);
-                    parcel = generatedParcels[index];
-                    parcel = Parcel.GetDeepCopy(parcel);
-
-                    pos1 = parcel.Pos1;
-                    pos2 = parcel.Pos2;
-                }
-                else
-                {
-                    pos1 = new(random);
-                    pos2 = new(random);
-
-                    parcel = new(random, pos1, pos2);
-
-                    generatedParcels.Add(parcel);
-                }
-
+                (Position pos1, Position pos2) = GetRandomPositionsWithOverlay(positionsOfRealestate, random, probabilityOfOverlay);
+                Parcel parcel = new(random, pos1, pos2);
+                positionsOfRealestate.Add(pos1);
+                positionsOfRealestate.Add(pos2);
                 Core.AddAsset(pos1, pos2, parcel);
             }
         }
 
-        generatedParcels.Clear();
-        generatedRealestates.Clear();
         return new Answer("OK", AnswerState.Ok);
+    }
+
+    public Answer UpdateAsset(AssetData oldAssetData, AssetData newAssetData)
+    {
+        Position oldPos1 = new Position(oldAssetData.Pos1Data.Latitude, oldAssetData.Pos1Data.LatitudeSign[0],
+            oldAssetData.Pos1Data.Longitude, oldAssetData.Pos1Data.LongitudeSign[0]);
+        oldPos1.Uid = oldAssetData.Pos1Data.Uid;
+        Position oldPos2 = new Position(oldAssetData.Pos2Data.Latitude, oldAssetData.Pos2Data.LatitudeSign[0],
+            oldAssetData.Pos2Data.Longitude, oldAssetData.Pos2Data.LongitudeSign[0]);
+        oldPos2.Uid = oldAssetData.Pos2Data.Uid;
+
+        Position newPos1 = new Position(newAssetData.Pos1Data.Latitude, newAssetData.Pos1Data.LatitudeSign[0],
+            newAssetData.Pos1Data.Longitude, newAssetData.Pos1Data.LongitudeSign[0]);
+        oldPos1.Uid = newAssetData.Pos1Data.Uid;
+        Position newPos2 = new Position(newAssetData.Pos2Data.Latitude, newAssetData.Pos2Data.LatitudeSign[0],
+            newAssetData.Pos2Data.Longitude, newAssetData.Pos2Data.LongitudeSign[0]);
+        oldPos2.Uid = newAssetData.Pos2Data.Uid;
+
+        if (newAssetData.Type == "R")
+        {
+            Realestate realestate = new Realestate(newAssetData.Num, newAssetData.Description, newPos1, newPos2);
+            return Core.UpdateAsset(oldPos1, oldPos2, newPos1, newPos2, realestate);
+        }
+        else
+        {
+            Parcel parcel = new Parcel(newAssetData.Num, newAssetData.Description, newPos1, newPos2);
+            return Core.UpdateAsset(oldPos1, oldPos2, newPos1, newPos2, parcel);
+        }
     }
 }

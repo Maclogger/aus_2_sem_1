@@ -14,8 +14,8 @@ public class AssetData
     public string TypeClient { get; set; }
     public int Num { get; set; }
     public string Description { get; set; }
-    public PositionData Pos1Data { get; }
-    public PositionData Pos2Data { get; }
+    public PositionData Pos1Data { get; set; }
+    public PositionData Pos2Data { get; set; }
 
     public AssetData(int num, string description, PositionData pos1Data, PositionData pos2Data, string type)
     {
@@ -26,15 +26,25 @@ public class AssetData
         Pos2Data = pos2Data;
         TypeClient = type == "R" ? "Nehnuteľnosť" : "Parcela";
     }
+
+    public AssetData(AssetData other)
+    {
+        Type = other.Type;
+        Num = other.Num;
+        Description = other.Description;
+        Pos1Data = new PositionData(other.Pos1Data);
+        Pos2Data = new PositionData(other.Pos2Data);
+        TypeClient = Type == "R" ? "Nehnuteľnosť" : "Parcela";
+    }
 }
 
 public class PositionData
 {
-    public int Uid { get; }
-    public double Latitude { get; }
-    public string LatitudeSign { get; }
-    public double Longitude { get; }
-    public string LongitudeSign { get; }
+    public int Uid { get; set; }
+    public double Latitude { get; set; }
+    public string LatitudeSign { get; set; }
+    public double Longitude { get; set; }
+    public string LongitudeSign { get; set; }
 
     public PositionData(int uid, double latitude, string latitudeSign, double longitude, string longitudeSign)
     {
@@ -45,15 +55,26 @@ public class PositionData
         LongitudeSign = longitudeSign;
     }
 
+    public PositionData(PositionData other)
+    {
+        Uid = other.Uid;
+        Latitude = other.Latitude;
+        LatitudeSign = other.LatitudeSign;
+        Longitude = other.Longitude;
+        LongitudeSign = other.LongitudeSign;
+    }
+
     public string Formatted => Position.ToFormattedString(Uid, Latitude, LatitudeSign, Longitude, LongitudeSign);
 }
 
 public partial class AssetsScreenList : UserControl
 {
+    private readonly ContentControl _contentArea;
     public ObservableCollection<AssetData> ListAssets { get; set; }
 
-    public AssetsScreenList(List<string> listOfAssets, char sign)
+    public AssetsScreenList(List<string> listOfAssets, char sign, ContentControl contentArea)
     {
+        _contentArea = contentArea;
         InitializeComponent();
         List<AssetData> list = new(listOfAssets.Count);
         foreach (string attr in listOfAssets)
@@ -104,5 +125,16 @@ public partial class AssetsScreenList : UserControl
             ListAssets.Remove(asset);
             MainApplication.Instance.RemoveAsset(asset);
         }
+    }
+
+    private void OnEditRecordClicked(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is AssetData asset)
+        {
+            _contentArea.Content = new EditSpecAssetScreen(asset, _contentArea);
+            Console.WriteLine("Okej");
+        }
+
+        Console.WriteLine("aha");
     }
 }

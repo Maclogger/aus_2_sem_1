@@ -265,4 +265,54 @@ public class ApplicationCore
         AssetsCount--;
         return new Answer("OK", AnswerState.Ok);
     }
+
+    public Answer UpdateAsset(
+        Position oldPos1,
+        Position oldPos2,
+        Position newPos1,
+        Position newPos2,
+        Asset newAsset
+    )
+    {
+        if (newAsset is Realestate rls)
+        {
+            if (oldPos1.Equals(newPos1) && oldPos2.Equals(newPos2))
+            {
+                Realestate? realestate = RealestatesTree.FindExact(oldPos1);
+                if (realestate == null)
+                {
+                    return new Answer($"Nehnuteľnosť {rls} sa v systéme nenašla. CHYBA", AnswerState.Error);
+                }
+
+                realestate.Description = rls.Description;
+                realestate.RealestateNum = rls.RealestateNum;
+            }
+            else
+            {
+                RemoveAsset(oldPos1, oldPos2, 'R');
+                AddAsset(newPos1, newPos2, newAsset);
+            }
+        }
+        else if (newAsset is Parcel prc)
+        {
+            if (oldPos1.Equals(newPos1) && oldPos2.Equals(newPos2))
+            {
+                Parcel? parcel = ParcelsTree.FindExact(oldPos1);
+                if (parcel == null)
+                {
+                    return new Answer($"Parcela {prc} sa v systéme nenašla. CHYBA", AnswerState.Error);
+                }
+
+                parcel.Description = prc.Description;
+                parcel.ParcelNum = prc.ParcelNum;
+            }
+            else
+            {
+                RemoveAsset(oldPos1, oldPos2, 'P');
+                AddAsset(newPos1, newPos2, newAsset);
+            }
+        }
+
+        return new Answer("OK", AnswerState.Ok);
+    }
 }

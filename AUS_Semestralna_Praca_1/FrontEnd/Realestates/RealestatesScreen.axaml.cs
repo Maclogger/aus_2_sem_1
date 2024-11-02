@@ -38,6 +38,6 @@ public partial class RealestatesScreen : UserControl
             return;
         }
 
-        _contentArea.Content = new AssetsScreenList(realestates, 'R');
+        _contentArea.Content = new AssetsScreenList(realestates, 'R', _contentArea);
     }
 }

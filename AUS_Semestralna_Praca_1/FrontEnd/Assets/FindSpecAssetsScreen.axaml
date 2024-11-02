@@ -44,7 +44,7 @@
 
 
             <Button x:Name="FindButton"
-                Content="Nájsť nehnuteľnosť"
+                Content="Nájsť asset"
                         FontWeight="Bold"
                         Margin="10"
                         Width="220"
@@ -57,7 +57,7 @@
                         Background="white"
                         Foreground="black"
                         CornerRadius="10"
-                        Click="OnFindRealestatesClicked" />
+                        Click="OnFindAssetClicked" />
 
         </StackPanel>
     </Border>

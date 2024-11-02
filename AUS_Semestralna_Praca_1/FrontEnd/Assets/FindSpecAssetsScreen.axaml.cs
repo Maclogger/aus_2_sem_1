@@ -22,7 +22,7 @@ public partial class FindSpecAssetsScreen : UserControl
         FindButton.Content = Sign == 'R' ? "Vyhľadať nehnuteľnsti" : "Vyhľadať parcely";
     }
 
-    private void OnFindRealestatesClicked(object? sender, RoutedEventArgs e)
+    private void OnFindAssetClicked(object? sender, RoutedEventArgs e)
     {
         string posAttr = "";
 
@@ -40,6 +40,6 @@ public partial class FindSpecAssetsScreen : UserControl
             return;
         }
 
-        _contentArea.Content = new AssetsScreenList(specificAssets, 'R');
+        _contentArea.Content = new AssetsScreenList(specificAssets, 'R', _contentArea);
     }
 }
