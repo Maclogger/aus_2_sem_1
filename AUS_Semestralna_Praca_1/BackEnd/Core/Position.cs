@@ -33,9 +33,11 @@ public class Position : IKey
 
     public Position(Random random)
     {
-        double latitude = Utils.GetRandomDoubleInRange(Config.Instance.MinLatitude, Config.Instance.MaxLatitude, random);
+        double latitude =
+            Utils.GetRandomDoubleInRange(Config.Instance.MinLatitude, Config.Instance.MaxLatitude, random);
         char latitudeSign = random.NextDouble() < 0.5 ? 'N' : 'S';
-        double longitude = Utils.GetRandomDoubleInRange(Config.Instance.MinLatitude, Config.Instance.MaxLatitude, random);
+        double longitude =
+            Utils.GetRandomDoubleInRange(Config.Instance.MinLatitude, Config.Instance.MaxLatitude, random);
         char longitudeSign = random.NextDouble() < 0.5 ? 'E' : 'W';
 
         Initialize(latitude, latitudeSign, longitude, longitudeSign);
@@ -54,6 +56,7 @@ public class Position : IKey
         Uid = Utils.GetNextVal();
     }
 
+
     public int CompareTo(IKey pOther, int pDimension)
     {
         if (pOther is not Position pOtherPos)
@@ -61,22 +64,18 @@ public class Position : IKey
             throw new ArgumentException($"IKey in comparator was not an instance of Position: {nameof(pOther)}");
         }
 
-        double[] cords = { X, Y };
-        double[] cordsOther = { pOtherPos.X, pOtherPos.Y };
+        // Získaj hodnoty podľa dimenzie bez vytvárania polí
+        double coord = pDimension == 0 ? X : Y;
+        double coordOther = pDimension == 0 ? pOtherPos.X : pOtherPos.Y;
 
-
-        if (Math.Abs(cords[pDimension] - cordsOther[pDimension]) < Config.Instance.Tolerance)
+        if (Math.Abs(coord - coordOther) < Config.Instance.Tolerance)
         {
             return 0;
         }
 
-        if (cords[pDimension] < cordsOther[pDimension])
-        {
-            return -1;
-        }
-
-        return 1;
+        return coord < coordOther ? -1 : 1;
     }
+
 
     public bool Equals(IKey pOther)
     {
@@ -106,17 +105,20 @@ public class Position : IKey
         ClientSys.AddToAttr(ref sol, $"UID_{postFix}", Uid ?? -1);
     }
 
-    public static string ToFormattedString(int uid, double latitude, string latitudeSign, double longitude, string longitudeSign)
+    public static string ToFormattedString(int uid, double latitude, string latitudeSign, double longitude,
+        string longitudeSign)
     {
         if (Config.Instance.FormattedOutput)
         {
             return $"([{Math.Abs(latitude)}{latitudeSign}, {Math.Abs(longitude)}{longitudeSign}])";
         }
+
         return $"(UID:{uid}, [{Math.Abs(latitude)}{latitudeSign}, {Math.Abs(longitude)}{longitudeSign}])";
     }
 
     public static Position GetDeepCopy(Position realestatePos1)
     {
-        return new(realestatePos1.Latitude, realestatePos1.LatitudeSign, realestatePos1.Longitude, realestatePos1.LongitudeSign);
+        return new(realestatePos1.Latitude, realestatePos1.LatitudeSign, realestatePos1.Longitude,
+            realestatePos1.LongitudeSign);
     }
 }

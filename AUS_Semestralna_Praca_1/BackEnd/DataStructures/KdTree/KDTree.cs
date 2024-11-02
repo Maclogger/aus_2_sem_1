@@ -138,7 +138,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
     {
         List<T> sol = new();
 
-        foreach (Node<K, T> node in InOrderIteratorImpl(pPredicate: n => HasSameKeysInAllDimension(pKey, n.Key)))
+        foreach (Node<K, T> node in FindIteratorImpl(pKey))
         {
             sol.Add(node.Data);
         }
@@ -146,17 +146,18 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         return sol;
     }
 
-    public List<Tuple<K, T>> FindEntries(K pKey)
+    public List<(K, T)> FindEntries(K pKey)
     {
-        List<Tuple<K, T>> sol = new();
+        List<(K, T)> sol = new();
 
-        foreach (Node<K, T> node in InOrderIteratorImpl(pPredicate: n => HasSameKeysInAllDimension(pKey, n.Key)))
+        foreach (Node<K, T> node in FindIteratorImpl(pKey))
         {
-            sol.Add(new Tuple<K, T>(node.Key, node.Data));
+            sol.Add((node.Key, node.Data));
         }
 
         return sol;
     }
+
     public T? FindExact(K key)
     {
         Node<K, T>? node = FindNode(key);
@@ -191,6 +192,26 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         return null; // if the node is null, then
     }
 
+    private IEnumerable<Node<K, T>> FindIteratorImpl(K pKey)
+    {
+        Node<K, T>? currentNode = _root;
+        int dimension = 0;
+
+        while (currentNode != null)
+        {
+            int comp = pKey.CompareTo(currentNode.Key, dimension);
+            if (comp == 0 && HasSameKeysInAllDimension(pKey, currentNode.Key))
+            {
+                // the wanted node was found
+                yield return currentNode;
+            }
+
+            currentNode = comp <= 0 ? currentNode.LeftChild : currentNode.RightChild;
+            dimension = (dimension + 1) % _k;
+        }
+    }
+
+
     public void Remove(K pKey)
     {
         if (_size <= 1 && _root != null)
@@ -213,7 +234,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         }
 
 
-        Stack.Stack<Node<K, T>> nodesToRemove = new();
+        Stack<Node<K, T>> nodesToRemove = new();
         List<Node<K, T>> nodesToAddBack = new();
 
         nodesToRemove.Push(nodeToDelete);
@@ -238,7 +259,8 @@ public class KdTree<K, T> : IEnumerable where K : IKey
                 {
                     // Case when nodeToDelete is not a leaf, and it doesn't have a LEFT child =>
                     // => have to remove some from the right side
-                    List<Node<K, T>> nodesWithLowestKeyInDim = FindNodesWithLowestKeyInDim(node.RightChild!, node.Dimension);
+                    List<Node<K, T>> nodesWithLowestKeyInDim =
+                        FindNodesWithLowestKeyInDim(node.RightChild!, node.Dimension);
 
                     if (nodesWithLowestKeyInDim.Count <= 0)
                     {
@@ -266,7 +288,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
             }
 
             node.Father.ReplaceChild(node, null, _k); // this will remove the node from the tree
-        } while (nodesToRemove.Size > 0);
+        } while (nodesToRemove.Count > 0);
 
         foreach (Node<K, T> node in nodesToAddBack)
         {
@@ -400,20 +422,63 @@ public class KdTree<K, T> : IEnumerable where K : IKey
 
     public IEnumerable<T> LevelOrder()
     {
-        foreach (Node<K,T> node in LevelOrderImpl())
+        foreach (Node<K, T> node in LevelOrderImpl())
         {
             yield return node.Data;
         }
     }
 
-    // this is implementation of InOrderIterator -> only used in this class => it returns the !!! NODE !!!
-    private IEnumerable<Node<K, T>> InOrderIteratorImpl(Node<K, T>? pStartNode = null, Func<Node<K, T>, bool>? pPredicate = null)
+
+    private IEnumerable<Node<K, T>> PreOrderTraversalWithoutStack(Node<K, T>? pStartNode = null,
+        Func<Node<K, T>, bool>? pPredicate = null)
     {
         Node<K, T>? currentNode = pStartNode ?? _root;
 
-        Stack.Stack<Node<K, T>> stack = new();
+        while (currentNode != null)
+        {
+            if (pPredicate == null || pPredicate(currentNode))
+            {
+                yield return currentNode;
+            }
 
-        while (currentNode != null || stack.Size > 0)
+            if (currentNode.LeftChild != null)
+            {
+                currentNode = currentNode.LeftChild;
+            }
+            else if (currentNode.RightChild != null)
+            {
+                currentNode = currentNode.RightChild;
+            }
+            else
+            {
+                while (currentNode.Father != null &&
+                       (currentNode == currentNode.Father.RightChild || currentNode.Father.RightChild == null))
+                {
+                    currentNode = currentNode.Father;
+                }
+
+                if (currentNode.Father != null)
+                {
+                    currentNode = currentNode.Father.RightChild;
+                }
+                else
+                {
+                    currentNode = null;
+                }
+            }
+        }
+    }
+
+
+    // this is implementation of InOrderIterator -> only used in this class => it returns the !!! NODE !!!
+    private IEnumerable<Node<K, T>> InOrderIteratorImpl(Node<K, T>? pStartNode = null,
+        Func<Node<K, T>, bool>? pPredicate = null)
+    {
+        Node<K, T>? currentNode = pStartNode ?? _root;
+
+        Stack<Node<K, T>> stack = new();
+
+        while (currentNode != null || stack.Count > 0)
         {
             // we go all a way to bottom left node
             while (currentNode != null)
@@ -429,7 +494,8 @@ public class KdTree<K, T> : IEnumerable where K : IKey
             if (pPredicate == null)
             {
                 yield return currentNode;
-            } else if (pPredicate(currentNode))
+            }
+            else if (pPredicate(currentNode))
             {
                 yield return currentNode;
             }
@@ -441,25 +507,25 @@ public class KdTree<K, T> : IEnumerable where K : IKey
     // this is implementation of LevelOrderIterator -> only used in this class => it returns the !!! NODE !!!
     private IEnumerable<Node<K, T>> LevelOrderImpl()
     {
-        Queue.Queue<Node<K, T>> queue = new();
+        Queue<Node<K, T>> queue = new();
 
         if (_root != null)
         {
-            queue.Add(_root);
+            queue.Enqueue(_root);
         }
 
-        while (queue.IsNotEmpty())
+        while (queue.Count > 0)
         {
-            Node<K, T> currentNode = queue.Pop()!;
+            Node<K, T> currentNode = queue.Dequeue();
 
             if (currentNode.LeftChild != null)
             {
-                queue.Add(currentNode.LeftChild);
+                queue.Enqueue(currentNode.LeftChild);
             }
 
             if (currentNode.RightChild != null)
             {
-                queue.Add(currentNode.RightChild);
+                queue.Enqueue(currentNode.RightChild);
             }
 
             yield return currentNode;
@@ -474,11 +540,11 @@ public class KdTree<K, T> : IEnumerable where K : IKey
     {
         string sol = "\n";
 
-        Queue.Queue<Node<K, T>?> queue = new();
+        Queue<Node<K, T>?> queue = new();
 
         if (_root != null)
         {
-            queue.Add(_root);
+            queue.Enqueue(_root);
         }
 
         int count = 0;
@@ -489,13 +555,13 @@ public class KdTree<K, T> : IEnumerable where K : IKey
                 sol += ",";
             }
 
-            Node<K, T>? currentNode = queue.Pop()!;
+            Node<K, T>? currentNode = queue.Dequeue()!;
             if (currentNode != null)
             {
                 count++;
                 sol += currentNode.ToString();
-                queue.Add(currentNode.LeftChild);
-                queue.Add(currentNode.RightChild);
+                queue.Enqueue(currentNode.LeftChild);
+                queue.Enqueue(currentNode.RightChild);
             }
             else
             {
@@ -505,5 +571,4 @@ public class KdTree<K, T> : IEnumerable where K : IKey
 
         Console.WriteLine(sol);
     }
-
 }

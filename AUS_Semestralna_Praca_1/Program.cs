@@ -14,6 +14,8 @@ partial class Program
     public static void Main(string[] args)
     {
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        //(MainApplication.Instance.FillUpSystem(0.1, 20_000, 0.5);
+
     }
 
 
