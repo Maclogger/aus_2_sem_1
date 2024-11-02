@@ -37,13 +37,15 @@ public class ApplicationCore
             try
             {
                 // adding new parcel to all realestates at pos1 and pos2
-                foreach (Parcel parcel in ParcelsTree.Find(pos1))
+                List<Parcel> parcels = ParcelsTree.Find(pos1);
+                foreach (Parcel parcel in parcels)
                 {
                     parcel.AddRealestate(realestate);
                     realestate.AddParcel(parcel);
                 }
 
-                foreach (Parcel parcel in ParcelsTree.Find(pos2))
+                parcels = ParcelsTree.Find(pos2);
+                foreach (Parcel parcel in parcels)
                 {
                     parcel.AddRealestate(realestate);
                     realestate.AddParcel(parcel);
@@ -66,13 +68,15 @@ public class ApplicationCore
             try
             {
                 // adding new parcel to all realestates at pos1 and pos2
-                foreach (Realestate rls in RealestatesTree.Find(pos1))
+                List<Realestate> realestates = RealestatesTree.Find(pos1);
+                foreach (Realestate rls in realestates)
                 {
                     rls.AddParcel(parcel);
                     parcel.AddRealestate(rls);
                 }
 
-                foreach (Realestate rls in RealestatesTree.Find(pos2))
+                realestates = RealestatesTree.Find(pos2);
+                foreach (Realestate rls in realestates)
                 {
                     rls.AddParcel(parcel);
                     parcel.AddRealestate(rls);

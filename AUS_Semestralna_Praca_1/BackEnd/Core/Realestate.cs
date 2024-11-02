@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 
@@ -19,20 +20,30 @@ public class Realestate : Asset
         Pos2 = pPos2;
     }
 
+    public Realestate(Random random, Position pPos1, Position pPos2)
+    {
+        RealestateNum = Utils.GetRandomIntInRange(0, 10_000, random);
+        Description = Utils.GetNextStringValOfLentgth(10);
+        Pos1 = pPos1;
+        Pos2 = pPos2;
+    }
 
     public void AddParcel(Parcel parcel)
     {
+        Parcelas.Add(parcel);
+        /*
         if (!Parcelas.Contains(parcel))
         {
             Parcelas.Add(parcel);
         }
+    */
     }
 
     public void RemoveParcel(Parcel parcelToDelete)
     {
         Parcelas.Remove(parcelToDelete);
     }
-    
+
     public override void ToAttr(ref string attr)
     {
         Pos1.AddToAttr(ref attr, 1);
@@ -40,5 +51,14 @@ public class Realestate : Asset
         ClientSys.AddToAttr(ref attr, "NUM", RealestateNum);
         ClientSys.AddToAttr(ref attr, "DESCRIPTION", Description);
         ClientSys.AddToAttr(ref attr, "TYPE", "R");
+    }
+
+    public static Realestate GetDeepCopy(Realestate realestate)
+    {
+        return new Realestate(
+            realestate.RealestateNum,
+            realestate.Description,
+            Position.GetDeepCopy(realestate.Pos1),
+            Position.GetDeepCopy(realestate.Pos2));
     }
 }

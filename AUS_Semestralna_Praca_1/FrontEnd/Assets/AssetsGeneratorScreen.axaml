@@ -1,0 +1,89 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AUS_Semestralna_Praca_1.FrontEnd.Assets.AssetsGeneratorScreen">
+    <Border Background="#2D2D2D" Margin="100" CornerRadius="20">
+
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical">
+            <TextBlock Text="Naplnenie systému náhodnými dátami"
+                       FontWeight="Bold" FontSize="32"
+                       HorizontalAlignment="Center"
+                       Margin="20 0 20 80" />
+
+
+            <TextBlock Text="Pravdepodobnosť duplicít"
+                       FontSize="20"
+                       HorizontalAlignment="Center"
+                       Margin="20" />
+
+            <NumericUpDown x:Name="ProbabilityOfDuplicates"
+                           Width="250"
+                           Minimum="0"
+                           Maximum="1"
+                           Value="0.1"
+                           Increment="0.1" />
+
+
+            <TextBlock Text="Počet prvkov"
+                       FontSize="20"
+                       HorizontalAlignment="Center"
+                       Margin="20" />
+
+            <NumericUpDown x:Name="ElementCount"
+                           Width="250"
+                           Minimum="1"
+                           Value="20"
+                           Increment="10" />
+
+
+            <TextBlock Text="Podiel nehnuteľností ku parcelám"
+                       FontSize="20"
+                       HorizontalAlignment="Center"
+                       Margin="20 40 20 0" />
+
+
+            <Grid Width="450" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Nehnuteľnosť"
+                           VerticalAlignment="Center"
+                           Grid.Column="0"
+                           Margin="0,0,10,0" />
+
+                <Slider x:Name="RealestateParcelSlider"
+                        Minimum="0"
+                        Maximum="1"
+                        Grid.Column="1"
+                        Value="0.5"
+                        HorizontalAlignment="Stretch" />
+
+                <TextBlock Text="Parcela"
+                           VerticalAlignment="Center"
+                           Grid.Column="2"
+                           Margin="10,0,0,0" />
+            </Grid>
+
+            <Button Content="Naplniť systém"
+                    FontWeight="Bold"
+                    Margin="10"
+                    Width="250"
+                    Height="50"
+                    FontSize="20"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="white"
+                    Foreground="black"
+                    CornerRadius="10"
+                    Click="OnFillUpSystemClicked" />
+        </StackPanel>
+
+    </Border>
+</UserControl>

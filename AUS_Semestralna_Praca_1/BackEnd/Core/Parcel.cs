@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 
@@ -5,7 +6,7 @@ namespace AUS_Semestralna_Praca_1.BackEnd.Core;
 
 public class Parcel : Asset
 {
-    public int ParcelNum { get; set; }// číslo parcely
+    public int ParcelNum { get; set; } // číslo parcely
     public string Description { get; set; } // popis
     public List<Realestate> Realestates { get; set; } = new(); // nehnuteľnosti
     public Position Pos1 { get; set; }
@@ -19,12 +20,23 @@ public class Parcel : Asset
         Pos2 = pPos2;
     }
 
+    public Parcel(Random random, Position pPos1, Position pPos2)
+    {
+        ParcelNum = Utils.GetRandomIntInRange(0, 10_000, random);
+        Description = Utils.GetNextStringValOfLentgth(10);
+        Pos1 = pPos1;
+        Pos2 = pPos2;
+    }
+
     public void AddRealestate(Realestate realestate)
     {
+        /*
         if (!Realestates.Contains(realestate))
         {
             Realestates.Add(realestate);
         }
+    */
+        Realestates.Add(realestate);
     }
 
     public override string ToString()
@@ -55,5 +67,14 @@ public class Parcel : Asset
     public void RemoveRealestate(Realestate realestate)
     {
         Realestates.Remove(realestate);
+    }
+
+    public static Parcel GetDeepCopy(Parcel parcel)
+    {
+        return new Parcel(
+            parcel.ParcelNum,
+            parcel.Description,
+            Position.GetDeepCopy(parcel.Pos1),
+            Position.GetDeepCopy(parcel.Pos2));
     }
 }

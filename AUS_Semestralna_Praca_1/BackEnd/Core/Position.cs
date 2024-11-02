@@ -31,6 +31,16 @@ public class Position : IKey
         Initialize(latitude, latitudeSign, longitude, longitudeSign);
     }
 
+    public Position(Random random)
+    {
+        double latitude = Utils.GetRandomDoubleInRange(Config.Instance.MinLatitude, Config.Instance.MaxLatitude, random);
+        char latitudeSign = random.NextDouble() < 0.5 ? 'N' : 'S';
+        double longitude = Utils.GetRandomDoubleInRange(Config.Instance.MinLatitude, Config.Instance.MaxLatitude, random);
+        char longitudeSign = random.NextDouble() < 0.5 ? 'E' : 'W';
+
+        Initialize(latitude, latitudeSign, longitude, longitudeSign);
+    }
+
     private void Initialize(double pLatitude, char pLatitudeSign, double pLongitude, char pLongitudeSign)
     {
         X = pLatitudeSign == 'W' ? -pLatitude : pLatitude;
@@ -103,5 +113,10 @@ public class Position : IKey
             return $"([{Math.Abs(latitude)}{latitudeSign}, {Math.Abs(longitude)}{longitudeSign}])";
         }
         return $"(UID:{uid}, [{Math.Abs(latitude)}{latitudeSign}, {Math.Abs(longitude)}{longitudeSign}])";
+    }
+
+    public static Position GetDeepCopy(Position realestatePos1)
+    {
+        return new(realestatePos1.Latitude, realestatePos1.LatitudeSign, realestatePos1.Longitude, realestatePos1.LongitudeSign);
     }
 }

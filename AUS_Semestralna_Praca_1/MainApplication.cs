@@ -246,11 +246,85 @@ public class MainApplication
 
     public void RemoveAsset(AssetData asset)
     {
-        Position pos1 = new(asset.Pos1Data.Latitude, asset.Pos1Data.LatitudeSign[0], asset.Pos1Data.Longitude, asset.Pos1Data.LongitudeSign[0]);
+        Position pos1 = new(asset.Pos1Data.Latitude, asset.Pos1Data.LatitudeSign[0], asset.Pos1Data.Longitude,
+            asset.Pos1Data.LongitudeSign[0]);
         pos1.Uid = asset.Pos1Data.Uid;
-        Position pos2 = new(asset.Pos2Data.Latitude, asset.Pos2Data.LatitudeSign[0], asset.Pos2Data.Longitude, asset.Pos2Data.LongitudeSign[0]);
+        Position pos2 = new(asset.Pos2Data.Latitude, asset.Pos2Data.LatitudeSign[0], asset.Pos2Data.Longitude,
+            asset.Pos2Data.LongitudeSign[0]);
         pos2.Uid = asset.Pos2Data.Uid;
 
         Core.RemoveAsset(pos1, pos2, asset.Type[0]);
+    }
+
+    public Answer FillUpSystem(double probabilityOfDuplicates, int elementCount, double realestateParcelRatio)
+    {
+        Random random = new();
+        List<Parcel> generatedParcels = new();
+        List<Realestate> generatedRealestates = new();
+
+        for (int i = 0; i < elementCount; i++)
+        {
+            Console.WriteLine($"{i + 1} / {elementCount}");
+            if (random.NextDouble() < realestateParcelRatio)
+            {
+                // generating new realestate
+                Realestate realestate;
+                Position pos1;
+                Position pos2;
+                if (random.NextDouble() < probabilityOfDuplicates && generatedRealestates.Count > 0)
+                {
+                    // adding a duplicate realestate
+                    int index = random.Next(0, generatedRealestates.Count);
+                    realestate = generatedRealestates[index];
+                    realestate = Realestate.GetDeepCopy(realestate);
+
+                    pos1 = realestate.Pos1;
+                    pos2 = realestate.Pos2;
+                }
+                else
+                {
+                    pos1 = new(random);
+                    pos2 = new(random);
+
+                    realestate = new(random, pos1, pos2);
+
+                    generatedRealestates.Add(realestate);
+                }
+
+                Core.AddAsset(pos1, pos2, realestate);
+            }
+            else
+            {
+                // generating new parcel
+                Parcel parcel;
+                Position pos1;
+                Position pos2;
+                if (random.NextDouble() < probabilityOfDuplicates && generatedParcels.Count > 0)
+                {
+                    // adding a duplicate realestate
+                    int index = random.Next(0, generatedParcels.Count);
+                    parcel = generatedParcels[index];
+                    parcel = Parcel.GetDeepCopy(parcel);
+
+                    pos1 = parcel.Pos1;
+                    pos2 = parcel.Pos2;
+                }
+                else
+                {
+                    pos1 = new(random);
+                    pos2 = new(random);
+
+                    parcel = new(random, pos1, pos2);
+
+                    generatedParcels.Add(parcel);
+                }
+
+                Core.AddAsset(pos1, pos2, parcel);
+            }
+        }
+
+        generatedParcels.Clear();
+        generatedRealestates.Clear();
+        return new Answer("OK", AnswerState.Ok);
     }
 }

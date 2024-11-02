@@ -1,3 +1,4 @@
+using AUS_Semestralna_Praca_1.FrontEnd.Assets;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -47,5 +48,10 @@ public partial class MainWindow : Window
     private void OnTesterClicked(object? sender, RoutedEventArgs e)
     {
         ContentArea.Content = new Testing.KdTreeTesterScreen(ContentArea);
+    }
+
+    private void OnSystemFillUpClicked(object? sender, RoutedEventArgs e)
+    {
+        ContentArea.Content = new AssetsGeneratorScreen(ContentArea);
     }
 }
