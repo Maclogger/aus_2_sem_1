@@ -50,6 +50,11 @@ public class Realestate : Asset
         ClientSys.AddToAttr(ref attr, "TYPE", "R");
     }
 
+    public override string ToString()
+    {
+        return $"[{Pos1}, {Pos2}]";
+    }
+
     public static Realestate GetDeepCopy(Realestate realestate)
     {
         return new Realestate(

@@ -237,8 +237,6 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         List<Node<K, T>> nodesToAddBack = new();
 
         nodesToRemove.Push(nodeToDelete);
-        Console.WriteLine($"{Program.counter2}:Removing node {nodeToDelete}");
-        Program.counter2++;
 
         do
         {
@@ -347,10 +345,7 @@ public class KdTree<K, T> : IEnumerable where K : IKey
     private void Swap(Node<K, T> node1, Node<K, T> node2)
     {
         // when swapping the same nodes
-        //if (node1 == node2) return;
-        Config.Instance.FormattedOutput = false;
-        Program.counter++;
-        Console.WriteLine($"{Program.counter}: Swapping {node1} and {node2}");
+        if (node1 == node2) return;
 
         if (node1.Father != null && node1.Father == node2.Father)
         {

@@ -267,7 +267,7 @@ public class MainApplication
         Position pos2;
         if (random.NextDouble() < probabilityOfOverlay && positions.Count >= 2)
         {
-            pos1 = positions[random.Next(0, positions.Count)];
+            pos1 = new(positions[random.Next(0, positions.Count)]);
         }
         else
         {
@@ -276,7 +276,7 @@ public class MainApplication
 
         if (random.NextDouble() < probabilityOfOverlay && positions.Count >= 2)
         {
-            pos2 = positions[random.Next(0, positions.Count)];
+            pos2 = new (positions[random.Next(0, positions.Count)]);
         }
         else
         {

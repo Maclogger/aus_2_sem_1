@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using System;
 using System.Collections.Generic;
+using AUS_Semestralna_Praca_1.BackEnd.Core;
 using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using AUS_Semestralna_Praca_1.FrontEnd;
@@ -47,41 +48,62 @@ partial class Program
         return data;
     }
 
-    public static int counter = 0;
-    public static int counter2 = 0;
     [STAThread]
     public static void Main(string[] args)
     {
-        MainApplication.Instance.FillUpSystem(1, 100, 0.5);
+        MainApplication.Instance.FillUpSystem(1, 100, 1);
+
+
+
+        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+    }
+
+    private static void FindingBug()
+    {
+        Console.WriteLine("A: " + MainApplication.Instance.AssetsCount);
+        Console.WriteLine("P: " + MainApplication.Instance.ParcelCount);
+        Console.WriteLine("R: " + MainApplication.Instance.RealestateCount);
 
         (_, List<string> parcelsStrings) = MainApplication.Instance.FindAllAssets('P');
         (_, List<string> realestatesString) = MainApplication.Instance.FindAllAssets('R');
+        Console.WriteLine(realestatesString.Count);
 
         List<AssetData> parcelData = Transform(parcelsStrings);
         List<AssetData> realestateData = Transform(realestatesString);
+        Console.WriteLine(realestateData.Count);
 
         foreach (AssetData data in parcelData)
         {
             MainApplication.Instance.RemoveAsset(data);
         }
 
+        int previousCount = MainApplication.Instance.RealestateCount;
         foreach (AssetData data in realestateData)
         {
+            Position posTest = new(-10.535476329054447, 'S', -58.653469397059396, 'E');
+            List<Realestate> found = MainApplication.Instance.Core.RealestatesTree.Find(posTest);
+            foreach (Realestate rlstmp in found)
+            {
+                Console.WriteLine(rlstmp);
+            }
+
+
             MainApplication.Instance.RemoveAsset(data);
+
+            //Console.WriteLine(
+             //   $"TUTO ZLE!!!!:{Program.counter} {previousCount} ... {MainApplication.Instance.RealestateCount}");
+            previousCount = MainApplication.Instance.RealestateCount;
         }
 
         Console.WriteLine("TU SME!!!!");
 
-        Console.WriteLine(MainApplication.Instance.AssetsCount);
-        Console.WriteLine(MainApplication.Instance.ParcelCount);
-        Console.WriteLine(MainApplication.Instance.RealestateCount);
+        Console.WriteLine("A: " + MainApplication.Instance.AssetsCount);
+        Console.WriteLine("P: " + MainApplication.Instance.ParcelCount);
+        Console.WriteLine("R: " + MainApplication.Instance.RealestateCount);
 
         MainApplication.Instance.FindAllAssets('P');
         MainApplication.Instance.FindAllAssets('R');
         MainApplication.Instance.FindAllAssets('A');
-
-
-        //BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
 
 

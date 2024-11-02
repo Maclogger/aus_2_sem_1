@@ -43,6 +43,11 @@ public class Position : IKey
         Initialize(latitude, latitudeSign, longitude, longitudeSign);
     }
 
+    public Position(Position other)
+    {
+        Initialize(other.Latitude, other.LatitudeSign, other.Longitude, other.LongitudeSign);
+    }
+
     private void Initialize(double pLatitude, char pLatitudeSign, double pLongitude, char pLongitudeSign)
     {
         X = pLatitudeSign == 'W' ? -pLatitude : pLatitude;
