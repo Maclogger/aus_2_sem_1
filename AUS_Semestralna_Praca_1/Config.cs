@@ -35,6 +35,8 @@ public class Config
     public bool UidPrint { get; set; } = true; // TODO change to false
     public char SeparatorInCSV { get; set; } = ',';
 
+    public int TimesSaved { get; set; } = 0;
+
     private Config()
     {
     }

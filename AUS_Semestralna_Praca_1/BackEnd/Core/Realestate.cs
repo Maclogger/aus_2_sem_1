@@ -13,6 +13,7 @@ public class Realestate : Asset
     public List<Parcel> Parcels { get; set; } = new(); // parcely
     public Position Pos1 { get; set; }
     public Position Pos2 { get; set; }
+    public int NumberOfSaves { get; set; } = 0;
 
     public Realestate(int pRealestateNum, string pDescription, Position pPos1, Position pPos2)
     {

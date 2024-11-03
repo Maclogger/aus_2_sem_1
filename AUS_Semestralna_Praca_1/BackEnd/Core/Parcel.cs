@@ -14,6 +14,8 @@ public class Parcel : Asset
     public Position Pos1 { get; set; }
     public Position Pos2 { get; set; }
 
+    public int NumberOfSaves { get; set; } = 0;
+
     public Parcel(int pParcelNum, string pDescription, Position pPos1, Position pPos2)
     {
         ParcelNum = pParcelNum;

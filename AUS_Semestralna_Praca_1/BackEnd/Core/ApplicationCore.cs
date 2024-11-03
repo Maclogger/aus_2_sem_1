@@ -321,25 +321,26 @@ public class ApplicationCore
     public void SaveSystem(CsvWriter writer)
     {
         writer.Write("počet parciel (vrcholov)", ParcelsCount);
-        List<Parcel> tempParcel = new(ParcelsCount);
         foreach (Parcel parcel in ParcelsTree.LevelOrder())
         {
-            if (!tempParcel.Contains(parcel))
+            if (parcel.NumberOfSaves == Config.Instance.TimesSaved)
             {
                 parcel.Save(writer);
-                tempParcel.Add(parcel);
+                parcel.NumberOfSaves++;
             }
         }
+
         writer.Write("počet nehnuteľností (vrcholov)", RealestatesCount);
-        List<Realestate> tempRealestate = new(ParcelsCount);
         foreach (Realestate realestate in RealestatesTree.LevelOrder())
         {
-            if (!tempRealestate.Contains(realestate))
+            if (realestate.NumberOfSaves == Config.Instance.TimesSaved)
             {
                 realestate.Save(writer);
-                tempRealestate.Add(realestate);
+                realestate.NumberOfSaves++;
             }
         }
+
+        Config.Instance.TimesSaved++;
     }
 
     public void LoadSystem(CsvReader reader)
@@ -350,6 +351,7 @@ public class ApplicationCore
             Parcel parcel = Parcel.Load(reader);
             AddAsset(parcel.Pos1, parcel.Pos2, parcel);
         }
+
         int realestateCount = reader.ReadInt();
         for (int i = 0; i < realestateCount; i++)
         {
