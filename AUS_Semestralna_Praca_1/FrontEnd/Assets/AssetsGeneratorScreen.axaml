@@ -51,7 +51,7 @@
                     <ColumnDefinition Width="100" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Nehnuteľnosť"
+                <TextBlock Text="Parcela"
                            VerticalAlignment="Center"
                            Grid.Column="0"
                            Margin="0,0,10,0" />
@@ -63,7 +63,7 @@
                         Value="0.5"
                         HorizontalAlignment="Stretch" />
 
-                <TextBlock Text="Parcela"
+                <TextBlock Text="Nehnuteľnosť"
                            VerticalAlignment="Center"
                            Grid.Column="2"
                            Margin="10,0,0,0" />
