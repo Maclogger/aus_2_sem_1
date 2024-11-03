@@ -132,9 +132,6 @@ public partial class AssetsScreenList : UserControl
         if (sender is Button button && button.CommandParameter is AssetData asset)
         {
             _contentArea.Content = new EditSpecAssetScreen(asset, _contentArea);
-            Console.WriteLine("Okej");
         }
-
-        Console.WriteLine("aha");
     }
 }

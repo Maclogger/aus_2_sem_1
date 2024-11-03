@@ -108,7 +108,7 @@ public class MainApplication
         }
         catch (Exception e)
         {
-            return (new Answer("Some of the attributes are missing or invalid.", AnswerState.Error),
+            return (new Answer($"Some of the attributes are missing or invalid. {e.Message}", AnswerState.Error),
                 new List<string>());
         }
 

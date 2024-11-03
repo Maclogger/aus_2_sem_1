@@ -35,11 +35,10 @@ public class Position : IKey
 
     public Position(Random random)
     {
-        double latitude =
-            Utils.GetRandomDoubleInRange(Config.Instance.MinLatitude, Config.Instance.MaxLatitude, random);
+        double latitude = Utils.GetRandomDoubleInRange(Config.Instance.MinLatitudeAbs, Config.Instance.MaxLatitudeAbs, random);
         char latitudeSign = random.NextDouble() < 0.5 ? 'N' : 'S';
         double longitude =
-            Utils.GetRandomDoubleInRange(Config.Instance.MinLatitude, Config.Instance.MaxLatitude, random);
+            Utils.GetRandomDoubleInRange(Config.Instance.MinLatitudeAbs, Config.Instance.MaxLatitudeAbs, random);
         char longitudeSign = random.NextDouble() < 0.5 ? 'E' : 'W';
 
         Initialize(latitude, latitudeSign, longitude, longitudeSign);
@@ -53,9 +52,9 @@ public class Position : IKey
 
     private void Initialize(double pLatitude, char pLatitudeSign, double pLongitude, char pLongitudeSign)
     {
-        X = pLatitudeSign == 'W' ? -pLatitude : pLatitude;
+        X = pLatitudeSign == 'S' ? -pLatitude : pLatitude;
 
-        Y = pLongitudeSign == 'S' ? -pLongitude : pLongitude;
+        Y = pLongitudeSign == 'W' ? -pLongitude : pLongitude;
 
         Latitude = pLatitude;
         LatitudeSign = pLatitudeSign;
