@@ -320,137 +320,41 @@ public class ApplicationCore
 
     public void SaveSystem(CsvWriter writer)
     {
-        // saving positions
-        Position[] positions = new Position[AssetsTree.Size];
-
-        writer.Write("asset_tree_count", AssetsTree.Size);
-        foreach ((Position position, Asset asset) in AssetsTree.LevelOrderEntries())
+        writer.Write("počet parciel (vrcholov)", ParcelsCount);
+        List<Parcel> tempParcel = new(ParcelsCount);
+        foreach (Parcel parcel in ParcelsTree.LevelOrder())
         {
-            positions[(int)position.Uid!] = position;
-            position.Save(writer);
-        }
-
-
-        foreach ((Position position, Asset asset) in AssetsTree.LevelOrderEntries())
-        {
-            asset.Save(writer);
-        }
-
-        // writing the tree
-        writer.Write("asset_tree_size", AssetsTree.Size);
-        foreach ((Position? position, Asset? asset) in AssetsTree.LevelSaveOrder())
-        {
-            if (position == null || asset == null)
+            if (!tempParcel.Contains(parcel))
             {
-                writer.Write("is_node", false);
-            }
-            else
-            {
-                writer.Write("is_node", true);
-                writer.Write("position_uid_of_node", (int)position.Uid!);
-                if (asset is Parcel parcel)
-                {
-                    writer.Write("is_parcel", true);
-                    writer.Write("parcel_index", parcel.Index);
-                }
-                else if (asset is Realestate realestate)
-                {
-
-                    writer.Write("is_parcel", false);
-                    writer.Write("realestate_index", realestate.Index);
-                }
+                parcel.Save(writer);
+                tempParcel.Add(parcel);
             }
         }
-
-        writer.Write("parcels_tree_size", ParcelsTree.Size);
-        foreach ((Position? position, Parcel? parcel) in ParcelsTree.LevelSaveOrder())
+        writer.Write("počet nehnuteľností (vrcholov)", RealestatesCount);
+        List<Realestate> tempRealestate = new(ParcelsCount);
+        foreach (Realestate realestate in RealestatesTree.LevelOrder())
         {
-            if (position == null || parcel == null)
+            if (!tempRealestate.Contains(realestate))
             {
-                writer.Write("is_node", false);
-            }
-            else
-            {
-                writer.Write("is_node", true);
-                writer.Write("pos_uid", (int)position.Uid!);
-                writer.Write("parcel_index", parcel.Index);
-            }
-        }
-
-        writer.Write("realestate_tree_size", RealestatesTree.Size);
-        foreach ((Position? position, Realestate? realestate) in RealestatesTree.LevelSaveOrder())
-        {
-            if (position == null || realestate == null)
-            {
-                writer.Write("is_node", false);
-            }
-            else
-            {
-                writer.Write("is_node", true);
-                writer.Write("pos_uid", (int)position.Uid!);
-                writer.Write("realestate_index", realestate.Index);
+                realestate.Save(writer);
+                tempRealestate.Add(realestate);
             }
         }
     }
 
     public void LoadSystem(CsvReader reader)
     {
-        int positionsCount = reader.ReadInt();
-        Position[] positions = new Position[positionsCount];
-        for (int i = 0; i < positionsCount; i++)
+        int parcelCount = reader.ReadInt();
+        for (int i = 0; i < parcelCount; i++)
         {
-            Position position = Position.Load(reader);
-            positions[(int)position.Uid!] = position;
+            Parcel parcel = Parcel.Load(reader);
+            AddAsset(parcel.Pos1, parcel.Pos2, parcel);
         }
-
-        Asset[] assets = new Asset[positionsCount];
-        for (int i = 0; i < positionsCount; i++)
+        int realestateCount = reader.ReadInt();
+        for (int i = 0; i < realestateCount; i++)
         {
-            Asset asset = Asset.Load(reader, positions);
-            if (asset is Parcel parcel)
-            {
-                assets[parcel.Index] = parcel;
-            }  else if (asset is Realestate realestate)
-            {
-                assets[realestate.Index] = realestate;
-            }
-        }
-
-        // linking exact instances of other realestates
-        foreach (Asset asset in assets)
-        {
-            if (asset is Parcel parcel)
-            {
-                foreach (int neighbour in parcel.Neighbours)
-                {
-                    parcel.Realestates.Add((Realestate)assets[neighbour]);
-                }
-            }  else if (asset is Realestate realestate)
-            {
-                foreach (int neighbour in realestate.Neighbours)
-                {
-                    realestate.Parcels.Add((Parcel)assets[neighbour]);
-                }
-            }
-        }
-
-        for (var index = 0; index < positions.Length; index++)
-        {
-            var position = positions[index];
-            Console.WriteLine($"{index}: {position}");
-        }
-
-        for (var index = 0; index < assets.Length; index++)
-        {
-            var asset = assets[index];
-            Console.WriteLine($"{index}: {asset}");
-        }
-
-        int assetsCount = reader.ReadInt();
-        for (int i = 0; i < assetsCount; i++)
-        {
-
-
+            Realestate realestates = Realestate.Load(reader);
+            AddAsset(realestates.Pos1, realestates.Pos2, realestates);
         }
     }
 }

@@ -523,31 +523,4 @@ public class KdTree<K, T> : IEnumerable where K : IKey
 
         Console.WriteLine(sol);
     }
-
-    public IEnumerable<(K?, T?)> LevelSaveOrder()
-    {
-        Queue<Node<K, T>?> queue = new();
-
-        if (_root != null)
-        {
-            queue.Enqueue(_root);
-        }
-
-        int count = 0;
-        while (count < _size)
-        {
-            Node<K, T>? currentNode = queue.Dequeue()!;
-            if (currentNode != null)
-            {
-                count++;
-                yield return (currentNode.Key, currentNode.Data);
-                queue.Enqueue(currentNode.LeftChild);
-                queue.Enqueue(currentNode.RightChild);
-            }
-            else
-            {
-                yield return (default, default);
-            }
-        }
-    }
 }

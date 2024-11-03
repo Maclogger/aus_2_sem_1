@@ -136,13 +136,11 @@ public class Position : IKey
         writer.Write("latitude_sign", LatitudeSign);
         writer.Write("longitude", Longitude);
         writer.Write("longitude_sign", LongitudeSign);
-        writer.Write("uid", Uid ?? -1);
     }
 
     public static Position Load(CsvReader reader)
     {
         Position position = new(reader.ReadDouble(), reader.ReadChar(), reader.ReadDouble(), reader.ReadChar());
-        position.Uid = reader.ReadInt();
         return position;
     }
 }

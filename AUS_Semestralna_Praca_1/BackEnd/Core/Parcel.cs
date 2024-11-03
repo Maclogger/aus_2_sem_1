@@ -13,9 +13,6 @@ public class Parcel : Asset
     public List<Realestate> Realestates { get; set; } = new(); // nehnuteľnosti
     public Position Pos1 { get; set; }
     public Position Pos2 { get; set; }
-    public int Index { get; set; } = Utils.GetNextIndex();
-
-    public int[] Neighbours { get; set; }
 
     public Parcel(int pParcelNum, string pDescription, Position pPos1, Position pPos2)
     {
@@ -81,43 +78,16 @@ public class Parcel : Asset
     }
 
 
-    public override void Save(CsvWriter writer)
+    public void Save(CsvWriter writer)
     {
-        writer.Write("type", 'P');
-        writer.Write("parcel_index", Index);
         writer.Write("parcel_num", ParcelNum);
         writer.Write("description", Description);
-        writer.Write("pos_1_uid", (int)Pos1.Uid!);
-        writer.Write("pos_2_uid", (int)Pos2.Uid!);
-        writer.Write("count_of_neighbours_realestates", Realestates.Count);
-
-        for (var i = 0; i < Realestates.Count; i++)
-        {
-            var realestate = Realestates[i];
-            writer.Write($"realestate_{i}", realestate.Index);
-        }
+        Pos1.Save(writer);
+        Pos2.Save(writer);
     }
 
-    public static Parcel Load(CsvReader reader, Position[] positions)
+    public static Parcel Load(CsvReader reader)
     {
-        int index = reader.ReadInt();
-        int parcelNum = reader.ReadInt();
-        string description = reader.ReadString();
-        Position pos1 = positions[reader.ReadInt()];
-        Position pos2 = positions[reader.ReadInt()];
-
-        Parcel parcel = new Parcel(parcelNum, description, pos1, pos2);
-        parcel.Index = index;
-
-        int realestateCount = reader.ReadInt();
-        int[] neighbours = new int[realestateCount];
-        for (int i = 0; i < realestateCount; i++)
-        {
-            neighbours[i] = reader.ReadInt();
-        }
-
-        parcel.Neighbours = neighbours;
-
-        return parcel;
+        return new Parcel(reader.ReadInt(), reader.ReadString(), Position.Load(reader), Position.Load(reader));
     }
 }

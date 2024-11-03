@@ -13,9 +13,6 @@ public class Realestate : Asset
     public List<Parcel> Parcels { get; set; } = new(); // parcely
     public Position Pos1 { get; set; }
     public Position Pos2 { get; set; }
-    public int Index { get; set; } = Utils.GetNextIndex();
-
-    public int[] Neighbours { get; set; }
 
     public Realestate(int pRealestateNum, string pDescription, Position pPos1, Position pPos2)
     {
@@ -69,43 +66,16 @@ public class Realestate : Asset
             Position.GetDeepCopy(realestate.Pos2));
     }
 
-    public override void Save(CsvWriter writer)
+    public void Save(CsvWriter writer)
     {
-        writer.Write("type", 'R');
-        writer.Write("realestate_index", Index);
         writer.Write("realestate_num", RealestateNum);
         writer.Write("description", Description);
-        writer.Write("pos_1_uid", (int)Pos1.Uid!);
-        writer.Write("pos_2_uid", (int)Pos2.Uid!);
-
-        writer.Write("count_of_neighbours_parcels", Parcels.Count);
-        for (var i = 0; i < Parcels.Count; i++)
-        {
-            var parcel = Parcels[i];
-            writer.Write($"parcel_{i}", parcel.Index);
-        }
+        Pos1.Save(writer);
+        Pos2.Save(writer);
     }
 
-    public static Realestate Load(CsvReader reader, Position[] positions)
+    public static Realestate Load(CsvReader reader)
     {
-        int index = reader.ReadInt();
-        int parcelNum = reader.ReadInt();
-        string description = reader.ReadString();
-        Position pos1 = positions[reader.ReadInt()];
-        Position pos2 = positions[reader.ReadInt()];
-
-        Realestate realestate = new Realestate(parcelNum, description, pos1, pos2);
-        realestate.Index = index;
-
-        int parcelCount = reader.ReadInt();
-        int[] neighbours = new int[parcelCount];
-        for (int i = 0; i < parcelCount; i++)
-        {
-            neighbours[i] = reader.ReadInt();
-        }
-
-        realestate.Neighbours = neighbours;
-
-        return realestate;
+        return new Realestate(reader.ReadInt(), reader.ReadString(), Position.Load(reader), Position.Load(reader));
     }
 }
