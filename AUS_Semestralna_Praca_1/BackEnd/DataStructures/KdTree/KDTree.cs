@@ -385,14 +385,20 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         else if (node2.Key.Equals(_root.Key)) _root = node1;
     }
 
-    public void Update(K key, T newData)
+    public void Update(K oldKey, K newKey, T newData)
     {
-        Node<K, T>? node = FindNode(key);
-
-        // the node doesn't exist
-        if (node == null) return;
-
-        node.Data = newData;
+        if (oldKey.Equals(newKey))
+        {
+            Node<K, T>? node = FindNode(oldKey);
+            if (node == null)
+            {
+                return;
+            }
+            node.Data = newData;
+            return;
+        }
+        Remove(oldKey);
+        Add(newKey, newData);
     }
 
     // ---------------------------------------------------

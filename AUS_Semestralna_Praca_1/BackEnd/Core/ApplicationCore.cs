@@ -21,6 +21,7 @@ public class ApplicationCore
     public KdTree<Position, Asset> AssetsTree { get; set; } = new(2);
 
 
+
     public int ParcelsCount { get; set; } = 0;
     public int RealestatesCount { get; set; } = 0;
     public int AssetsCount { get; set; } = 0;
@@ -109,10 +110,8 @@ public class ApplicationCore
     }
 
 
-    public void RunSimTest(TextBlock block)
-    {
-        // TODO SimulationTester.RunSimTests();
-    }
+
+
 
     public Tuple<Answer, List<Asset>> FindAssets(Position pos, char sign)
     {

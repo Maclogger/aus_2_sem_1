@@ -1,3 +1,4 @@
+/*
 using System;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
@@ -70,3 +71,4 @@ public class Cord : IKey
         return X == cord.X && Y == cord.Y && Uid == cord.Uid;
     }
 }
+*/

@@ -87,6 +87,11 @@
                 <TextBlock Text="Počet prvkov v strome pred testom" />
                 <NumericUpDown Minimum="0"
                                Increment="1" Value="{Binding ElementCountBeforeTest, Source={x:Static local:Config.Instance}}" />
+
+                <TextBlock Text="Po koľkých operáciách sa má vykonať veľká kontrola" />
+                <NumericUpDown Minimum="1"
+                               Increment="10" Value="{Binding CheckAfterOperationCount, Source={x:Static local:Config.Instance}}" />
+
             </StackPanel>
         </Border>
     </ScrollViewer>

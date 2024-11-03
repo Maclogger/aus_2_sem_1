@@ -11,15 +11,23 @@ public partial class KdTreeTesterScreen : UserControl
     {
         _contentArea = contentArea;
         InitializeComponent();
+        TreeSizeBlockCount.Text = MainApplication.Instance.TestTree!.Size.ToString();
     }
 
-    private void OnRun4DTestClicked(object? sender, RoutedEventArgs e)
+    private void OnRunTestClicked(object? sender, RoutedEventArgs e)
     {
-        MainApplication.Instance.RunTest(MyTextBlock);
+        MainApplication.Instance.RunSimTest(MyTextBlock);
+        TreeSizeBlockCount.Text = MainApplication.Instance.TestTree!.Size.ToString();
     }
 
     private void OnPrintTreeClicked(object? sender, RoutedEventArgs e)
     {
-        // TODO MainApplication.Instance.PrintOut4DTree(MyTextBlock);
+        MainApplication.Instance.PrintTestTree(MyTextBlock);
+    }
+
+    private void OnFillUpTestTreeClicked(object? sender, RoutedEventArgs e)
+    {
+        MainApplication.Instance.PrepareTestTree();
+        TreeSizeBlockCount.Text = MainApplication.Instance.TestTree!.Size.ToString();
     }
 }

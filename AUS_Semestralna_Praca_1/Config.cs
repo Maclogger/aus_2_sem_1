@@ -18,7 +18,7 @@ public class Config
 
     // testing KdTree structure:
     public double ProbOfAdd { get; set; } = 0.25;
-    public double ProbOfFind { get; set; } = 1.25;
+    public double ProbOfFind { get; set; } = 0.25;
     public double ProbOfRemove { get; set; } = 0.25;
     public double ProbOfUpdate { get; set; } = 0.25;
 
@@ -30,9 +30,8 @@ public class Config
     public int Seed { get; set; } = 1;
     public int SeedCount { get; set; } = 100;
     public int OperationCount { get; set; } = 100;
-    public int ElementCountBeforeTest { get; set; } = 0;
-    public int CheckAfterOperationCount { get; set; } = 100;
-    public bool UidPrint { get; set; } = true; // TODO change to false
+    public int ElementCountBeforeTest { get; set; } = 20_000;
+    public int CheckAfterOperationCount { get; set; } = 1;
     public char SeparatorInCSV { get; set; } = ',';
 
     public int TimesSaved { get; set; } = 0;

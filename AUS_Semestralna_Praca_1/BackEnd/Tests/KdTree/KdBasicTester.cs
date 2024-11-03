@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
@@ -338,7 +338,7 @@ public class KdBasicTester
 
         Console.WriteLine("ok");
     }
-    */
+    #1#
 
     /*
     public static void SwapTest()
@@ -395,7 +395,7 @@ public class KdBasicTester
             ], new Cord(20, 33), new Cord(25, 36)
         );
     }
-    */
+    #1#
 
     /*private static void TestSwapUni(List<string> expected, Cord cord1, Cord cord2)
     {
@@ -410,7 +410,7 @@ public class KdBasicTester
         }
 
         CollectionAssert.AreEqual(expected, actual);
-    }*/
+    }#1#
 
     private static KdTree<MyIntKey, int> SetUpRandomIntTree(int pCount, int pMin, int pMax)
     {
@@ -663,6 +663,6 @@ public class KdBasicTester
         {
             Console.WriteLine(s);
         }
-    */
+    #1#
     }
-}
+}*/

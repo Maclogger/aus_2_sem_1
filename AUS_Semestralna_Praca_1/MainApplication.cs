@@ -7,6 +7,7 @@ using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 using AUS_Semestralna_Praca_1.BackEnd.Files;
+using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree;
 using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree.Keys;
 using AUS_Semestralna_Praca_1.FrontEnd.Assets;
 using Avalonia.Controls;
@@ -22,8 +23,9 @@ public class MainApplication
 
     public ApplicationCore Core { get; set; }
 
-    private KdTree<Key4D, int> _kdTestTree = new(4);
-    private KdTree<Key4D, int> _kdTestCordTree = new(2);
+
+    public KdTree<TestKey, Cord>? TestTree { get; set; } = new(2);
+    public List<TestKey>? ExpectedInTree { get; set; }
 
 
     private MainApplication()
@@ -161,12 +163,6 @@ public class MainApplication
         }
 
         return (answer, sol);
-    }
-
-
-    public void RunTest(TextBlock block)
-    {
-        Core.RunSimTest(block);
     }
 
     public (Answer answer, List<string> assets) FindAssets(string posAttr1, string posAttr2)
@@ -370,5 +366,24 @@ public class MainApplication
         }
 
         Core.LoadSystem(reader);
+    }
+
+    public void RunSimTest(TextBlock block)
+    {
+        SimulationTester.RunSimTests(TestTree!, ExpectedInTree!, block);
+    }
+
+    public void PrepareTestTree()
+    {
+        (TestTree, ExpectedInTree) = SimulationTester.CreateTestTree();
+    }
+
+    public void PrintTestTree(TextBlock myTextBlock)
+    {
+        myTextBlock.Text = "";
+        foreach ((TestKey testKey, Cord cord) in TestTree!.LevelOrderEntries())
+        {
+            myTextBlock.Text += $"{testKey}: {cord}\n";
+        }
     }
 }
