@@ -79,6 +79,17 @@
                         Foreground="Black"
                         FontWeight="DemiBold" />
 
+                <Button Content="Súbory"
+                        Background="White"
+                        Click="OnFileSystemClicked"
+                        Height="50"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Width="190"
+                        Margin="5"
+                        Foreground="Black"
+                        FontWeight="DemiBold" />
+
                 <TextBlock Height="40"></TextBlock>
 
 

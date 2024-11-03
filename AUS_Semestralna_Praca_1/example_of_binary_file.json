@@ -1,0 +1,73 @@
+{
+  "verzia": "1.0",
+  "počet pozícií": 24,
+  "pole_pozícií": [
+    {
+      "latitude": 14.2,
+      "latitude_sign": "S",
+      "longitude": 0.4,
+      "longitude_sign": "E",
+      "uid": 1
+    },
+    {
+      "latitude": 12.2,
+      "latitude_sign": "S",
+      "longitude": 2.4,
+      "longitude_sign": "E",
+      "uid": 2
+    }
+  ],
+  "počet_assetov": 24,
+  "pole_assetov": [
+    {
+      "typ": "P",
+      "index": 1,
+      "num": 1,
+      "description": "toto je parcela",
+      "pos1_UID": 1,
+      "pos2_UID": 2
+    }
+  ],
+  "počet assetov v strome": 24,
+  "pole_assetov": [
+    {
+      "is_not_null": true,
+      "pos_UID": 1,
+      "is_parcel": true,
+      "parcel_index": 1
+    },
+    {
+      "is_not_null": true,
+      "pos_UID": 2,
+      "is_parcel": false,
+      "realestate_index": 1
+    },
+    {
+      "is_not_null": false
+    }
+  ],
+  "počet parciel": 12,
+  "pole_parciel": [
+    {
+      "is_not_null": true,
+      "position": 1,
+      "uid": 1,
+      "parcel_index": 1
+    },
+    {
+      "is_not_null": false
+    }
+  ],
+  "počet nehnuteľností": 1,
+  "pole_nehnutelnosti": [
+    {
+      "is_not_null": true,
+      "position": 1,
+      "uid": 1,
+      "nehnutelnost_index": 1
+    },
+    {
+      "is_not_null": false
+    }
+  ]
+}

@@ -67,4 +67,5 @@ public class Config
         get => Math.Max(Math.Abs(MaxLongitude), Math.Abs(MinLongitude));
     }
 
+    public string Version { get; set; } = "1.0";
 }

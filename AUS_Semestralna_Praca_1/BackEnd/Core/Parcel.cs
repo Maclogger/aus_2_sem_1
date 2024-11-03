@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.Core;
@@ -11,6 +12,7 @@ public class Parcel : Asset
     public List<Realestate> Realestates { get; set; } = new(); // nehnuteľnosti
     public Position Pos1 { get; set; }
     public Position Pos2 { get; set; }
+    public int Index { get; set; } = Utils.GetNextIndex();
 
     public Parcel(int pParcelNum, string pDescription, Position pPos1, Position pPos2)
     {
@@ -73,5 +75,29 @@ public class Parcel : Asset
             parcel.Description,
             Position.GetDeepCopy(parcel.Pos1),
             Position.GetDeepCopy(parcel.Pos2));
+    }
+
+
+    public override void Save(BinaryWriter binaryWriter)
+    {
+        binaryWriter.Write('P');
+        binaryWriter.Write(Index);
+        binaryWriter.Write(ParcelNum);
+        binaryWriter.Write(Description);
+        binaryWriter.Write((int)Pos1.Uid!);
+        binaryWriter.Write((int)Pos2.Uid!);
+    }
+
+    public static Parcel Load(BinaryReader reader, Position[] positions)
+    {
+        int index = reader.ReadInt32();
+        int parcelNum = reader.ReadInt32();
+        string description = reader.ReadString();
+        Position pos1 = positions[reader.ReadInt32()];
+        Position pos2 = positions[reader.ReadInt32()];
+
+        Parcel parcel = new Parcel(parcelNum, description, pos1, pos2);
+        parcel.Index = index;
+        return parcel;
     }
 }

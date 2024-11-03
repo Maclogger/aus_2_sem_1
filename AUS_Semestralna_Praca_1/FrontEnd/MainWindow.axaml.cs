@@ -1,4 +1,5 @@
 using AUS_Semestralna_Praca_1.FrontEnd.Assets;
+using AUS_Semestralna_Praca_1.FrontEnd.Files;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -53,5 +54,10 @@ public partial class MainWindow : Window
     private void OnSystemFillUpClicked(object? sender, RoutedEventArgs e)
     {
         ContentArea.Content = new AssetsGeneratorScreen(ContentArea);
+    }
+
+    private void OnFileSystemClicked(object? sender, RoutedEventArgs e)
+    {
+        ContentArea.Content = new FileSystemScreen(ContentArea);
     }
 }

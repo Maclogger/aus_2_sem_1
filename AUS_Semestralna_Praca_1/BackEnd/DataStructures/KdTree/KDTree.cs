@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using AUS_Semestralna_Praca_1.BackEnd.Core;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 
@@ -384,9 +385,9 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         else if (node2.Key.Equals(_root.Key)) _root = node1;
     }
 
-    public void Update(K oldKey, T newData)
+    public void Update(K key, T newData)
     {
-        Node<K, T>? node = FindNode(oldKey);
+        Node<K, T>? node = FindNode(key);
 
         // the node doesn't exist
         if (node == null) return;
@@ -418,6 +419,14 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         foreach (Node<K, T> node in LevelOrderImpl())
         {
             yield return node.Data;
+        }
+    }
+
+    public IEnumerable<(K, T)> LevelOrderEntries()
+    {
+        foreach (Node<K, T> node in LevelOrderImpl())
+        {
+            yield return (node.Key, node.Data);
         }
     }
 
@@ -513,5 +522,32 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         }
 
         Console.WriteLine(sol);
+    }
+
+    public IEnumerable<(K?, T?)> LevelSaveOrder()
+    {
+        Queue<Node<K, T>?> queue = new();
+
+        if (_root != null)
+        {
+            queue.Enqueue(_root);
+        }
+
+        int count = 0;
+        while (count < _size)
+        {
+            Node<K, T>? currentNode = queue.Dequeue()!;
+            if (currentNode != null)
+            {
+                count++;
+                yield return (currentNode.Key, currentNode.Data);
+                queue.Enqueue(currentNode.LeftChild);
+                queue.Enqueue(currentNode.RightChild);
+            }
+            else
+            {
+                yield return (default, default);
+            }
+        }
     }
 }

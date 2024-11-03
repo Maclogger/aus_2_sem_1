@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree;
@@ -314,5 +315,117 @@ public class ApplicationCore
         }
 
         return new Answer("OK", AnswerState.Ok);
+    }
+
+    public void SaveSystem(BinaryWriter binaryWriter)
+    {
+        // saving positions
+        Position[] positions = new Position[AssetsCount * 2];
+
+        binaryWriter.Write(AssetsCount);
+        foreach ((Position position, Asset asset) in AssetsTree.LevelOrderEntries())
+        {
+            positions[(int)position.Uid!] = position;
+            position.Save(binaryWriter);
+        }
+
+
+        foreach ((Position position, Asset asset) in AssetsTree.LevelOrderEntries())
+        {
+            asset.Save(binaryWriter);
+        }
+
+        // writing the tree
+        binaryWriter.Write(AssetsTree.Size);
+        foreach ((Position? position, Asset? asset) in AssetsTree.LevelSaveOrder())
+        {
+            if (position == null || asset == null)
+            {
+                binaryWriter.Write(false);
+            }
+            else
+            {
+                binaryWriter.Write(true);
+                binaryWriter.Write((int)position.Uid!);
+                if (asset is Parcel parcel)
+                {
+                    binaryWriter.Write(true);
+                    binaryWriter.Write(parcel.Index);
+                }
+                else if (asset is Realestate realestate)
+                {
+
+                    binaryWriter.Write(false);
+                    binaryWriter.Write(realestate.Index);
+                }
+            }
+        }
+
+        binaryWriter.Write(ParcelsCount);
+        foreach ((Position? position, Parcel? parcel) in ParcelsTree.LevelSaveOrder())
+        {
+            if (position == null || parcel == null)
+            {
+                binaryWriter.Write(false);
+            }
+            else
+            {
+                binaryWriter.Write(true);
+                binaryWriter.Write((int)position.Uid!);
+                binaryWriter.Write(parcel.Index);
+            }
+        }
+
+        binaryWriter.Write(RealestatesCount);
+        foreach ((Position? position, Realestate? realestate) in RealestatesTree.LevelSaveOrder())
+        {
+            if (position == null || realestate == null)
+            {
+                binaryWriter.Write(false);
+            }
+            else
+            {
+                binaryWriter.Write(true);
+                binaryWriter.Write((int)position.Uid!);
+                binaryWriter.Write(realestate.Index);
+            }
+        }
+    }
+
+    public void LoadSystem(BinaryReader reader)
+    {
+        Position[] positions = new Position[AssetsCount * 2];
+        int positionsCount = reader.ReadInt32();
+        for (int i = 0; i < positionsCount; i++)
+        {
+            Position position = Position.Load(reader);
+            positions[(int)position.Uid!] = position;
+        }
+
+        int assetsCount = reader.ReadInt32();
+        Asset[] assets = new Asset[assetsCount];
+        for (int i = 0; i < assetsCount; i++)
+        {
+            Asset asset = Asset.Load(reader, positions);
+            if (asset is Parcel parcel)
+            {
+                assets[parcel.Index] = parcel;
+            }  else if (asset is Realestate realestate)
+            {
+                assets[realestate.Index] = realestate;
+            }
+        }
+
+        assetsCount = reader.ReadInt32();
+        for (int i = 0; i < assetsCount; i++)
+        {
+
+
+        }
+
+
+
+
+
     }
 }

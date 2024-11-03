@@ -6,6 +6,7 @@ public class Utils
 {
     private static readonly Random RandomInstance = new Random();
     private static int Uid = 0;
+    private static int Index = 0;
     private static int StringUid = 0;
     private const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -55,6 +56,13 @@ public class Utils
         int currentUid = Uid;
         Uid++;
         return currentUid;
+    }
+    
+    public static int GetNextIndex()
+    {
+        int currentIndex = Index;
+        Index++;
+        return currentIndex;
     }
 
     public static int GetNextStringVal()

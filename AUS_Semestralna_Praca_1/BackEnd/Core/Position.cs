@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 
@@ -47,6 +48,7 @@ public class Position : IKey
     {
         Initialize(other.Latitude, other.LatitudeSign, other.Longitude, other.LongitudeSign);
     }
+
 
     private void Initialize(double pLatitude, char pLatitudeSign, double pLongitude, char pLongitudeSign)
     {
@@ -125,5 +127,21 @@ public class Position : IKey
     {
         return new(realestatePos1.Latitude, realestatePos1.LatitudeSign, realestatePos1.Longitude,
             realestatePos1.LongitudeSign);
+    }
+
+    public void Save(BinaryWriter binaryWriter)
+    {
+        binaryWriter.Write(Latitude);
+        binaryWriter.Write(LatitudeSign);
+        binaryWriter.Write(Longitude);
+        binaryWriter.Write(LongitudeSign);
+        binaryWriter.Write(Uid ?? -1);
+    }
+
+    public static Position Load(BinaryReader reader)
+    {
+        Position position = new(reader.ReadDouble(), reader.ReadChar(), reader.ReadDouble(), reader.ReadChar());
+        position.Uid = reader.ReadInt32();
+        return position;
     }
 }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using AUS_Semestralna_Praca_1.BackEnd.Core;
 using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
@@ -7,6 +9,7 @@ using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
 using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree.Keys;
 using AUS_Semestralna_Praca_1.FrontEnd.Assets;
 using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 
 namespace AUS_Semestralna_Praca_1;
 
@@ -349,5 +352,25 @@ public class MainApplication
             Parcel parcel = new Parcel(newAssetData.Num, newAssetData.Description, newPos1, newPos2);
             return Core.UpdateAsset(oldPos1, oldPos2, newPos1, newPos2, parcel);
         }
+    }
+
+    public void SaveSystem(BinaryWriter binaryWriter)
+    {
+        binaryWriter.Write(Config.Instance.Version);
+        Core.SaveSystem(binaryWriter);
+    }
+
+    public void LoadSystem(BinaryReader binaryReader)
+    {
+        string version = binaryReader.ReadString();
+        if (version != Config.Instance.Version)
+        {
+            throw new VersionNotFoundException("Neplatná verzia súboru!");
+        }
+
+        Core.LoadSystem(binaryReader);
+
+
+
     }
 }
