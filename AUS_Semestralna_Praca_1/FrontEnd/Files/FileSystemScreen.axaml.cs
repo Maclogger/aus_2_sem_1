@@ -58,16 +58,19 @@ public partial class FileSystemScreen : UserControl
                 FileTypeFilter = new[] { new FilePickerFileType(".csv") }
             });
 
-        IStorageFile? file = files[0];
-        if (file != null)
+        if (files.Count > 0)
         {
-            await using var stream = await file.OpenReadAsync();
-            using var streamReader = new StreamReader(stream);
+            IStorageFile? file = files[0];
+            if (file != null)
+            {
+                await using var stream = await file.OpenReadAsync();
+                using var streamReader = new StreamReader(stream);
 
-            CsvReader reader = new(streamReader);
+                CsvReader reader = new(streamReader);
 
-            // Volajte metódu na načítanie údajov z CSV formátu
-            MainApplication.Instance.LoadSystem(reader);
+                // Volajte metódu na načítanie údajov z CSV formátu
+                MainApplication.Instance.LoadSystem(reader);
+            }
         }
     }
 }

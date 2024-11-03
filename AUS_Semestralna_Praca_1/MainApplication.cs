@@ -189,7 +189,8 @@ public class MainApplication
             }
         }
 
-        return (answer, assets);
+        Answer final = answer.State is AnswerState.Ok ? answer : answer2;
+        return (final, assets);
     }
 
     public (Answer answer, List<string> assets) FindAllAssets(char sign)
