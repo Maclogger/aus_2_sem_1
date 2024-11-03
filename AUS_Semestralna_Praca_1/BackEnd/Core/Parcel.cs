@@ -70,16 +70,6 @@ public class Parcel : Asset
         Realestates.Remove(realestate);
     }
 
-    public static Parcel GetDeepCopy(Parcel parcel)
-    {
-        return new Parcel(
-            parcel.ParcelNum,
-            parcel.Description,
-            Position.GetDeepCopy(parcel.Pos1),
-            Position.GetDeepCopy(parcel.Pos2));
-    }
-
-
     public void Save(CsvWriter writer)
     {
         writer.Write("parcel_num", ParcelNum);

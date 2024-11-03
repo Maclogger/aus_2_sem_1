@@ -109,15 +109,6 @@ public class ApplicationCore
         return new Answer(message, AnswerState.Ok);
     }
 
-
-
-
-
-    public Tuple<Answer, List<Asset>> FindAssets(Position pos, char sign)
-    {
-        throw new NotImplementedException();
-    }
-
     public (Answer, List<Realestate>) FindRealestates(Position pos)
     {
         List<Realestate> realestates = RealestatesTree.Find(pos);

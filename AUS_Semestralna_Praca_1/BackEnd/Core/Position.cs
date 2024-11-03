@@ -8,14 +8,14 @@ namespace AUS_Semestralna_Praca_1.BackEnd.Core;
 
 public class Position : IKey
 {
-    public char LatitudeSign; // N or S
-    public double Latitude;
-    public char LongitudeSign; // W or E
-    public double Longitude;
+    private char _latitudeSign; // N or S
+    private double _latitude;
+    private char _longitudeSign; // W or E
+    private double _longitude;
     public int? Uid { get; set; }
-    public double X { get; set; }
+    private double X { get; set; }
 
-    public double Y { get; set; }
+    private double Y { get; set; }
 
 
     public Position(double pLatitude, char pLatitudeSign, double pLongitude, char pLongitudeSign)
@@ -46,7 +46,7 @@ public class Position : IKey
 
     public Position(Position other)
     {
-        Initialize(other.Latitude, other.LatitudeSign, other.Longitude, other.LongitudeSign);
+        Initialize(other._latitude, other._latitudeSign, other._longitude, other._longitudeSign);
     }
 
 
@@ -56,10 +56,10 @@ public class Position : IKey
 
         Y = pLongitudeSign == 'W' ? -pLongitude : pLongitude;
 
-        Latitude = pLatitude;
-        LatitudeSign = pLatitudeSign;
-        Longitude = pLongitude;
-        LongitudeSign = pLongitudeSign;
+        _latitude = pLatitude;
+        _latitudeSign = pLatitudeSign;
+        _longitude = pLongitude;
+        _longitudeSign = pLongitudeSign;
         Uid = Utils.GetNextVal();
     }
 
@@ -105,10 +105,10 @@ public class Position : IKey
 
     public void AddToAttr(ref string sol, int postFix)
     {
-        ClientSys.AddToAttr(ref sol, $"LAT_{postFix}", Latitude);
-        ClientSys.AddToAttr(ref sol, $"LAT_SIGN_{postFix}", LatitudeSign.ToString());
-        ClientSys.AddToAttr(ref sol, $"LON_{postFix}", Longitude);
-        ClientSys.AddToAttr(ref sol, $"LON_SIGN_{postFix}", LongitudeSign.ToString());
+        ClientSys.AddToAttr(ref sol, $"LAT_{postFix}", _latitude);
+        ClientSys.AddToAttr(ref sol, $"LAT_SIGN_{postFix}", _latitudeSign.ToString());
+        ClientSys.AddToAttr(ref sol, $"LON_{postFix}", _longitude);
+        ClientSys.AddToAttr(ref sol, $"LON_SIGN_{postFix}", _longitudeSign.ToString());
         ClientSys.AddToAttr(ref sol, $"UID_{postFix}", Uid ?? -1);
     }
 
@@ -125,16 +125,16 @@ public class Position : IKey
 
     public static Position GetDeepCopy(Position realestatePos1)
     {
-        return new(realestatePos1.Latitude, realestatePos1.LatitudeSign, realestatePos1.Longitude,
-            realestatePos1.LongitudeSign);
+        return new(realestatePos1._latitude, realestatePos1._latitudeSign, realestatePos1._longitude,
+            realestatePos1._longitudeSign);
     }
 
     public void Save(CsvWriter writer)
     {
-        writer.Write("latitude", Latitude);
-        writer.Write("latitude_sign", LatitudeSign);
-        writer.Write("longitude", Longitude);
-        writer.Write("longitude_sign", LongitudeSign);
+        writer.Write("latitude", _latitude);
+        writer.Write("latitude_sign", _latitudeSign);
+        writer.Write("longitude", _longitude);
+        writer.Write("longitude_sign", _longitudeSign);
     }
 
     public static Position Load(CsvReader reader)

@@ -9,7 +9,7 @@ namespace AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree;
 
 public static class SimulationTester
 {
-    public static void CheckCorrectness(List<TestKey> pExpectedInTree, KdTree<TestKey, Cord> pTree)
+    private static void CheckCorrectness(List<TestKey> pExpectedInTree, KdTree<TestKey, Cord> pTree)
     {
         Assert.AreEqual(pExpectedInTree.Count, pTree.Size);
 
@@ -85,7 +85,7 @@ public static class SimulationTester
         }
     }
 
-    public static void RunOneSimTest(
+    private static void RunOneSimTest(
         KdTree<TestKey, Cord> tree,
         List<TestKey> expectedInTree,
         int pSeed = 1,
