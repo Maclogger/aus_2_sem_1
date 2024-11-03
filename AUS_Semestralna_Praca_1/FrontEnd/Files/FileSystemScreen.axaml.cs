@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using AUS_Semestralna_Praca_1.BackEnd.Files;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -19,27 +20,30 @@ public partial class FileSystemScreen : UserControl
         InitializeComponent();
     }
 
+
     private async void OnSaveSystemClicked(object? sender, RoutedEventArgs e)
     {
-        // Get top level from the current control. Alternatively, you can use Window reference instead.
+        // Získajte najvyššiu úroveň pre aktuálny ovládací prvok.
         TopLevel? topLevel = TopLevel.GetTopLevel(this);
 
-        // Start async operation to open the dialog.
+        // Spustí asynchrónnu operáciu na otvorenie dialógu.
         IStorageFile? file = await topLevel!.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
-            Title = "Save Binary File",
-            FileTypeChoices = new[] { new FilePickerFileType("Binary Files") { Patterns = new[] { "*.bin" } } },
+            Title = "Uložiť CSV súbor",
+            FileTypeChoices = new[] { new FilePickerFileType("CSV Files") { Patterns = new[] { "*.csv" } } },
             SuggestedFileName = "DataFile"
         });
 
         if (file is not null)
         {
             await using var stream = await file.OpenWriteAsync();
-            using var binaryWriter = new BinaryWriter(stream);
+            using var writer = new StreamWriter(stream);
 
-            MainApplication.Instance.SaveSystem(binaryWriter);
+            CsvWriter csvWriter = new CsvWriter(writer);
+            // Volajte metódu na uloženie údajov v CSV formáte
+            MainApplication.Instance.SaveSystem(csvWriter);
 
-            binaryWriter.Flush();
+            await writer.FlushAsync();
         }
     }
 
@@ -49,22 +53,22 @@ public partial class FileSystemScreen : UserControl
         IReadOnlyList<IStorageFile?> files = await topLevel!.StorageProvider.OpenFilePickerAsync(
             new FilePickerOpenOptions
             {
-                Title = "Vyberte súbor",
+                Title = "Vyberte CSV súbor",
                 AllowMultiple = false,
-                FileTypeFilter = [new FilePickerFileType(".bin")]
+                FileTypeFilter = new[] { new FilePickerFileType(".csv") }
             });
 
         IStorageFile? file = files[0];
         if (file != null)
         {
             await using var stream = await file.OpenReadAsync();
-            using var binaryReader = new BinaryReader(stream);
+            using var streamReader = new StreamReader(stream);
 
-            MainApplication.Instance.LoadSystem(binaryReader);
+            CsvReader reader = new(streamReader);
 
-            binaryReader.Close();
+            // Volajte metódu na načítanie údajov z CSV formátu
+            MainApplication.Instance.LoadSystem(reader);
         }
-
-
     }
 }
+

@@ -51,10 +51,7 @@ partial class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        MainApplication.Instance.FillUpSystem(1, 100, 1);
-
-
-
+        //MainApplication.Instance.FillUpSystem(1, 100, 1);
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
 

@@ -33,6 +33,7 @@ public class Config
     public int ElementCountBeforeTest { get; set; } = 0;
     public int CheckAfterOperationCount { get; set; } = 100;
     public bool UidPrint { get; set; } = true; // TODO change to false
+    public char SeparatorInCSV { get; set; } = ',';
 
     private Config()
     {
@@ -67,5 +68,5 @@ public class Config
         get => Math.Max(Math.Abs(MaxLongitude), Math.Abs(MinLongitude));
     }
 
-    public string Version { get; set; } = "1.0";
+    public string Version { get; set; } = "1.0.0";
 }

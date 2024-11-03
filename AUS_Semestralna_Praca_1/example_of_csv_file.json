@@ -3,18 +3,18 @@
   "počet pozícií": 24,
   "pole_pozícií": [
     {
+      "uid": 1,
       "latitude": 14.2,
       "latitude_sign": "S",
       "longitude": 0.4,
-      "longitude_sign": "E",
-      "uid": 1
+      "longitude_sign": "E"
     },
     {
+      "uid": 2,
       "latitude": 12.2,
       "latitude_sign": "S",
       "longitude": 2.4,
-      "longitude_sign": "E",
-      "uid": 2
+      "longitude_sign": "E"
     }
   ],
   "počet_assetov": 24,

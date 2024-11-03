@@ -6,6 +6,7 @@ using AUS_Semestralna_Praca_1.BackEnd.Core;
 using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
+using AUS_Semestralna_Praca_1.BackEnd.Files;
 using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree.Keys;
 using AUS_Semestralna_Praca_1.FrontEnd.Assets;
 using Avalonia.Controls;
@@ -308,8 +309,8 @@ public class MainApplication
                 // generating new realestate
                 (Position pos1, Position pos2) = GetRandomPositionsWithOverlay(positionsOfParcels, random, probabilityOfOverlay);
                 Realestate realestate = new(random, pos1, pos2);
-                positionsOfParcels.Add(pos1);
-                positionsOfParcels.Add(pos2);
+                positionsOfRealestate.Add(pos1);
+                positionsOfRealestate.Add(pos2);
                 Core.AddAsset(pos1, pos2, realestate);
             }
             else
@@ -317,8 +318,8 @@ public class MainApplication
                 // generating new parcel
                 (Position pos1, Position pos2) = GetRandomPositionsWithOverlay(positionsOfRealestate, random, probabilityOfOverlay);
                 Parcel parcel = new(random, pos1, pos2);
-                positionsOfRealestate.Add(pos1);
-                positionsOfRealestate.Add(pos2);
+                positionsOfParcels.Add(pos1);
+                positionsOfParcels.Add(pos2);
                 Core.AddAsset(pos1, pos2, parcel);
             }
         }
@@ -354,23 +355,20 @@ public class MainApplication
         }
     }
 
-    public void SaveSystem(BinaryWriter binaryWriter)
+    public void SaveSystem(CsvWriter writer)
     {
-        binaryWriter.Write(Config.Instance.Version);
-        Core.SaveSystem(binaryWriter);
+        writer.Write("version", Config.Instance.Version);
+        Core.SaveSystem(writer);
     }
 
-    public void LoadSystem(BinaryReader binaryReader)
+    public void LoadSystem(CsvReader reader)
     {
-        string version = binaryReader.ReadString();
+        string version = reader.ReadString();
         if (version != Config.Instance.Version)
         {
             throw new VersionNotFoundException("Neplatná verzia súboru!");
         }
 
-        Core.LoadSystem(binaryReader);
-
-
-
+        Core.LoadSystem(reader);
     }
 }

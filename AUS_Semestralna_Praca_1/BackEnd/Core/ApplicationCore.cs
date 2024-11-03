@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
+using AUS_Semestralna_Praca_1.BackEnd.Files;
 using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree;
 using AUS_Semestralna_Praca_1.BackEnd.Tests.KdTree.Keys;
 using AUS_Semestralna_Praca_1.FrontEnd.Assets;
@@ -226,7 +227,7 @@ public class ApplicationCore
                         AnswerState.Error);
                 }
 
-                foreach (Parcel prc in realestate.Parcelas)
+                foreach (Parcel prc in realestate.Parcels)
                 {
                     prc.RemoveRealestate(realestate);
                 }
@@ -317,94 +318,93 @@ public class ApplicationCore
         return new Answer("OK", AnswerState.Ok);
     }
 
-    public void SaveSystem(BinaryWriter binaryWriter)
+    public void SaveSystem(CsvWriter writer)
     {
         // saving positions
-        Position[] positions = new Position[AssetsCount * 2];
+        Position[] positions = new Position[AssetsTree.Size];
 
-        binaryWriter.Write(AssetsCount);
+        writer.Write("asset_tree_count", AssetsTree.Size);
         foreach ((Position position, Asset asset) in AssetsTree.LevelOrderEntries())
         {
             positions[(int)position.Uid!] = position;
-            position.Save(binaryWriter);
+            position.Save(writer);
         }
 
 
         foreach ((Position position, Asset asset) in AssetsTree.LevelOrderEntries())
         {
-            asset.Save(binaryWriter);
+            asset.Save(writer);
         }
 
         // writing the tree
-        binaryWriter.Write(AssetsTree.Size);
+        writer.Write("asset_tree_size", AssetsTree.Size);
         foreach ((Position? position, Asset? asset) in AssetsTree.LevelSaveOrder())
         {
             if (position == null || asset == null)
             {
-                binaryWriter.Write(false);
+                writer.Write("is_node", false);
             }
             else
             {
-                binaryWriter.Write(true);
-                binaryWriter.Write((int)position.Uid!);
+                writer.Write("is_node", true);
+                writer.Write("position_uid_of_node", (int)position.Uid!);
                 if (asset is Parcel parcel)
                 {
-                    binaryWriter.Write(true);
-                    binaryWriter.Write(parcel.Index);
+                    writer.Write("is_parcel", true);
+                    writer.Write("parcel_index", parcel.Index);
                 }
                 else if (asset is Realestate realestate)
                 {
 
-                    binaryWriter.Write(false);
-                    binaryWriter.Write(realestate.Index);
+                    writer.Write("is_parcel", false);
+                    writer.Write("realestate_index", realestate.Index);
                 }
             }
         }
 
-        binaryWriter.Write(ParcelsCount);
+        writer.Write("parcels_tree_size", ParcelsTree.Size);
         foreach ((Position? position, Parcel? parcel) in ParcelsTree.LevelSaveOrder())
         {
             if (position == null || parcel == null)
             {
-                binaryWriter.Write(false);
+                writer.Write("is_node", false);
             }
             else
             {
-                binaryWriter.Write(true);
-                binaryWriter.Write((int)position.Uid!);
-                binaryWriter.Write(parcel.Index);
+                writer.Write("is_node", true);
+                writer.Write("pos_uid", (int)position.Uid!);
+                writer.Write("parcel_index", parcel.Index);
             }
         }
 
-        binaryWriter.Write(RealestatesCount);
+        writer.Write("realestate_tree_size", RealestatesTree.Size);
         foreach ((Position? position, Realestate? realestate) in RealestatesTree.LevelSaveOrder())
         {
             if (position == null || realestate == null)
             {
-                binaryWriter.Write(false);
+                writer.Write("is_node", false);
             }
             else
             {
-                binaryWriter.Write(true);
-                binaryWriter.Write((int)position.Uid!);
-                binaryWriter.Write(realestate.Index);
+                writer.Write("is_node", true);
+                writer.Write("pos_uid", (int)position.Uid!);
+                writer.Write("realestate_index", realestate.Index);
             }
         }
     }
 
-    public void LoadSystem(BinaryReader reader)
+    public void LoadSystem(CsvReader reader)
     {
-        Position[] positions = new Position[AssetsCount * 2];
-        int positionsCount = reader.ReadInt32();
+        int positionsCount = reader.ReadInt();
+        Position[] positions = new Position[positionsCount];
         for (int i = 0; i < positionsCount; i++)
         {
             Position position = Position.Load(reader);
             positions[(int)position.Uid!] = position;
         }
 
-        int assetsCount = reader.ReadInt32();
-        Asset[] assets = new Asset[assetsCount];
-        for (int i = 0; i < assetsCount; i++)
+        Asset[] assets = new Asset[positionsCount];
+        for (int i = 0; i < positionsCount; i++)
         {
             Asset asset = Asset.Load(reader, positions);
             if (asset is Parcel parcel)
@@ -416,16 +416,41 @@ public class ApplicationCore
             }
         }
 
-        assetsCount = reader.ReadInt32();
+        // linking exact instances of other realestates
+        foreach (Asset asset in assets)
+        {
+            if (asset is Parcel parcel)
+            {
+                foreach (int neighbour in parcel.Neighbours)
+                {
+                    parcel.Realestates.Add((Realestate)assets[neighbour]);
+                }
+            }  else if (asset is Realestate realestate)
+            {
+                foreach (int neighbour in realestate.Neighbours)
+                {
+                    realestate.Parcels.Add((Parcel)assets[neighbour]);
+                }
+            }
+        }
+
+        for (var index = 0; index < positions.Length; index++)
+        {
+            var position = positions[index];
+            Console.WriteLine($"{index}: {position}");
+        }
+
+        for (var index = 0; index < assets.Length; index++)
+        {
+            var asset = assets[index];
+            Console.WriteLine($"{index}: {asset}");
+        }
+
+        int assetsCount = reader.ReadInt();
         for (int i = 0; i < assetsCount; i++)
         {
 
 
         }
-
-
-
-
-
     }
 }

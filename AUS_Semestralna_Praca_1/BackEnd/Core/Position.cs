@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures.KdTree;
+using AUS_Semestralna_Praca_1.BackEnd.Files;
 
 namespace AUS_Semestralna_Praca_1.BackEnd.Core;
 
@@ -129,19 +130,19 @@ public class Position : IKey
             realestatePos1.LongitudeSign);
     }
 
-    public void Save(BinaryWriter binaryWriter)
+    public void Save(CsvWriter writer)
     {
-        binaryWriter.Write(Latitude);
-        binaryWriter.Write(LatitudeSign);
-        binaryWriter.Write(Longitude);
-        binaryWriter.Write(LongitudeSign);
-        binaryWriter.Write(Uid ?? -1);
+        writer.Write("latitude", Latitude);
+        writer.Write("latitude_sign", LatitudeSign);
+        writer.Write("longitude", Longitude);
+        writer.Write("longitude_sign", LongitudeSign);
+        writer.Write("uid", Uid ?? -1);
     }
 
-    public static Position Load(BinaryReader reader)
+    public static Position Load(CsvReader reader)
     {
         Position position = new(reader.ReadDouble(), reader.ReadChar(), reader.ReadDouble(), reader.ReadChar());
-        position.Uid = reader.ReadInt32();
+        position.Uid = reader.ReadInt();
         return position;
     }
 }
