@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using AUS_Semestralna_Praca_1.BackEnd.Core;
+using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
 using AUS_Semestralna_Praca_1.BackEnd.DataStructures;
+using AUS_Semestralna_Praca_1.FrontEnd.GuiUtils;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
@@ -17,6 +19,8 @@ public class AssetData
     public PositionData Pos1Data { get; set; }
     public PositionData Pos2Data { get; set; }
 
+    public string OverlayButtonText { get; set; }
+
     public AssetData(int num, string description, PositionData pos1Data, PositionData pos2Data, string type)
     {
         Type = type;
@@ -25,6 +29,7 @@ public class AssetData
         Pos1Data = pos1Data;
         Pos2Data = pos2Data;
         TypeClient = type == "R" ? "Nehnuteľnosť" : "Parcela";
+        OverlayButtonText = type == "R" ? "Parcely" : "Nehnuteľnosti";
     }
 
     public AssetData(AssetData other)
@@ -132,6 +137,22 @@ public partial class AssetsScreenList : UserControl
         if (sender is Button button && button.CommandParameter is AssetData asset)
         {
             _contentArea.Content = new EditSpecAssetScreen(asset, _contentArea);
+        }
+    }
+
+    private void OnShowOverlayingAssetsClicked(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is AssetData asset)
+        {
+            (Answer answer, List<string> assets) = MainApplication.Instance.GetOverlayingAssets(asset);
+
+            if (answer.State is not AnswerState.Ok)
+            {
+                new MyMessageBox(answer).Show();
+                return;
+            }
+
+            _contentArea.Content = new AssetsScreenList(assets, 'A', _contentArea);
         }
     }
 }

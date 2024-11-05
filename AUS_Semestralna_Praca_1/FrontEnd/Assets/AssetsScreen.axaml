@@ -97,7 +97,20 @@
                         CornerRadius="10"
                         Click="OnFindAllAssetsClicked" />
 
-
+                <Button Content="Zobraziť prekryvy"
+                        FontWeight="Bold"
+                        Margin="10"
+                        Width="320"
+                        Height="50"
+                        FontSize="16"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="white"
+                        Foreground="black"
+                        CornerRadius="10"
+                        Click="OnListOverlayingAssetsClicked" />
             </StackPanel>
 
         </StackPanel>

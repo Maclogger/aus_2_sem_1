@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using AUS_Semestralna_Praca_1.BackEnd.Core;
 using AUS_Semestralna_Praca_1.BackEnd.CoreGui;
@@ -67,6 +68,8 @@ public class MainApplication
     public int RealestateCount => Core.RealestatesCount;
     public int ParcelCount => Core.ParcelsCount;
     public int AssetsCount => Core.AssetsCount;
+
+    private readonly List<Asset> _overlayingAssets = new();
 
     public Answer
         AddAsset(string pos1Attr, string pos2Attr, string assetAttr, char sign) // sign: 'R': realestate, 'P': parcel
@@ -258,7 +261,7 @@ public class MainApplication
     }
 
 
-    private (Position, Position) GetRandomPositionsWithOverlay(
+    private (Position, bool, Position, bool) GetRandomPositionsWithOverlay(
         List<Position> positions,
         Random random,
         double probabilityOfOverlay
@@ -266,9 +269,12 @@ public class MainApplication
     {
         Position pos1;
         Position pos2;
+        bool wasWithOverlay1 = false;
+        bool wasWithOverlay2 = false;
         if (random.NextDouble() < probabilityOfOverlay && positions.Count >= 2)
         {
             pos1 = new(positions[random.Next(0, positions.Count)]);
+            wasWithOverlay1 = true;
         }
         else
         {
@@ -277,7 +283,8 @@ public class MainApplication
 
         if (random.NextDouble() < probabilityOfOverlay && positions.Count >= 2)
         {
-            pos2 = new (positions[random.Next(0, positions.Count)]);
+            pos2 = new(positions[random.Next(0, positions.Count)]);
+            wasWithOverlay2 = true;
         }
         else
         {
@@ -289,14 +296,18 @@ public class MainApplication
             pos2 = new(random);
         }
 
-        return (pos1, pos2);
+        return (pos1, wasWithOverlay1, pos2, wasWithOverlay2);
     }
+
 
     public Answer FillUpSystem(double probabilityOfOverlay, int elementCount, double realestateParcelRatio)
     {
         Random random = new(1);
-        List<Position> positionsOfRealestate = new(); // TODO add optimization => we +- know how many there will be
-        List<Position> positionsOfParcels = new(); // TODO add optimization => we +- know how many there will be
+        int realestatePositionsCountApprox = (int)(realestateParcelRatio * elementCount * 2);
+        int parcelPositionsCountApprox = 2 * elementCount - realestatePositionsCountApprox;
+
+        List<Position> positionsOfRealestate = new(realestatePositionsCountApprox);
+        List<Position> positionsOfParcels = new(parcelPositionsCountApprox);
 
         for (int i = 0; i < elementCount; i++)
         {
@@ -304,19 +315,31 @@ public class MainApplication
             if (random.NextDouble() < realestateParcelRatio)
             {
                 // generating new realestate
-                (Position pos1, Position pos2) = GetRandomPositionsWithOverlay(positionsOfParcels, random, probabilityOfOverlay);
+                (Position pos1, bool isWithOverlay1, Position pos2, bool isWithOverlay2) =
+                    GetRandomPositionsWithOverlay(positionsOfParcels, random, probabilityOfOverlay);
                 Realestate realestate = new(random, pos1, pos2);
                 positionsOfRealestate.Add(pos1);
                 positionsOfRealestate.Add(pos2);
+                if (isWithOverlay1 || isWithOverlay2)
+                {
+                    _overlayingAssets.Add(realestate);
+                }
+
                 Core.AddAsset(pos1, pos2, realestate);
             }
             else
             {
                 // generating new parcel
-                (Position pos1, Position pos2) = GetRandomPositionsWithOverlay(positionsOfRealestate, random, probabilityOfOverlay);
+                (Position pos1, bool isWithOverlay1, Position pos2, bool isWithOverlay2) =
+                    GetRandomPositionsWithOverlay(positionsOfRealestate, random, probabilityOfOverlay);
                 Parcel parcel = new(random, pos1, pos2);
                 positionsOfParcels.Add(pos1);
                 positionsOfParcels.Add(pos2);
+                if (isWithOverlay1 || isWithOverlay2)
+                {
+                    _overlayingAssets.Add(parcel);
+                }
+
                 Core.AddAsset(pos1, pos2, parcel);
             }
         }
@@ -371,7 +394,10 @@ public class MainApplication
 
     public void RunSimTest(TextBlock block)
     {
+        var sw = Stopwatch.StartNew();
         SimulationTester.RunSimTests(TestTree!, ExpectedInTree!, block);
+        sw.Stop();
+        Console.WriteLine("Simulation time: " + sw.Elapsed);
     }
 
     public void PrepareTestTree()
@@ -386,5 +412,42 @@ public class MainApplication
         {
             myTextBlock.Text += $"{testKey}: {cord}\n";
         }
+    }
+
+    public (Answer answer, List<string> assets) GetOverlayingAssets(AssetData? ofAssetData = null)
+    {
+        List<string> sol = [];
+
+        List<Asset> assets = [];
+        if (ofAssetData == null)
+        {
+            assets = _overlayingAssets ?? new();
+        }
+        else
+        {
+            var (realestates, parcels) = Core.GetOverlayingAssets(ofAssetData);
+
+            foreach (Realestate realestate in realestates)
+            {
+                assets.Add(realestate);
+            }
+
+            foreach (Parcel parcel in parcels)
+            {
+                assets.Add(parcel);
+            }
+        }
+
+        if (assets.Count <= 0)
+            return (new Answer("Neexistuje žiadna parcela ani nehnuteľnosť, ktorá sa prekrýva.", AnswerState.Info), sol);
+        
+        foreach (Asset asset in assets)
+        {
+            string realestateStr = "";
+            asset.ToAttr(ref realestateStr);
+            sol.Add(realestateStr);
+        }
+
+        return (new Answer("OK", AnswerState.Ok), sol);
     }
 }

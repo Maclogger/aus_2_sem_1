@@ -12,5 +12,6 @@ Global
 		{6EC86CF1-647C-4FEE-B894-BD7E298F2A9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EC86CF1-647C-4FEE-B894-BD7E298F2A9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EC86CF1-647C-4FEE-B894-BD7E298F2A9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EC86CF1-647C-4FEE-B894-BD7E298F2A9E}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

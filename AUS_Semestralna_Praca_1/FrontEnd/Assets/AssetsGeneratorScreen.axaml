@@ -13,7 +13,7 @@
                        Margin="20 0 20 80" />
 
 
-            <TextBlock Text="Pravdepodobnosť duplicít"
+            <TextBlock Text="Pravdepodobnosť prekryvu"
                        FontSize="20"
                        HorizontalAlignment="Center"
                        Margin="20" />

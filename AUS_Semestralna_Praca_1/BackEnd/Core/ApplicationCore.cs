@@ -21,7 +21,6 @@ public class ApplicationCore
     public KdTree<Position, Asset> AssetsTree { get; set; } = new(2);
 
 
-
     public int ParcelsCount { get; set; } = 0;
     public int RealestatesCount { get; set; } = 0;
     public int AssetsCount { get; set; } = 0;
@@ -348,5 +347,32 @@ public class ApplicationCore
             Realestate realestates = Realestate.Load(reader);
             AddAsset(realestates.Pos1, realestates.Pos2, realestates);
         }
+    }
+
+    public (List<Realestate>, List<Parcel>) GetOverlayingAssets(AssetData ofAssetData)
+    {
+        Position pos = new Position(
+            ofAssetData.Pos1Data.Latitude, ofAssetData.Pos1Data.LatitudeSign[0],
+            ofAssetData.Pos1Data.Longitude, ofAssetData.Pos1Data.LongitudeSign[0]);
+        pos.Uid = ofAssetData.Pos1Data.Uid;
+
+        if (ofAssetData.Type == "R")
+        {
+            Realestate? realestate = RealestatesTree.FindExact(pos);
+            if (realestate == null)
+            {
+                throw new UnreachableException("The position was not found in the tree! ERROR");
+            }
+
+            return ([], realestate.Parcels);
+        }
+
+        Parcel? parcel = ParcelsTree.FindExact(pos);
+        if (parcel == null)
+        {
+            throw new UnreachableException("The position was not found in the tree! ERROR");
+        }
+
+        return (parcel.Realestates, []);
     }
 }

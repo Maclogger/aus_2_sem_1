@@ -55,7 +55,18 @@ public class Realestate : Asset
 
     public override string ToString()
     {
-        return $"[{Pos1}, {Pos2}]";
+        if (Config.Instance.FormattedOutput)
+        {
+            string sol = "";
+
+            sol += $"\nNehnuteľnosť ({Pos1}-{Pos2})\n";
+            sol += $"Číslo parcely: {RealestateNum}\n";
+            sol += $"Popis: '{Description}'\n";
+
+            return sol;
+        }
+
+        return $"{RealestateNum}: {Description}";
     }
 
     public static Realestate GetDeepCopy(Realestate realestate)

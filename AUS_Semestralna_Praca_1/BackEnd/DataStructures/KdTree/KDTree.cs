@@ -252,15 +252,14 @@ public class KdTree<K, T> : IEnumerable where K : IKey
                 if (node.LeftChild != null)
                 {
                     // finding a node with the biggest part of the key at current dimension
-                    Node<K, T> nodeForSwap = FindNodeWithHighestKeyInDim(node.LeftChild, node.Dimension);
+                    Node<K, T> nodeForSwap = FindNodesInSubTree(node.LeftChild, node.Dimension, findingInLeftSubTree: true)[0];
                     Swap(node, nodeForSwap);
                 }
                 else
                 {
                     // Case when nodeToDelete is not a leaf, and it doesn't have a LEFT child =>
                     // => have to remove some from the right side
-                    List<Node<K, T>> nodesWithLowestKeyInDim =
-                        FindNodesWithLowestKeyInDim(node.RightChild!, node.Dimension);
+                    List<Node<K, T>> nodesWithLowestKeyInDim = FindNodesInSubTree(node.RightChild!, node.Dimension, findingInLeftSubTree: false);
 
                     if (nodesWithLowestKeyInDim.Count <= 0)
                     {
@@ -301,47 +300,72 @@ public class KdTree<K, T> : IEnumerable where K : IKey
         _size--;
     }
 
-    private Node<K, T> FindNodeWithHighestKeyInDim(Node<K, T> pStartNode, int pDimension)
+    /*
+     * @par startNode ... is left / right child (the root of the subtree)
+     * @par dimension ... dimension of the startNode's father (the dimension of the deleting node)
+     * @findingInLeftSubTree
+     */
+    private List<Node<K, T>> FindNodesInSubTree(Node<K, T> startNode, int dimension, bool findingInLeftSubTree)
     {
-        Node<K, T> nodeWithHighestKeyInDim = pStartNode;
+        Func<Node<K, T>, bool> predicate = node => node.Dimension != dimension;
 
-        foreach (Node<K, T> node in InOrderIteratorImpl(pStartNode))
+        List<Node<K, T>> nodes = new();
+        K lowestKey = startNode.Key;
+
+        IEnumerable<Node<K, T>> levelOrderImpl = findingInLeftSubTree ?
+                LevelOrderImpl(startNode, leftNodePredicate: predicate) :
+                LevelOrderImpl(startNode, rightNodePredicate: predicate);
+
+        foreach (Node<K, T> node in levelOrderImpl)
         {
-            int comp = node.Key.CompareTo(nodeWithHighestKeyInDim.Key, pDimension);
-            if (comp > 0 || (comp == 0 && node.IsLeaf()))
+            int comp = node.Key.CompareTo(lowestKey, dimension);
+            if ((findingInLeftSubTree && comp > 0) || (!findingInLeftSubTree && comp < 0))
             {
-                // if node has higher key in that dimension, or it is the same, but is also a leaf (leaf is better)
-                nodeWithHighestKeyInDim = node;
-            }
-        }
-
-        return nodeWithHighestKeyInDim;
-    }
-
-    private List<Node<K, T>> FindNodesWithLowestKeyInDim(Node<K, T> pStartNode, int pDimension)
-    {
-        List<Node<K, T>> nodesWithLowestKeyInDim = new();
-        K lowestKey = pStartNode.Key;
-
-        foreach (Node<K, T> node in InOrderIteratorImpl(pStartNode))
-        {
-            int comp = node.Key.CompareTo(lowestKey, pDimension);
-            if (comp < 0)
-            {
-                // if node is lower than the current minimum
+                // if node is better at that dimension
                 lowestKey = node.Key;
-                nodesWithLowestKeyInDim.Clear();
-                nodesWithLowestKeyInDim.Add(node);
+                nodes.Clear();
+                nodes.Add(node);
             }
             else if (comp == 0)
             {
-                nodesWithLowestKeyInDim.Add(node);
+                nodes.Add(node);
             }
         }
 
-        return nodesWithLowestKeyInDim;
+        return nodes;
     }
 
+    private IEnumerable<Node<K, T>> LevelOrderImpl(
+        Node<K, T>? startNode = null,
+        Func<Node<K, T>, bool>? leftNodePredicate = null,
+        Func<Node<K, T>, bool>? rightNodePredicate = null
+    )
+    {
+        if (_root == null)
+        {
+            yield break;
+        }
+
+        Queue<Node<K, T>> queue = new();
+        queue.Enqueue(startNode ?? _root);
+
+        while (queue.Count > 0)
+        {
+            Node<K, T> currentNode = queue.Dequeue();
+
+            if (currentNode.LeftChild != null && (leftNodePredicate == null || leftNodePredicate(currentNode)))
+            {
+                queue.Enqueue(currentNode.LeftChild);
+            }
+
+            if (currentNode.RightChild != null && (rightNodePredicate == null || rightNodePredicate(currentNode)))
+            {
+                queue.Enqueue(currentNode.RightChild);
+            }
+
+            yield return currentNode;
+        }
+    }
 
     private void Swap(Node<K, T> node1, Node<K, T> node2)
     {
@@ -459,34 +483,6 @@ public class KdTree<K, T> : IEnumerable where K : IKey
             yield return currentNode;
 
             currentNode = currentNode.RightChild; // we go to right node
-        }
-    }
-
-    // this is implementation of LevelOrderIterator -> only used in this class => it returns the !!! NODE !!!
-    private IEnumerable<Node<K, T>> LevelOrderImpl()
-    {
-        Queue<Node<K, T>> queue = new();
-
-        if (_root != null)
-        {
-            queue.Enqueue(_root);
-        }
-
-        while (queue.Count > 0)
-        {
-            Node<K, T> currentNode = queue.Dequeue();
-
-            if (currentNode.LeftChild != null)
-            {
-                queue.Enqueue(currentNode.LeftChild);
-            }
-
-            if (currentNode.RightChild != null)
-            {
-                queue.Enqueue(currentNode.RightChild);
-            }
-
-            yield return currentNode;
         }
     }
 

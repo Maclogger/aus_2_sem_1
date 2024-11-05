@@ -57,4 +57,17 @@ public partial class AssetsScreen : UserControl
 
         _contentArea.Content = new AssetsScreenList(assets, 'A', _contentArea);
     }
+
+    private void OnListOverlayingAssetsClicked(object? sender, RoutedEventArgs e)
+    {
+        (Answer answer, List<string> assets) = MainApplication.Instance.GetOverlayingAssets();
+
+        if (answer.State is not AnswerState.Ok)
+        {
+            new MyMessageBox(answer).Show();
+            return;
+        }
+
+        _contentArea.Content = new AssetsScreenList(assets, 'A', _contentArea);
+    }
 }

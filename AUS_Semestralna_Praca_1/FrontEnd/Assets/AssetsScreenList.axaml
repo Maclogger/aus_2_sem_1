@@ -48,6 +48,22 @@
 
                                     <!-- Tlačidlá vpravo -->
                                     <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+
+                                        <Button Content="{Binding OverlayButtonText}"
+                                                FontWeight="Bold"
+                                                Margin="0"
+                                                Padding="0"
+                                                Width="100"
+                                                Height="100"
+                                                FontSize="13"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalContentAlignment="Center"
+                                                Background="white"
+                                                Foreground="black"
+                                                CornerRadius="12"
+                                                CommandParameter="{Binding}"
+                                                Click="OnShowOverlayingAssetsClicked" />
+
                                         <Button Content="EDIT"
                                                 FontWeight="Bold"
                                                 Margin="10"
@@ -60,7 +76,8 @@
                                                 Foreground="black"
                                                 CornerRadius="10"
                                                 CommandParameter="{Binding}"
-                                                Click="OnEditRecordClicked"/>
+                                                Click="OnEditRecordClicked" />
+
                                         <Button Content="DELETE"
                                                 FontWeight="Bold"
                                                 Margin="10"
@@ -73,8 +90,8 @@
                                                 Foreground="white"
                                                 CornerRadius="10"
                                                 CommandParameter="{Binding}"
-                                                Click="OnRemoveRecordClicked"
-                                                />
+                                                Click="OnRemoveRecordClicked" />
+
                                     </StackPanel>
                                 </Grid>
 
