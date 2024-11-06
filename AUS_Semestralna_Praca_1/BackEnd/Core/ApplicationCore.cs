@@ -375,4 +375,22 @@ public class ApplicationCore
 
         return (parcel.Realestates, []);
     }
+
+    public List<Asset> FindAllOverlayingAssets()
+    {
+        List<Asset> assets = [];
+        foreach (Asset asset in AssetsTree)
+        {
+            if ((asset is Parcel parcel && parcel.Realestates.Count > 0) ||
+                (asset is Realestate realestate && realestate.Parcels.Count > 0))
+            {
+                if (!assets.Contains(asset))
+                {
+                    assets.Add(asset);
+                }
+            }
+        }
+
+        return assets;
+    }
 }

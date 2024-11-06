@@ -69,7 +69,7 @@ public class MainApplication
     public int ParcelCount => Core.ParcelsCount;
     public int AssetsCount => Core.AssetsCount;
 
-    private readonly List<Asset> _overlayingAssets = new();
+    private List<Asset> _overlayingAssets = new();
 
     public Answer
         AddAsset(string pos1Attr, string pos2Attr, string assetAttr, char sign) // sign: 'R': realestate, 'P': parcel
@@ -421,7 +421,11 @@ public class MainApplication
         List<Asset> assets = [];
         if (ofAssetData == null)
         {
-            assets = _overlayingAssets ?? new();
+            if (Config.Instance.ShouldUpdateOverlays)
+            {
+                _overlayingAssets = Core.FindAllOverlayingAssets();
+            }
+            assets = _overlayingAssets;
         }
         else
         {

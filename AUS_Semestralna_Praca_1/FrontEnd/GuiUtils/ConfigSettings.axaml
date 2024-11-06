@@ -72,6 +72,9 @@
                 <CheckBox IsChecked="{Binding ShoudPrint, Source={x:Static local:Config.Instance}}"
                           Content="Should print output" />
 
+                <CheckBox IsChecked="{Binding ShouldUpdateOverlays, Source={x:Static local:Config.Instance}}"
+                          Content="Aktualizovať zoznam prekryvov" />
+
                 <TextBlock Text="Seed" />
                 <NumericUpDown Minimum="1"
                                Increment="1" Value="{Binding Seed, Source={x:Static local:Config.Instance}}" />

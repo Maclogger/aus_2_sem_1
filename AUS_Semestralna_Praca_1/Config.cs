@@ -25,7 +25,7 @@ public class Config
     public bool FormattedOutput { get; set; } = true;
 
     public double ProbOfDuplicate { get; set; } = 0.9;
-    public bool ShoudPrint { get; set; } = true;
+    public bool ShoudPrint { get; set; }
 
     public int Seed { get; set; } = 1;
     public int SeedCount { get; set; } = 100;
@@ -35,6 +35,7 @@ public class Config
     public char SeparatorInCSV { get; set; } = ',';
 
     public int TimesSaved { get; set; } = 0;
+    public bool ShouldUpdateOverlays { get; set; } = true;
 
     private Config()
     {
